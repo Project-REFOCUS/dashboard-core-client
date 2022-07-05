@@ -6,6 +6,8 @@ import Navbar from './navbar/Navbar';
 import Sidebar from './sidebar/Sidebar';
 import Dashboard from './dashboard/Dashboard';
 
+import './styles';
+
 
 const App = () => (
     <div>
