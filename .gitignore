@@ -20,7 +20,6 @@ yarn-error.log*
 # Yarn 
 # =========
 node_modules/
-yarn.lock
 package-lock.json
 
 # JetBrains
