@@ -54,7 +54,7 @@ const NavbarTabs = () => {
         }
         <li className="nav-item"
           role="presentaion"
-          /* onClick={ 
+          onClick={ 
             () => {
               const tabsLength = tabList.length;
 
@@ -76,7 +76,7 @@ const NavbarTabs = () => {
                 ]);
               }
             }
-          } */>
+          }>
           <button type="button"
             className="nav-link"
             disabled={ tabData.length === 3 }
