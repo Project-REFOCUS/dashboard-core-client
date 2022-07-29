@@ -90,7 +90,7 @@ const Sidebar = ({ setCategories, categories }) => {
         )
       )
     }
-    else alert("Over the limit");
+    else alert("Maximum categories are at 2. Over the limit");
   };
   
   const handleDataOrientationChange = (type, value) => {
@@ -105,35 +105,6 @@ const Sidebar = ({ setCategories, categories }) => {
     setCategoryData(type, { geography: value });
   }
 
-  const handleAddSameCategory = (type) => {
-    const index = 
-      listOptions
-        .map( (listOpt) => listOpt.key )
-        .indexOf(type);
-    
-    const sliceEnd = listOptions.slice(index + 1);
-    const sliceStart = listOptions.slice(0, index + 1); 
-    
-    setCategories([...categories, 
-      {
-        categoryName: `${ type }1`,
-        dataOrientation: "",
-        race: "",
-        geography: []
-      }
-    ])
-
-    setListOptions([ 
-      ...sliceStart, 
-      { 
-        key: `${ type }1`,
-        label: `${ type }`,
-        borderLeftColor: "hotPink",
-        showCollapse: true
-      },
-      ...sliceEnd
-    ]);
-  }
   function setCategoryData(type, objectData){
     setCategories(
       categories.map((category) => {
@@ -158,15 +129,18 @@ const Sidebar = ({ setCategories, categories }) => {
               <ListGroup.Item key={ listGroupItem.key }
                 variant={ listGroupItem.showCollapse ? `light` : `secondary` }
                 className={ `${ listGroupItem.showCollapse ? `border-left-${ listGroupItem.borderLeftColor }` : `` }` }>
+                
+                {/* sidebar collapse toggle */}
                 <CollapseToggle 
                   handleCollapseToggle={ handleCollapseToggle }
                   showCollapse={ listGroupItem.showCollapse }
                   type={ listGroupItem.key }
                   label={ listGroupItem.label }
                   length={ categories.length }
-                  handleAddSameCategory={ handleAddSameCategory }
                   categories={ categories }
                 />
+
+                {/* sidebar collapse content */}
                 <CollapseContent 
                   showCollapse={ listGroupItem.showCollapse }
                   type={ listGroupItem.key }
@@ -174,6 +148,7 @@ const Sidebar = ({ setCategories, categories }) => {
                   handleRaceChange={ handleRaceChange }
                   handleGeographyChange={ handleGeographyChange }
                 />
+                
               </ListGroup.Item>
             )
           }

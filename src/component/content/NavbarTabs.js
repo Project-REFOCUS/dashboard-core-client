@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { PlusLg } from 'react-bootstrap-icons';
 
-import DashboardContent from './DashboardContent';
+import NavbarTabsItem from './NavbarTabsItem';
+import NavbarTabsPane from './NavbarTabsPane';
 
 import './NavbarTabsStyles.scss';
 import '../customStyles.scss';
@@ -42,25 +43,18 @@ const NavbarTabs = () => {
               const { key, tabIsActive, label } = tabs;
               
               return (
-                <li 
-                  key={ key }
-                  className="nav-item"
-                  role="presentation"
-                  onClick={ () => { handleTabChange(key) } }>
-                  <button type="button"
-                    id={ `tab-${ key }` }
-                    className={ `nav-link ${ tabIsActive ? `active`: `` }` }
-                    role="tab">
-                    { label }
-                  </button>
-                </li>
+                <NavbarTabsItem key={ key }
+                  tabIsActive={ tabIsActive }
+                  label={ label } 
+                  tabKey={ key } 
+                  handleTabChange={ handleTabChange } />
               )
             }
           )
         }
-        {/* <li className="nav-item"
+        <li className="nav-item"
           role="presentaion"
-          onClick={ 
+          /* onClick={ 
             () => {
               const tabsLength = tabList.length;
 
@@ -76,21 +70,20 @@ const NavbarTabs = () => {
                 setTabData([...tabData, 
                   {
                     tabKey: `Dashboard-${ tabsLength }`,
-                    dataInfo: "",
                     dataPeriod: "",
                     categories: []
                   }
                 ]);
               }
-              else alert("Tabs limit to 3");
             }
-          }>
+          } */>
           <button type="button"
             className="nav-link"
+            disabled={ tabData.length === 3 }
             role="tab">
             <PlusLg className="icon-style-1" />
           </button>
-        </li> */}
+        </li>
       </ul>
       <div className="tab-content">
         {
@@ -98,16 +91,12 @@ const NavbarTabs = () => {
             (tabs, index) => {
               const { key, label, tabIsActive } = tabs;
               return (
-                <div key={ label }
-                  role="tabpanel"
-                  id={ `tabpane-${ key }` }
-                  className={ `fade g-lg-0 tab-pane ${ tabIsActive ? `active show`: ``}` }>
-                  <DashboardContent
-                    setTabData={ setTabData }
-                    tabData={ tabData[index] }
-                    tabDataAll={ tabData }
-                  />
-                </div>
+                <NavbarTabsPane key={ label }
+                  tabKey={ key }
+                  tabIsActive={ tabIsActive } 
+                  setTabData={ setTabData }
+                  tabData={ tabData[index] }
+                  tabDataAll={ tabData } />
               )
             }
           )

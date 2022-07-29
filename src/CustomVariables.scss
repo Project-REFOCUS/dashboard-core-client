@@ -1,26 +1,32 @@
 /* colors */
 $custom-pink : #CD36A3;
+$custom-hot-pink:  #F0027F;
+
 $custom-green-1 : #6CC7B6;
+$custom-green-2: #68BB7B;
+
 $custom-yellow: #F2B51C;
 $custom-orange: #FC8D1F;
+$custom-purple: #8F26E1;
+
 $custom-grey-1: #636E72;
 $custom-grey-2: #B2BEC3;
 $custom-grey-3: #DFE6E9;
 $custom-grey-4: #F9FAFB;
-$custom-hot-pink:  #F0027F;
-$custom-purple: #8F26E1;
-$custom-green-2: #68BB7B;
+
 $custom-white: #ffffff;
 $custom-black-1: #2D3436;
+$custom-black-2: #000000;
+
 $custom-blue-1: #72BBF4;
 $custom-blue-2: #D3ECFF;
 $custom-blue-3: #086EBE;
 $custom-blue-4: #28A1FF;
-$custom-black-2: #000000;
 
 /* font family */
 $fontLato: 'Lato', sans-serif;
 $fontOpenSans: 'Open Sans', sans-serif;
+$fontAvenir: 'Avenir', sans-serif;
 
 /* mixins methods */
 @mixin fontStyle1($color, $fontFamily, $fontSize, $lineHeight, $fontStyle, $fontWeight){
