@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { ListGroup } from 'react-bootstrap';
-import CollapseToggle from './CollapseToggle';
-import CollapseContent from './CollapseContent';
+import React, { useState } from "react";
+import { ListGroup } from "react-bootstrap";
+import CollapseToggle from "./CollapseToggle";
+import CollapseContent from "./CollapseContent";
 
-import './SidebarStyle.scss';
+import "./SidebarStyle.scss";
 
 const ListGroupOptions = [
   {
@@ -22,140 +22,170 @@ const ListGroupOptions = [
     key: "Tests",
     label: "Tests",
     borderLeftColor: "yellow",
-    showCollapse: false
+    showCollapse: false,
   },
   {
     key: "Vaccinations",
     label: "Vaccinations",
     borderLeftColor: "green-1",
-    showCollapse: false
+    showCollapse: false,
   },
   {
     key: "Police shootings",
     label: "Police shootings",
     borderLeftColor: "green-2",
-    showCollapse: false
+    showCollapse: false,
   },
   {
     key: "Population estimates",
-    label: ( 
+    label: (
       <div className="d-inline-block">
         <span className="d-block">Population estimates</span>
-        <span 
-          className="d-block" 
+        <span
+          className="d-block"
           style={{
-            fontSize: "14px"
-          }}>( 1 year estimates )</span>
+            fontSize: "14px",
+          }}
+        >
+          ( 1 year estimates )
+        </span>
       </div>
     ),
     borderLeftColor: "orange",
-    showCollapse: false
-  }
+    showCollapse: false,
+  },
 ];
 
 const Sidebar = ({ setCategories, categories }) => {
-  
-  const [ listOptions, setListOptions ] = useState(ListGroupOptions);
+  const [listOptions, setListOptions] = useState(ListGroupOptions);
+  const [isDuplicate, setIsDuplicate] = useState("");
 
   const handleCollapseToggle = (type) => {
-
-    if((categories.length === 2 
-      && categories.some((value) => { return value.categoryName === type })) || 
-      categories.length < 2){
-       
+    // pushes category object to categories
+    if (
+      (categories.length === 2 &&
+        categories.some((value) => {
+          return value.categoryName === type;
+        })) ||
+      categories.length < 2
+    ) {
       setListOptions(
-        listOptions.map(
-          (listItem) => {
-            const showCollapse = !listItem.showCollapse;
+        listOptions.map((listItem) => {
+          const showCollapse = !listItem.showCollapse;
 
-            if(listItem.key === type)
-            {
-              setCategories(
-                showCollapse ? 
-                [ ...categories, 
-                  {
-                    categoryName: type,
-                    dataOrientation: "",
-                    race: "",
-                    geography: []
-                  }
-                ] : categories.filter((category) => { return category.categoryName !== type })
-              )
+          if (listItem.key === type) {
+            setCategories(
+              showCollapse
+                ? [
+                    ...categories,
+                    {
+                      categoryName: type,
+                      dataOrientation: "",
+                      race: "",
+                      geography: [],
+                    },
+                  ]
+                : categories.filter((category) => {
+                    return category.categoryName !== type;
+                  })
+            );
 
-              return ({ ...listItem, showCollapse: !listItem.showCollapse })
-            }
-            
-            return listItem;
+            return { ...listItem, showCollapse: !listItem.showCollapse };
           }
-        )
-      )
-    }
-    else alert("Maximum categories are at 2. Over the limit");
+
+          return listItem;
+        })
+      );
+    } else alert("Maximum categories are at 2. Over the limit");
   };
-  
+
   const handleDataOrientationChange = (type, value) => {
     setCategoryData(type, { dataOrientation: value });
-  }
+  };
 
   const handleRaceChange = (type, value) => {
     setCategoryData(type, { race: value });
-  }
+  };
 
   const handleGeographyChange = (type, value) => {
     setCategoryData(type, { geography: value });
-  }
+  };
 
-  function setCategoryData(type, objectData){
+  function setCategoryData(type, objectData) {
     setCategories(
       categories.map((category) => {
-        if(category.categoryName === type)
-          return { ...category, ...objectData }
-        
+        if (category.categoryName === type)
+          return { ...category, ...objectData };
+
         return category;
       })
-    )
+    );
   }
 
-  return(
+  return (
     <ListGroup id="sidebarNavigation">
-      <ListGroup.Item 
-        className="category-info-select-max-list-group-item">
+      <ListGroup.Item className="category-info-select-max-list-group-item">
         Select max. 2 categories
       </ListGroup.Item>
-      {
-        listOptions.map(
-          (listGroupItem) => {
-            return(
-              <ListGroup.Item key={ listGroupItem.key }
-                variant={ listGroupItem.showCollapse ? `light` : `secondary` }
-                className={ `${ listGroupItem.showCollapse ? `border-left-${ listGroupItem.borderLeftColor }` : `` }` }>
-                
-                {/* sidebar collapse toggle */}
-                <CollapseToggle 
-                  handleCollapseToggle={ handleCollapseToggle }
-                  showCollapse={ listGroupItem.showCollapse }
-                  type={ listGroupItem.key }
-                  label={ listGroupItem.label }
-                  length={ categories.length }
-                  categories={ categories }
-                />
+      {listOptions.map((listGroupItem) => {
+        return (
+          <ListGroup.Item
+            key={listGroupItem.key}
+            variant={listGroupItem.showCollapse ? `light` : `secondary`}
+            className={`${
+              listGroupItem.showCollapse
+                ? `border-left-${listGroupItem.borderLeftColor}`
+                : ``
+            }`}
+          >
+            {/* sidebar collapse toggle */}
+            <CollapseToggle
+              handleCollapseToggle={handleCollapseToggle}
+              showCollapse={listGroupItem.showCollapse}
+              type={listGroupItem.key}
+              label={listGroupItem.label}
+              length={categories.length}
+              categories={categories}
+              isDuplicate={isDuplicate}
+              setIsDuplicate={setIsDuplicate}
+              ctType="first"
+            />
 
-                {/* sidebar collapse content */}
-                <CollapseContent 
-                  showCollapse={ listGroupItem.showCollapse }
-                  type={ listGroupItem.key }
-                  handleDataOrientationChange={ handleDataOrientationChange }
-                  handleRaceChange={ handleRaceChange }
-                  handleGeographyChange={ handleGeographyChange }
+            {/* sidebar collapse content */}
+            <CollapseContent
+              showCollapse={listGroupItem.showCollapse}
+              type={listGroupItem.key}
+              handleDataOrientationChange={handleDataOrientationChange}
+              handleRaceChange={handleRaceChange}
+              handleGeographyChange={handleGeographyChange}
+            />
+            {/* can be used for adding duplicates */}
+            {isDuplicate === listGroupItem.key ? (
+              <>
+                <CollapseToggle
+                  handleCollapseToggle={handleCollapseToggle}
+                  showCollapse={listGroupItem.showCollapse}
+                  type={listGroupItem.key}
+                  label={listGroupItem.label}
+                  length={categories.length}
+                  categories={categories}
+                  isDuplicate={isDuplicate}
+                  ctType="second"
                 />
-                
-              </ListGroup.Item>
-            )
-          }
-        )
-      }
+                <CollapseContent
+                  showCollapse={listGroupItem.showCollapse}
+                  type={listGroupItem.key}
+                  handleDataOrientationChange={handleDataOrientationChange}
+                  handleRaceChange={handleRaceChange}
+                  handleGeographyChange={handleGeographyChange}
+                />
+              </>
+            ) : null}
+          </ListGroup.Item>
+        );
+      })}
     </ListGroup>
   );
-}
+};
 
 export default Sidebar;

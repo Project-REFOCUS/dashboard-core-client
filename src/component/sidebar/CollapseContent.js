@@ -1,128 +1,133 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Collapse } from 'react-bootstrap';
-import { PlusLg } from 'react-bootstrap-icons';
-import ReactSelect, { components, createFilter } from 'react-select';
-import { XLg } from 'react-bootstrap-icons';
+import React, { useEffect, useState } from "react";
+import { Form, Collapse } from "react-bootstrap";
+import { PlusLg } from "react-bootstrap-icons";
+import ReactSelect, { components, createFilter } from "react-select";
+import { XLg } from "react-bootstrap-icons";
 
-import { dataOrientationOption, raceOption, stateOptions } from '../../data';
-import { fontStyles, customFontStyles } from '../customFontStyleHelper';
-import { isEmptyKeyObject } from '../../utility_helpers';
+import { dataOrientationOption, raceOption, stateOptions } from "../../data";
+import { fontStyles, customFontStyles } from "../customFontStyleHelper";
+import { isEmptyKeyObject } from "../../utility_helpers";
 
-import '../customStyles.scss';
-import '../../CustomVariables.scss';
+import "../customStyles.scss";
+import "../../CustomVariables.scss";
 
 const groupStateOptions = [
   {
     label: "United States",
-    options: [ { value: "deselect", label: "Deselect All" }, ...stateOptions ]
-  }
-]
+    options: [{ value: "deselect", label: "Deselect All" }, ...stateOptions],
+  },
+];
 
 const stateMenuListComponent = ({ selectProps, ...props }) => {
- 
   const { onInputChange, stateInputValue, onMenuInputFocus } = selectProps;
 
   const ariaAttributes = {
     "aria-autocomplete": "list",
     "aria-label": selectProps["aria-label"],
-    "aria-labelledby": selectProps["aria-labelledby"]
+    "aria-labelledby": selectProps["aria-labelledby"],
   };
 
   const focusAndStopProp = (e) => {
     e.stopPropagation();
     e.target.focus();
-  }
+  };
 
   return (
     <>
       <Form.Group className="px-2 py-1">
-        <Form.Control type="text"
+        <Form.Control
+          type="text"
           id="state-search"
           autoCorrect="off"
           autoComplete="off"
           spellCheck="false"
-          value={ stateInputValue }
+          value={stateInputValue}
           onChange={(e) =>
             onInputChange(e.currentTarget.value, {
-              action: "input-change"
+              action: "input-change",
             })
           }
-          onMouseDown={ focusAndStopProp }
-          onTouchEnd={ focusAndStopProp }
-          onFocus={ onMenuInputFocus }
+          onMouseDown={focusAndStopProp}
+          onTouchEnd={focusAndStopProp}
+          onFocus={onMenuInputFocus}
           placeholder="Search state..."
-          { ...ariaAttributes } />
+          {...ariaAttributes}
+        />
       </Form.Group>
-      <components.MenuList { ...props } selectProps={ selectProps }>
-        { props.children }
+      <components.MenuList {...props} selectProps={selectProps}>
+        {props.children}
       </components.MenuList>
     </>
-  )
-}
+  );
+};
 
 const stateGroupHeadingComponent = (props) => {
-  
-  return(
+  return (
     <>
-      <components.GroupHeading { ...props }>
+      <components.GroupHeading {...props}>
         <div className="d-flex justify-content-between align-items-center">
           <Form.Check>
             <Form.Check.Input
-              id={ props.data.label }
+              id={props.data.label}
               type="checkbox"
-              onChange={ () => null }/>
+              onChange={() => null}
+            />
             <Form.Check.Label
-              htmlFor={ props.data.label }
-              style={
-                { ...customFontStyles({ ...fontStyles, color: "#000000" }) }
-              }>{ props.children }
+              htmlFor={props.data.label}
+              style={{
+                ...customFontStyles({ ...fontStyles, color: "#000000" }),
+              }}
+            >
+              {props.children}
             </Form.Check.Label>
           </Form.Check>
         </div>
       </components.GroupHeading>
       <hr className="hr-style-1" />
-      
     </>
   );
-}
+};
 const stateOptionComponent = ({ selectProps, ...props }) => {
   const { stateInputValue } = selectProps;
 
-  if(props.value === "deselect")
+  if (props.value === "deselect")
     return (
-      (selectProps.value).length > 0 && 
-      <components.Option { ...props } selectProps={ selectProps }>
-        <div className="d-flex justify-content-between align-items-center">
-          { props.label }
-        </div>
-      </components.Option>
-    )
+      selectProps.value.length > 0 && (
+        <components.Option {...props} selectProps={selectProps}>
+          <div className="d-flex justify-content-between align-items-center">
+            {props.label}
+          </div>
+        </components.Option>
+      )
+    );
   return (
-    <components.Option { ...props } selectProps={ selectProps }>
+    <components.Option {...props} selectProps={selectProps}>
       <div className="d-flex justify-content-between align-items-center">
         <Form.Check>
           <Form.Check.Input
-            id={ props.label }
-            type="checkbox" 
-            checked={ props.isSelected }
-            onChange={ () => null }/>
+            id={props.label}
+            type="checkbox"
+            checked={props.isSelected}
+            onChange={() => null}
+          />
           <Form.Check.Label
-            htmlFor={ props.label }
-            style={
-              { ...customFontStyles({ ...fontStyles, color: "#000000" }) }
-            }>{ 
-              stateInputValue === "" 
-              ? props.label : 
-              ( 
-                <>
-                  <strong 
-                    style={{ 
-                      ...customFontStyles({ ...fontStyles, fontWeight: 700 })
-                    }}>{ (props.label).substring(0, stateInputValue.length) }</strong>
-                  { (props.label).substring(stateInputValue.length) }
-                </>
-              )
-            }
+            htmlFor={props.label}
+            style={{ ...customFontStyles({ ...fontStyles, color: "#000000" }) }}
+          >
+            {stateInputValue === "" ? (
+              props.label
+            ) : (
+              <>
+                <strong
+                  style={{
+                    ...customFontStyles({ ...fontStyles, fontWeight: 700 }),
+                  }}
+                >
+                  {props.label.substring(0, stateInputValue.length)}
+                </strong>
+                {props.label.substring(stateInputValue.length)}
+              </>
+            )}
           </Form.Check.Label>
         </Form.Check>
       </div>
@@ -132,65 +137,60 @@ const stateOptionComponent = ({ selectProps, ...props }) => {
 
 const stateValueContainerComponent = ({ children, selectProps, ...props }) => {
   return (
-    <components.ValueContainer { ...props } selectProps={ selectProps }>
-      { 
-        React.Children.map(children, 
-          (child, index) => {
-            if(index <= 5)
-              return child;
-            
-            return;
-          }
-        )
-      }
+    <components.ValueContainer {...props} selectProps={selectProps}>
+      {React.Children.map(children, (child, index) => {
+        if (index <= 5) return child;
+
+        return;
+      })}
     </components.ValueContainer>
   );
-}
+};
 
 const stateDropdownIndicatorComponent = (props) => {
   const stateValues = props.selectProps.value;
-  return(
+  return (
     <div className="d-flex justify-content-between align-items-center flex-column align-self-stretch">
-      <components.DropdownIndicator { ...props }/>
-      {
-        stateValues && stateValues.length > 6 ?
-        (
-          <div 
-            style={{
-              ...customFontStyles({
-                ...fontStyles,
-                fontSize: "10px",
-                lineHeight: "14px",
-                color: "#636E72"
-              }),
-              padding: "4px"
-            }}>
-            { `${ stateValues.length - 6 } +` }
-          </div>
-        ) : (<></>)
-      }
+      <components.DropdownIndicator {...props} />
+      {stateValues && stateValues.length > 6 ? (
+        <div
+          style={{
+            ...customFontStyles({
+              ...fontStyles,
+              fontSize: "10px",
+              lineHeight: "14px",
+              color: "#636E72",
+            }),
+            padding: "4px",
+          }}
+        >
+          {`${stateValues.length - 6} +`}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
-}
+};
 const stateMultiValueRemoveComponent = (props) => {
-  return(
-    <components.MultiValueRemove { ...props }>
+  return (
+    <components.MultiValueRemove {...props}>
       <XLg className="remove-tag-icon-1" />
     </components.MultiValueRemove>
   );
-}
+};
 
 const ReactSelectStyle1 = {
   control: (base) => ({
     ...base,
     "&:hover": {
-      backgroundColor: "#D3ECFF"
+      backgroundColor: "#D3ECFF",
     },
-    minHeight: "30px"
+    minHeight: "30px",
   }),
-  indicatorSeparator:(base) => ({
+  indicatorSeparator: (base) => ({
     ...base,
-    width: 0
+    width: 0,
   }),
   valueContainer: (base) => ({
     ...base,
@@ -198,45 +198,49 @@ const ReactSelectStyle1 = {
   }),
   singleValue: (base) => ({
     ...base,
-    ...customFontStyles({ ...fontStyles, color: "#2D3436" })
+    ...customFontStyles({ ...fontStyles, color: "#2D3436" }),
   }),
   option: (base, state) => ({
     ...base,
     ...customFontStyles({ ...fontStyles, color: "#000000" }),
     backgroundColor: state.isSelected ? "#72BBF4" : base.backgroundColor,
-    "&:hover": { 
+    "&:hover": {
       backgroundColor: state.isSelected ? "#086EBE" : base.backgroundColor,
-      cursor: "pointer"                                    
-    }
+      cursor: "pointer",
+    },
   }),
   placeholder: (base) => ({
     ...base,
-    ...customFontStyles({ ...fontStyles, color: "#B2BEC3" })
-  })
-}
+    ...customFontStyles({ ...fontStyles, color: "#B2BEC3" }),
+  }),
+};
 
-const CollapseContent = ({ showCollapse, type, handleDataOrientationChange, handleRaceChange, handleGeographyChange }) => {
+const CollapseContent = ({
+  showCollapse,
+  type,
+  handleDataOrientationChange,
+  handleRaceChange,
+  handleGeographyChange,
+  isDuplicate = false,
+}) => {
   const [isStateFocused, setIsStateFocused] = useState(false);
   const [stateInputValue, setStateInputValue] = useState("");
-  
-  const [ dataOrientation, setDataOrientation] = useState({});
-  const [ race, setRace ] = useState({});
-  const [ placeState, setPlaceState ] = useState([]);
 
-  useEffect(
-    () => {
-      if(!showCollapse){
-        setDataOrientation({});
-        setRace({});
-        setPlaceState([]);
-      }
+  const [dataOrientation, setDataOrientation] = useState({});
+  const [race, setRace] = useState({});
+  const [placeState, setPlaceState] = useState([]);
+
+  useEffect(() => {
+    if (!showCollapse) {
+      setDataOrientation({});
+      setRace({});
+      setPlaceState([]);
     }
-    ,[ showCollapse ]
-  );
+  }, [showCollapse]);
 
   /* handle changes on the category data */
   const handleReactSelectChange = (selected, action) => {
-    switch(action.name){
+    switch (action.name) {
       case "dataOrientationSelectName":
         setDataOrientation(selected);
         handleDataOrientationChange(type, selected.value);
@@ -246,7 +250,7 @@ const CollapseContent = ({ showCollapse, type, handleDataOrientationChange, hand
         handleRaceChange(type, selected.value);
         break;
     }
-  }
+  };
 
   const handlePlaceStateChange = (options) => {
     if (
@@ -256,29 +260,28 @@ const CollapseContent = ({ showCollapse, type, handleDataOrientationChange, hand
     ) {
       setPlaceState([]);
       handleGeographyChange(type, []);
-    }
-    else{
+    } else {
       setPlaceState(options);
-      handleGeographyChange(type, options.map((option) => option.value));
+      handleGeographyChange(
+        type,
+        options.map((option) => option.value)
+      );
     }
     setIsStateFocused(false);
-  }
-  
-  return (
-    <Collapse in={ showCollapse } >
-      <div>
+  };
 
+  return (
+    <Collapse in={showCollapse}>
+      <div>
         {/* begin: Data Orientation */}
         <div className="mb-2">
-          <Form.Label className="mb-0">
-            Data Orientation
-          </Form.Label>
+          <Form.Label className="mb-0">Data Orientation</Form.Label>
           <ReactSelect
-            options={ dataOrientationOption }
-            styles={ ReactSelectStyle1 }
+            options={dataOrientationOption}
+            styles={ReactSelectStyle1}
             name="dataOrientationSelectName"
-            onChange={ handleReactSelectChange }
-            value={isEmptyKeyObject(dataOrientation) ? null : dataOrientation }
+            onChange={handleReactSelectChange}
+            value={isEmptyKeyObject(dataOrientation) ? null : dataOrientation}
             placeholder="Data Orientation: "
           />
         </div>
@@ -286,28 +289,24 @@ const CollapseContent = ({ showCollapse, type, handleDataOrientationChange, hand
 
         {/* begin: Race */}
         <div className="mb-2">
-          <Form.Label className="mb-0">
-            Race
-          </Form.Label>
+          <Form.Label className="mb-0">Race</Form.Label>
           <ReactSelect
-            options={ raceOption }
-            styles={ ReactSelectStyle1 }
-            isDisabled={ isEmptyKeyObject(dataOrientation) }
-            value={ isEmptyKeyObject(race) ? null : race }
+            options={raceOption}
+            styles={ReactSelectStyle1}
+            isDisabled={isEmptyKeyObject(dataOrientation)}
+            value={isEmptyKeyObject(race) ? null : race}
             placeholder="Race: "
             name="raceSelectName"
-            onChange={ handleReactSelectChange }
+            onChange={handleReactSelectChange}
           />
         </div>
         {/* end: Race */}
 
         {/* begin: Geography */}
         <div className="mb-2">
-          <Form.Label className="mb-0">
-            Geography
-          </Form.Label>
-          <ReactSelect 
-            options={ groupStateOptions }
+          <Form.Label className="mb-0">Geography</Form.Label>
+          <ReactSelect
+            options={groupStateOptions}
             components={{
               MenuList: stateMenuListComponent,
               Option: stateOptionComponent,
@@ -315,28 +314,28 @@ const CollapseContent = ({ showCollapse, type, handleDataOrientationChange, hand
               ValueContainer: stateValueContainerComponent,
               DropdownIndicator: stateDropdownIndicatorComponent,
               ClearIndicator: () => null,
-              GroupHeading: stateGroupHeadingComponent
+              GroupHeading: stateGroupHeadingComponent,
             }}
-            isDisabled={ isEmptyKeyObject(dataOrientation) }
+            isDisabled={isEmptyKeyObject(dataOrientation)}
             styles={{
               control: (base) => ({
                 ...base,
                 "&:hover": {
-                  backgroundColor: "#D3ECFF"
+                  backgroundColor: "#D3ECFF",
                 },
-                minHeight: "30px"
+                minHeight: "30px",
               }),
               dropdownIndicator: (base) => ({
                 ...base,
-                justifyContent: "space-between"
+                justifyContent: "space-between",
               }),
-              indicatorSeparator:(base) => ({
+              indicatorSeparator: (base) => ({
                 ...base,
-                width: 0
+                width: 0,
               }),
               groupHeading: (base) => ({
                 ...base,
-                textTransform: "none"
+                textTransform: "none",
               }),
               multiValue: (base) => ({
                 ...base,
@@ -344,44 +343,46 @@ const CollapseContent = ({ showCollapse, type, handleDataOrientationChange, hand
                   ...fontStyles,
                   fontSize: "11px",
                   lineHeight: "15px",
-                  color: "#000000"
+                  color: "#000000",
                 }),
                 backgroundColor: "#DFE6E9",
-                borderRadius: "4px"
+                borderRadius: "4px",
               }),
               option: (base, state) => ({
                 ...base,
                 ...customFontStyles({ ...fontStyles, color: "#000000" }),
-                backgroundColor: state.isSelected ? "#72BBF4" : base.backgroundColor,
-                "&:hover": { 
-                  backgroundColor: state.isSelected ? "#086EBE" : base.backgroundColor,
-                  cursor: "pointer"                                   
-                }
+                backgroundColor: state.isSelected
+                  ? "#72BBF4"
+                  : base.backgroundColor,
+                "&:hover": {
+                  backgroundColor: state.isSelected
+                    ? "#086EBE"
+                    : base.backgroundColor,
+                  cursor: "pointer",
+                },
               }),
               placeholder: (base) => ({
                 ...base,
-                ...customFontStyles({ ...fontStyles, color: "#B2BEC3" })
-              })
+                ...customFontStyles({ ...fontStyles, color: "#B2BEC3" }),
+              }),
             }}
-            pageSize={ 5 }
+            pageSize={5}
             filterOption={createFilter({ matchFrom: "start" })}
-            hideSelectedOptions={ false }
-            stateInputValue={ stateInputValue }
-            isSearchable={ false }
-            closeMenuOnSelect={ false }
+            hideSelectedOptions={false}
+            stateInputValue={stateInputValue}
+            isSearchable={false}
+            closeMenuOnSelect={false}
             onMenuInputFocus={() => setIsStateFocused(true)}
-            onChange={ handlePlaceStateChange }
-            value={ placeState }
+            onChange={handlePlaceStateChange}
+            value={placeState}
             placeholder="Location: "
-            onInputChange={
-              (value) => {
-                setStateInputValue(value)
-              }
-            }
+            onInputChange={(value) => {
+              setStateInputValue(value);
+            }}
             isMulti
             {...{
               menuIsOpen: isStateFocused || undefined,
-              isFocused: isStateFocused || undefined
+              isFocused: isStateFocused || undefined,
             }}
           />
           <div className="text-end custom-style-1">Advanced options</div>
@@ -391,12 +392,12 @@ const CollapseContent = ({ showCollapse, type, handleDataOrientationChange, hand
         <div className="d-flex justify-content-between">
           <div>
             <PlusLg className="me-2 plusLgStyle1" />
-            <span className="custom-style-1">Add denominator { `(max: 2)` }</span>
+            <span className="custom-style-1">Add denominator {`(max: 2)`}</span>
           </div>
         </div>
       </div>
     </Collapse>
   );
-}
+};
 
 export default CollapseContent;
