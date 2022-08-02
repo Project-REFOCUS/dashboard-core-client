@@ -24,7 +24,13 @@
   border-left: 4px solid $custom-orange !important;
 }
 
+#sidebarNavigation::-webkit-scrollbar {
+  display: none;
+}
+
 #sidebarNavigation{
+  overflow: hidden;
+
   .list-group-item{
     @include borderWRad1(1px, solid, $custom-grey-3, 0);
     @include fontStyle1(inherit, $fontLato, 18px, 22px, normal, 400);
