@@ -237,6 +237,8 @@ const DashboardContent = ({ setTabData, tabData, tabDataAll }) => {
         return "in the last 90 days";
       case "last365days":
         return "in the last 365 days";
+      case "fromJanuary2020":
+        return "from January 2020";
     }
 
     return "";
@@ -370,10 +372,9 @@ const DashboardContent = ({ setTabData, tabData, tabDataAll }) => {
       <Row className="g-0">
         <Col
           id="sidebar-container"
-          className="mb-sm-4 mb-4 mb-lg-0 "
+          className="mb-sm-4 mb-4 mb-lg-0"
           xl={2}
           lg={3}
-          style={{ overflow: "hidden" }}
         >
           <Sidebar setCategories={setCategories} categories={categories} />
         </Col>
