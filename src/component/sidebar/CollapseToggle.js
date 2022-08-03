@@ -34,7 +34,6 @@ const CollapseToggle = ({
             type="checkbox"
             checked={showCollapse}
             disabled={disabledCategory ? false : true}
-            onChange={() => handleCollapseToggle(type)}
           />
           <Form.Check.Label className={showCollapse ? `text-blue-3` : ``}>
             {label}
