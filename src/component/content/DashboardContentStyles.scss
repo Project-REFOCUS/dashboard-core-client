@@ -1,6 +1,14 @@
 @import '../../CustomVariables.scss';
 
+#sidebar-container::-webkit-scrollbar {
+  display: none;
+}
+
 #sidebar-container{
+  -ms-overflow-style: none; /* for Internet Explorer, Edge */
+  scrollbar-width: none; /* for Firefox */
+  overflow-y: scroll;
+
   background-color: $custom-grey-4;
   @include borderWRad1(1px, solid, $custom-grey-3, 4px);
   overflow: auto;
