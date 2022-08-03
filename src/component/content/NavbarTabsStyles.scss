@@ -25,16 +25,19 @@
       &:hover, &:focus{
         border-color: transparent;
       }
+      border-bottom: 1px solid rgba(177, 177, 177, 0.781);
     }
     
     .nav-link.active{
       color: $custom-blue-1;
+      border-bottom: 1px solid transparent;
     }
 
     .nav-item{
       margin-right: 4px;
       border-radius: 4px 4px 0px 0px;
     }
+
   }
 }
 
