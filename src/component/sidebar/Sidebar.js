@@ -139,7 +139,7 @@ const Sidebar = ({ setCategories, categories }) => {
   }
 
   return (
-    <ListGroup id="sidebarNavigation" className="overflow-hidden">
+    <ListGroup id="sidebarNavigation">
       <ListGroup.Item className="category-info-select-max-list-group-item">
         Select max. 2 categories
       </ListGroup.Item>
