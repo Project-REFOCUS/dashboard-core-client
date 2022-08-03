@@ -144,48 +144,24 @@ const Sidebar = ({ setCategories, categories }) => {
   };
 
   return (
-    <ListGroup id="sidebarNavigation">
-      <ListGroup.Item className="category-info-select-max-list-group-item">
+    <ListGroup id="sidebarNavigation" key="List-Group">
+      <ListGroup.Item
+        key="label-1"
+        className="category-info-select-max-list-group-item"
+      >
         Select max. 2 categories
       </ListGroup.Item>
-      {listOptions.map(({ key, showCollapse, label, borderLeftColor }) => {
-        return (
-          <ListGroup.Item
-            key={key}
-            variant={showCollapse ? `light` : `secondary`}
-            className={`${
-              showCollapse ? `border-left-${borderLeftColor}` : ``
-            }`}
-          >
-            {/* sidebar collapse toggle */}
-            <CollapseToggle
-              handleCollapseToggle={handleCollapseToggle}
-              showCollapse={showCollapse}
-              type={key}
-              label={label}
-              length={categories.length}
-              categories={categories}
-              handleIsDuplicate={() => {
-                const len = categories.length;
-                if (len < 2) {
-                  setIsDuplicate(key);
-                  handleSameCategory(key, "add");
-                }
-              }}
-              isDuplicate={isDuplicate}
-              handleSameCategory={handleSameCategory}
-            />
-
-            {/* sidebar collapse content */}
-            <CollapseContent
-              showCollapse={showCollapse}
-              type={key}
-              handleContentChange={handleContentChange}
-            />
-
-            {/* sidebar duplicate toggle */}
-            {isDuplicate === key && (
-              <>
+      {listOptions.map(
+        ({ key, showCollapse, label, borderLeftColor }, keyIdx) => {
+          return (
+            <React.Fragment key={key}>
+              <ListGroup.Item
+                variant={showCollapse ? `light` : `secondary`}
+                className={`${
+                  showCollapse ? `border-left-${borderLeftColor}` : ``
+                }`}
+              >
+                {/* sidebar collapse toggle */}
                 <CollapseToggle
                   handleCollapseToggle={handleCollapseToggle}
                   showCollapse={showCollapse}
@@ -193,31 +169,63 @@ const Sidebar = ({ setCategories, categories }) => {
                   label={label}
                   length={categories.length}
                   categories={categories}
-                  isDuplicate={isDuplicate}
-                  ctType="second"
                   handleIsDuplicate={() => {
-                    // Different function for original category and duplicate
-                    // only has remove button for duplicate category
                     const len = categories.length;
-                    if (len === 2) {
-                      setIsDuplicate(""); // empty string -> no more duplicates
-                      handleSameCategory(key, "remove");
+                    if (len < 2) {
+                      setIsDuplicate(key);
+                      handleSameCategory(key, "add");
                     }
                   }}
+                  isDuplicate={isDuplicate}
+                  handleSameCategory={handleSameCategory}
                 />
-
                 {/* sidebar collapse content */}
                 <CollapseContent
                   showCollapse={showCollapse}
                   type={key}
                   handleContentChange={handleContentChange}
-                  ctType="second"
                 />
-              </>
-            )}
-          </ListGroup.Item>
-        );
-      })}
+              </ListGroup.Item>
+              {isDuplicate === key && (
+                <ListGroup.Item
+                  variant={showCollapse ? `light` : `secondary`}
+                  className={`${
+                    showCollapse ? `border-left-${borderLeftColor}` : ``
+                  }`}
+                >
+                  <CollapseToggle
+                    handleCollapseToggle={handleCollapseToggle}
+                    showCollapse={showCollapse}
+                    type={key}
+                    label={label}
+                    length={categories.length}
+                    categories={categories}
+                    isDuplicate={isDuplicate}
+                    ctType="second"
+                    handleIsDuplicate={() => {
+                      // Different function for original category and duplicate
+                      // only has remove button for duplicate category
+                      const len = categories.length;
+                      if (len === 2) {
+                        setIsDuplicate(""); // empty string -> no more duplicates
+                        handleSameCategory(key, "remove");
+                      }
+                    }}
+                  />
+
+                  {/* sidebar collapse content */}
+                  <CollapseContent
+                    showCollapse={showCollapse}
+                    type={key}
+                    handleContentChange={handleContentChange}
+                    ctType="second"
+                  />
+                </ListGroup.Item>
+              )}
+            </React.Fragment>
+          );
+        }
+      )}
     </ListGroup>
   );
 };
