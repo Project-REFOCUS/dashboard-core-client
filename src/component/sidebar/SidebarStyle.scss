@@ -24,6 +24,10 @@
   border-left: 4px solid $custom-orange !important;
 }
 
+.border-left-blue {
+  border-left: 4px solid $custom-blue-1 !important;
+}
+
 #sidebarNavigation{
   .list-group-item{
     @include borderWRad1(1px, solid, $custom-grey-3, 0);

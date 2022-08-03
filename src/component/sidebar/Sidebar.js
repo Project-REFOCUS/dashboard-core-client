@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ListGroup, ListGroupItem } from "react-bootstrap";
+import { ListGroup } from "react-bootstrap";
 import CollapseToggle from "./CollapseToggle";
 import CollapseContent from "./CollapseContent";
 
@@ -54,6 +54,12 @@ const ListGroupOptions = [
     borderLeftColor: "orange",
     showCollapse: false,
   },
+  {
+    key: "Twitter",
+    label: "Twitter",
+    borderLeftColor: "blue",
+    showCollapse: false,
+  },
 ];
 
 const Sidebar = ({ setCategories, categories }) => {
@@ -92,6 +98,7 @@ const Sidebar = ({ setCategories, categories }) => {
               return category.categoryName !== type;
             })
       );
+      setIsDuplicate(""); // reset any duplication if category is untoggled
     } else alert("Maximum categories are at 2. Over the limit");
   };
 
@@ -101,7 +108,7 @@ const Sidebar = ({ setCategories, categories }) => {
       res = [
         ...categories,
         {
-          categoryName: `${type}1`,
+          categoryName: `${type}`,
           dataOrientation: "",
           race: "",
           geography: [],
@@ -113,58 +120,56 @@ const Sidebar = ({ setCategories, categories }) => {
     setCategories(res);
   };
 
-  const handleDataOrientationChange = (type, value) => {
-    setCategoryData(type, { dataOrientation: value });
+  const handleContentChange = (type, payload, ctType = "first") => {
+    let newCategories = [...categories];
+    // same categories and diff categories
+    if (categories.length === 0) throw new Error("Modifying empty categories");
+
+    if (isDuplicate !== "") {
+      // there is duplication
+      const dupIndex = ctType === "first" ? 0 : 1; // ctType if content change is from first or 2nd same category content
+
+      newCategories[dupIndex] = {
+        ...newCategories[dupIndex],
+        ...payload,
+      };
+    } else {
+      // payload be the {property: value} object
+      const catMapFunction = (cat) =>
+        cat.categoryName === type ? { ...cat, ...payload } : cat;
+      newCategories = categories.map(catMapFunction);
+    }
+
+    setCategories(newCategories);
   };
-
-  const handleRaceChange = (type, value) => {
-    setCategoryData(type, { race: value });
-  };
-
-  const handleGeographyChange = (type, value) => {
-    setCategoryData(type, { geography: value });
-  };
-
-  function setCategoryData(type, objectData) {
-    setCategories(
-      categories.map((category) => {
-        if (category.categoryName === type)
-          return { ...category, ...objectData };
-
-        return category;
-      })
-    );
-  }
 
   return (
     <ListGroup id="sidebarNavigation">
       <ListGroup.Item className="category-info-select-max-list-group-item">
         Select max. 2 categories
       </ListGroup.Item>
-      {listOptions.map((listGroupItem) => {
+      {listOptions.map(({ key, showCollapse, label, borderLeftColor }) => {
         return (
           <ListGroup.Item
-            key={listGroupItem.key}
-            variant={listGroupItem.showCollapse ? `light` : `secondary`}
+            key={key}
+            variant={showCollapse ? `light` : `secondary`}
             className={`${
-              listGroupItem.showCollapse
-                ? `border-left-${listGroupItem.borderLeftColor}`
-                : ``
+              showCollapse ? `border-left-${borderLeftColor}` : ``
             }`}
           >
             {/* sidebar collapse toggle */}
             <CollapseToggle
               handleCollapseToggle={handleCollapseToggle}
-              showCollapse={listGroupItem.showCollapse}
-              type={listGroupItem.key}
-              label={listGroupItem.label}
+              showCollapse={showCollapse}
+              type={key}
+              label={label}
               length={categories.length}
               categories={categories}
               handleIsDuplicate={() => {
                 const len = categories.length;
                 if (len < 2) {
-                  setIsDuplicate(listGroupItem.key);
-                  handleSameCategory(listGroupItem.key, "add");
+                  setIsDuplicate(key);
+                  handleSameCategory(key, "add");
                 }
               }}
               isDuplicate={isDuplicate}
@@ -173,20 +178,19 @@ const Sidebar = ({ setCategories, categories }) => {
 
             {/* sidebar collapse content */}
             <CollapseContent
-              showCollapse={listGroupItem.showCollapse}
-              type={listGroupItem.key}
-              handleDataOrientationChange={handleDataOrientationChange}
-              handleRaceChange={handleRaceChange}
-              handleGeographyChange={handleGeographyChange}
+              showCollapse={showCollapse}
+              type={key}
+              handleContentChange={handleContentChange}
             />
+
             {/* sidebar duplicate toggle */}
-            {isDuplicate === listGroupItem.key && (
+            {isDuplicate === key && (
               <>
                 <CollapseToggle
                   handleCollapseToggle={handleCollapseToggle}
-                  showCollapse={listGroupItem.showCollapse}
-                  type={listGroupItem.key}
-                  label={listGroupItem.label}
+                  showCollapse={showCollapse}
+                  type={key}
+                  label={label}
                   length={categories.length}
                   categories={categories}
                   isDuplicate={isDuplicate}
@@ -196,19 +200,18 @@ const Sidebar = ({ setCategories, categories }) => {
                     // only has remove button for duplicate category
                     const len = categories.length;
                     if (len === 2) {
-                      setIsDuplicate(ListGroupItem.key);
-                      handleSameCategory(listGroupItem.key, "remove");
+                      setIsDuplicate(""); // empty string -> no more duplicates
+                      handleSameCategory(key, "remove");
                     }
                   }}
                 />
 
                 {/* sidebar collapse content */}
                 <CollapseContent
-                  showCollapse={listGroupItem.showCollapse}
-                  type={listGroupItem.key}
-                  handleDataOrientationChange={handleDataOrientationChange}
-                  handleRaceChange={handleRaceChange}
-                  handleGeographyChange={handleGeographyChange}
+                  showCollapse={showCollapse}
+                  type={key}
+                  handleContentChange={handleContentChange}
+                  ctType="second"
                 />
               </>
             )}
