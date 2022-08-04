@@ -25,7 +25,12 @@
       &:hover, &:focus{
         border-color: transparent;
       }
+      padding-bottom: 7px;
       border-bottom: 1px solid rgba(177, 177, 177, 0.781);
+    }
+    
+    #nav-plus {
+      border-bottom: 1px solid rgba(177, 177, 177, 0.781) !important;
     }
     
     .nav-link.active{
