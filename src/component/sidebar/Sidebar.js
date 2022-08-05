@@ -67,38 +67,41 @@ const Sidebar = ({ setCategories, categories }) => {
   const [isDuplicate, setIsDuplicate] = useState("");
 
   const handleCollapseToggle = (type) => {
-    if (categories.length <= 2) {
-      let index = -1;
+    if (
+      (categories.length === 2 &&
+        categories.some((value) => {
+          return value.categoryName === type;
+        })) ||
+      categories.length < 2
+    ) {
+      setListOptions(
+        listOptions.map((listItem) => {
+          const showCollapse = !listItem.showCollapse;
 
-      const mapShowCollapse = (listItem, idx) => {
-        const { showCollapse, key } = listItem;
-        if (key === type) {
-          index = idx;
-          listItem.showCollapse = !showCollapse;
-        }
-        return listItem;
-      };
+          if (listItem.key === type) {
+            setCategories(
+              showCollapse
+                ? [
+                    ...categories,
+                    {
+                      categoryName: type,
+                      dataOrientation: "",
+                      race: "",
+                      geography: [],
+                    },
+                  ]
+                : categories.filter((category) => {
+                    return category.categoryName !== type;
+                  })
+            );
 
-      setListOptions(listOptions.map(mapShowCollapse));
+            return { ...listItem, showCollapse: !listItem.showCollapse };
+          }
 
-      const { showCollapse } = listOptions[index];
-      setCategories(
-        showCollapse
-          ? [
-              ...categories,
-              {
-                id: categories.length,
-                categoryName: type,
-                dataOrientation: "",
-                race: "",
-                geography: [],
-              },
-            ]
-          : categories.filter((category) => {
-              return category.categoryName !== type;
-            })
+          return listItem;
+        })
       );
-      setIsDuplicate(""); // reset any duplication if category is untoggled
+      setIsDuplicate("");
     } else alert("Maximum categories are at 2. Over the limit");
   };
 
