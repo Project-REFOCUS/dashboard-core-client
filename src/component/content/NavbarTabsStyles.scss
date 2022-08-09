@@ -39,8 +39,12 @@
     }
 
     .nav-item{
+      margin-left: 4px;
+      display: flex;
+    }
+
+    .nav-item-remover{
       margin-right: 4px;
-      border-radius: 4px 4px 0px 0px;
     }
 
   }

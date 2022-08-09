@@ -32,6 +32,10 @@ const NavbarTabs = () => {
     );
   };
 
+  const handleRemoveTab = (key) => {
+    return setTabList(tabList.filter((item) => item.key !== key));
+  };
+
   return (
     <div id="tabNavigation">
       <ul className="nav nav-tabs" role="tablist">
@@ -45,6 +49,7 @@ const NavbarTabs = () => {
               label={label}
               tabKey={key}
               handleTabChange={handleTabChange}
+              handleRemoveTab={handleRemoveTab}
             />
           );
         })}
