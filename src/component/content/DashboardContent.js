@@ -19,6 +19,10 @@ import "../customStyles.scss";
 
 const selectPeriod = [
   {
+    value: "last7days",
+    label: "Last 7 days",
+  },
+  {
     value: "last30days",
     label: "Last 30 days",
   },
@@ -231,6 +235,8 @@ const DashboardContent = ({ setTabData, tabData, tabDataAll }) => {
 
   function dataPeriodText(dataPeriod) {
     switch (dataPeriod) {
+      case "last7days":
+        return "in the last 7 days";
       case "last30days":
         return "in the last 30 days";
       case "last90days":
