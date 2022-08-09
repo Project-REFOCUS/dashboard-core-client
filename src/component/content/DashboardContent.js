@@ -335,6 +335,7 @@ const DashboardContent = ({ setTabData, tabData, tabDataAll }) => {
                     ...base,
                     "&:hover": {
                       backgroundColor: "#D3ECFF",
+                      cursor: "pointer",
                     },
                     minHeight: "30px",
                   }),

@@ -185,6 +185,7 @@ const ReactSelectStyle1 = {
     ...base,
     "&:hover": {
       backgroundColor: "#D3ECFF",
+      cursor: "pointer",
     },
     minHeight: "30px",
   }),
@@ -323,6 +324,7 @@ const CollapseContent = ({
                 ...base,
                 "&:hover": {
                   backgroundColor: "#D3ECFF",
+                  cursor: "pointer",
                 },
                 minHeight: "30px",
               }),
