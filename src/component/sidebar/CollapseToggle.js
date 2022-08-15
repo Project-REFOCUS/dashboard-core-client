@@ -23,13 +23,14 @@ const CollapseToggle = ({
     categories.length < 2;
 
   return (
-    <div className="d-flex justify-content-between align-items-center pointer">
+    <div className="d-flex justify-content-between align-items-center">
       <div
         className="d-flex align-items-center flex-grow-1"
         onClick={() => handleCollapseToggle(type)}
       >
         <Form.Check>
           <Form.Check.Input
+            className="pointer"
             id={label}
             type="checkbox"
             checked={showCollapse}
