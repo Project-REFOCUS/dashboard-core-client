@@ -43,7 +43,7 @@ const CollapseToggle = ({
       </div>
       {showCollapse && !isDuplicate ? (
         <PlusLg
-          className="icon-style-1"
+          className={`icon-style-1 ${length === 2 ? "" : "pointer"}`}
           color={`${length < 2 ? "#636E72" : "#B2BEC3"}`}
           onClick={handleIsDuplicate}
         />
