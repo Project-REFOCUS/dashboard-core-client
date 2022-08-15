@@ -23,7 +23,7 @@ const CollapseToggle = ({
     categories.length < 2;
 
   return (
-    <div className="d-flex justify-content-between align-items-center">
+    <div className="d-flex justify-content-between align-items-center pointer">
       <div
         className="d-flex align-items-center flex-grow-1"
         onClick={() => handleCollapseToggle(type)}
@@ -36,7 +36,9 @@ const CollapseToggle = ({
             disabled={disabledCategory ? false : true}
             readOnly
           />
-          <Form.Check.Label className={showCollapse ? `text-blue-3` : ``}>
+          <Form.Check.Label
+            className={showCollapse ? `text-blue-3 pointer` : `pointer`}
+          >
             {label}
           </Form.Check.Label>
         </Form.Check>
@@ -56,7 +58,7 @@ const CollapseToggle = ({
 };
 
 const TrashIcon = ({ handleIsDuplicate }) => (
-  <div className="trash-icon-svg" onClick={handleIsDuplicate}>
+  <div className="trash-icon-svg pointer" onClick={handleIsDuplicate}>
     <svg
       width="14"
       height="14"
