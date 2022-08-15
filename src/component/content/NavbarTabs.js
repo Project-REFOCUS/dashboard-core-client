@@ -33,7 +33,19 @@ const NavbarTabs = () => {
   };
 
   const handleRemoveTab = (key) => {
-    return setTabList(tabList.filter((item) => item.key !== key));
+    const newTabList = tabList.filter((item) => item.key !== key);
+    const newTabData = tabData.filter((item) => item.tabKey !== key);
+
+    newTabList.forEach((item, idx) => {
+      if (idx > 0) {
+        var [key, label] = [`Dashboard-${idx}`, `Dashboard ${idx}`];
+        newTabList[idx].key = key;
+        newTabList[idx].label = label;
+        newTabData[idx].tabKey = key;
+      }
+    });
+    setTabList(newTabList);
+    setTabData(newTabData);
   };
 
   return (
