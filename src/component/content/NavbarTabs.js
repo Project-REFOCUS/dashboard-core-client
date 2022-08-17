@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PlusLg } from "react-bootstrap-icons";
 
 import NavbarTabsItem from "./NavbarTabsItem";
@@ -8,6 +8,9 @@ import "./NavbarTabsStyles.scss";
 import "../customStyles.scss";
 
 const NavbarTabs = () => {
+  const [ lastTabCount, setLastTabCount ] = useState(0);
+  const [ lastCurrentTab, setLastCurrentTab ] = useState(0);
+
   const [tabData, setTabData] = useState([
     {
       tabKey: "Dashboard",
@@ -24,6 +27,24 @@ const NavbarTabs = () => {
     },
   ]);
 
+  useEffect(
+    () => {
+      if(!tabList.some((tab) => tab.tabIsActive === true)){
+       setTabList(
+          tabList.map(
+            (tab, index) => {
+              if(index === 0)
+                return { ...tab, tabIsActive: true };
+               
+              return tab;
+            }
+          )
+        )
+      }
+    },
+    [tabList]
+  );
+
   const handleTabChange = (key) => {
     setTabList(
       tabList.map((tab) => {
@@ -33,7 +54,15 @@ const NavbarTabs = () => {
   };
 
   const handleRemoveTab = (key) => {
-    const newTabList = tabList.filter((item) => item.key !== key);
+    tabList.forEach((tab, index) => {
+      if(tab.key === key) setLastCurrentTab(index); 
+    });
+
+    setTabList(tabList.filter((tab) => tab.key !== key));
+    setTabData(tabData.filter((tab) => tab.tabKey !== key));
+
+    
+    /* const newTabList = tabList.filter((item) => item.key !== key);
     const newTabData = tabData.filter((item) => item.tabKey !== key);
 
     newTabList.forEach((item, idx) => {
@@ -45,7 +74,7 @@ const NavbarTabs = () => {
       }
     });
     setTabList(newTabList);
-    setTabData(newTabData);
+    setTabData(newTabData); */
   };
 
   return (
@@ -60,6 +89,7 @@ const NavbarTabs = () => {
               tabIsActive={tabIsActive}
               label={label}
               tabKey={key}
+              length={ tabList.length }
               handleTabChange={handleTabChange}
               handleRemoveTab={handleRemoveTab}
             />
@@ -69,13 +99,12 @@ const NavbarTabs = () => {
           className="nav-item"
           role="presentaion"
           onClick={() => {
-            const tabsLength = tabList.length;
-
+            const tabCount = lastTabCount + 1;
             setTabList([
               ...tabList,
               {
-                key: `Dashboard-${tabsLength}`,
-                label: `Dashboard ${tabsLength}`,
+                key: `Dashboard-${ tabCount }`,
+                label: `Dashboard ${ tabCount }`,
                 tabIsActive: false,
               },
             ]);
@@ -83,11 +112,13 @@ const NavbarTabs = () => {
             setTabData([
               ...tabData,
               {
-                tabKey: `Dashboard-${tabsLength}`,
+                tabKey: `Dashboard-${ tabCount }`,
                 dataPeriod: "",
                 categories: [],
               },
             ]);
+
+            setLastTabCount((lastTabCount) => lastTabCount + 1);
           }}
         >
           <button type="button" className="nav-link" role="tab">

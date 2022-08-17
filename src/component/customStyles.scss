@@ -90,6 +90,11 @@ label.form-label{
   color: $custom-black-2;
 }
 
+.remove-tag-icon-2{
+  @include wxhStyle1(16px, 16px);
+  color: $custom-black-2;
+}
+
 .hr-style-1{
   color: $custom-grey-3;
   background-color: $custom-grey-3;
