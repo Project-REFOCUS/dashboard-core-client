@@ -15,6 +15,11 @@ const esbuildPluginProxyConfiguration = {
             { name: 'esbuildJsAssets', methods: ['GET'], urls: ['.*js'] },
             { name: 'esbuildCssAssets', methods: ['GET'], urls: ['.*css'] },
             { name: 'esbuildSourceMap', methods: ['GET'], urls: ['.*js.map'] },
+            {
+                name: 'projectRefocusRemote',
+                methods: ['GET'],
+                urls: ['/dashboard-service/.*']
+            }
         ],
         esbuild: {
             host: 'localhost',
@@ -29,12 +34,16 @@ const esbuildPluginProxyConfiguration = {
         esbuildCssAssets: {
             host: 'localhost',
             port: internalPort,
-            path: '/js/index.css'
+            path: '/css/index.css'
         },
         esbuildSourceMap: {
             host: 'localhost',
             port: internalPort,
             path: '/js/index.js.map'
+        },
+        projectRefocusRemote: {
+            host: 'projectrefocus.gscbinc.com',
+            port: 80
         }
     }
 };

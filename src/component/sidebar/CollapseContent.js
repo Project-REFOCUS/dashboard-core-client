@@ -1,30 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { Form, Collapse } from "react-bootstrap";
-import { PlusLg } from "react-bootstrap-icons";
-import ReactSelect, { components, createFilter } from "react-select";
+import React, { useEffect, useState } from 'react';
+import { Form, Collapse } from 'react-bootstrap';
+import { PlusLg } from 'react-bootstrap-icons';
+import ReactSelect, { components, createFilter } from 'react-select';
 import { XLg } from "react-bootstrap-icons";
+import { getRaceEthnicityCategories, getListOfStates } from '../../common/services';
 
-import { dataOrientationOption, raceOption, stateOptions } from "../../data";
-import { fontStyles, customFontStyles } from "../customFontStyleHelper";
-import { isEmptyKeyObject } from "../../utility_helpers";
+import { dataOrientationOption } from '../../data';
+import { fontStyles, customFontStyles } from '../customFontStyleHelper';
+import { isEmptyKeyObject } from '../../utility_helpers';
 
-import "../customStyles.scss";
-import "../../CustomVariables.scss";
-
-const groupStateOptions = [
-  {
-    label: "United States",
-    options: [{ value: "deselect", label: "Deselect All" }, ...stateOptions],
-  },
-];
+import '../customStyles.scss';
+import '../../CustomVariables.scss';
 
 const stateMenuListComponent = ({ selectProps, ...props }) => {
   const { onInputChange, stateInputValue, onMenuInputFocus } = selectProps;
 
   const ariaAttributes = {
-    "aria-autocomplete": "list",
-    "aria-label": selectProps["aria-label"],
-    "aria-labelledby": selectProps["aria-labelledby"],
+    'aria-autocomplete': 'list',
+    'aria-label': selectProps['aria-label'],
+    'aria-labelledby': selectProps['aria-labelledby'],
   };
 
   const focusAndStopProp = (e) => {
@@ -226,7 +220,11 @@ const CollapseContent = ({
   const [stateInputValue, setStateInputValue] = useState("");
 
   const [dataOrientation, setDataOrientation] = useState({});
+  const [raceLoading, setRaceLoading] = useState(true);
+  const [raceOptions, setRaceOptions] = useState([]);
   const [race, setRace] = useState({});
+  const [stateLoading, setStateLoading] = useState(true);
+  const [stateOptions, setStateOptions] = useState([]);
   const [placeState, setPlaceState] = useState([]);
 
   useEffect(() => {
@@ -236,6 +234,21 @@ const CollapseContent = ({
       setPlaceState([]);
     }
   }, [showCollapse]);
+
+
+  useEffect(() => {
+    getRaceEthnicityCategories().then(options => {
+      setRaceLoading(false);
+      setRaceOptions(options);
+    });
+  }, []);
+
+  useEffect(() => {
+    getListOfStates().then(options => {
+      setStateLoading(false);
+      setStateOptions(options);
+    });
+  }, []);
 
   /* handle changes on the category data */
   const handleReactSelectChange = (selected, action) => {
@@ -293,7 +306,8 @@ const CollapseContent = ({
         <div className="mb-2">
           <Form.Label className="mb-0">Race</Form.Label>
           <ReactSelect
-            options={raceOption}
+            options={raceOptions}
+            isLoading={raceLoading}
             styles={ReactSelectStyle1}
             isDisabled={isEmptyKeyObject(dataOrientation)}
             value={isEmptyKeyObject(race) ? null : race}
@@ -308,7 +322,8 @@ const CollapseContent = ({
         <div className="mb-2">
           <Form.Label className="mb-0">Geography</Form.Label>
           <ReactSelect
-            options={groupStateOptions}
+            isLoading={stateLoading}
+            options={stateOptions}
             components={{
               MenuList: stateMenuListComponent,
               Option: stateOptionComponent,

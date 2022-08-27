@@ -12,8 +12,7 @@ module.exports = {
         bundle: true,
         minify: !isDevelopment,
         loader: { '.js': 'jsx', '.jsx': 'jsx', '.ts': 'tsx', '.tsx': 'tsx' },
-        entryNames: '/js/index',
-        assetNames: '/[ext]/[name]',
+        entryNames: '/[ext]/index',
         outdir: './dist',
         plugins: [
             copy({

@@ -1,63 +1,51 @@
-import React, { useState } from "react";
-import { ListGroup } from "react-bootstrap";
-import CollapseToggle from "./CollapseToggle";
-import CollapseContent from "./CollapseContent";
+import React, { useState } from 'react';
+import { ListGroup } from 'react-bootstrap';
+import CollapseToggle from './CollapseToggle';
+import CollapseContent from './CollapseContent';
 
-import "./SidebarStyle.scss";
+import './SidebarStyle.scss';
 
 const ListGroupOptions = [
   {
-    key: "Cases",
-    label: "Cases",
-    borderLeftColor: "hotPink",
+    key: 'Cases',
+    label: 'Cases',
+    borderLeftColor: 'hotPink',
     showCollapse: false,
   },
   {
-    key: "Deaths",
-    label: "Deaths",
-    borderLeftColor: "purple",
+    key: 'Deaths',
+    label: 'Deaths',
+    borderLeftColor: 'purple',
     showCollapse: false,
   },
   {
-    key: "Tests",
-    label: "Tests",
-    borderLeftColor: "yellow",
+    key: 'Tests',
+    label: 'Tests',
+    borderLeftColor: 'yellow',
     showCollapse: false,
   },
   {
-    key: "Vaccinations",
-    label: "Vaccinations",
-    borderLeftColor: "green-1",
+    key: 'Vaccinations',
+    label: 'Vaccinations',
+    borderLeftColor: 'green-1',
     showCollapse: false,
   },
   {
-    key: "Police shootings",
-    label: "Police shootings",
-    borderLeftColor: "green-2",
+    key: 'Police shootings',
+    label: 'Police shootings',
+    borderLeftColor: 'green-2',
     showCollapse: false,
   },
   {
-    key: "Population estimates",
-    label: (
-      <div className="d-inline-block">
-        <span className="d-block">Population estimates</span>
-        <span
-          className="d-block"
-          style={{
-            fontSize: "14px",
-          }}
-        >
-          ( 1 year estimates )
-        </span>
-      </div>
-    ),
-    borderLeftColor: "orange",
+    key: 'Population estimates',
+    label: 'Population estimates',
+    borderLeftColor: 'orange',
     showCollapse: false,
   },
   {
-    key: "Twitter",
-    label: "Twitter",
-    borderLeftColor: "blue",
+    key: 'Twitter',
+    label: 'Twitter',
+    borderLeftColor: 'blue',
     showCollapse: false,
   },
 ];
@@ -102,7 +90,7 @@ const Sidebar = ({ setCategories, categories }) => {
         })
       );
       setIsDuplicate("");
-    } else alert("Maximum categories are at 2. Over the limit");
+    }
   };
 
   const handleSameCategory = (type, changeType) => {
