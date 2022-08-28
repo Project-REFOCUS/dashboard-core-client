@@ -18,8 +18,8 @@ module.exports = {
             copy({
                 resolveFrom: 'cwd',
                 assets: {
-                    from: ['public/index.html'],
-                    to: ['dist/index.html']
+                    from: ['public/*'],
+                    to: ['dist/*']
                 },
                 copyOnStart: isDevelopment
             }),

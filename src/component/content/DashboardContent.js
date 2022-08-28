@@ -3,7 +3,7 @@ import { Row, Col, Stack, Image, Form } from "react-bootstrap";
 import ReactSelect, { components } from "react-select";
 
 import Sidebar from "../sidebar/Sidebar";
-import EmptyDataImg from "../../empty_data_img.png";
+import { DashboardGraph } from '../../dashboard';
 
 import { fontStyles, customFontStyles } from "../customFontStyleHelper";
 import {
@@ -46,7 +46,7 @@ const PeriodMenuComponent = ({ selectProps, ...props }) => {
   );
 };
 const PeriodOptionComponent = ({ selectProps, ...props }) => {
-  return <components.Option {...props} selectProps={selectProps} />;
+  return <components.Option {...props} selectProps={selectProps}>{props.children}</components.Option>;
 };
 
 const DashboardContent = ({ setTabData, tabData, tabDataAll }) => {
@@ -377,31 +377,12 @@ const DashboardContent = ({ setTabData, tabData, tabDataAll }) => {
         </Row>
       </div>
       <Row className="g-0">
-        <Col
-          id="sidebar-container"
-          className="mb-sm-4 mb-4 mb-lg-0"
-          xl={2}
-          lg={3}
-        >
+        <Col id="sidebar-container" className="mb-sm-4 mb-4 mb-lg-0" xl={2} lg={3}>
           <Sidebar setCategories={setCategories} categories={categories} />
         </Col>
         <Col className="mb-sm-4 mb-4" xl={10} lg={9}>
           <div className="px-lg-3">
-            <Stack
-              id="data-content-container"
-              className="d-flex justify-content-center align-items-center"
-            >
-              <div className="d-flex justify-content-center align-items-center ellipse-style-1">
-                <Image
-                  src={EmptyDataImg}
-                  alt="empty-data-pic"
-                  className="m-auto d-block"
-                />
-              </div>
-              <p className="mt-2 paragraph-style-1">
-                Select COVID-19 category to start
-              </p>
-            </Stack>
+            <DashboardGraph />
           </div>
         </Col>
       </Row>

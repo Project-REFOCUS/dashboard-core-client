@@ -12,9 +12,11 @@ const esbuildPluginProxyConfiguration = {
         path: '/',
         filters: [
             { name: 'esbuild', methods: ['GET'], urls: ['/'] },
-            { name: 'esbuildJsAssets', methods: ['GET'], urls: ['.*js'] },
-            { name: 'esbuildCssAssets', methods: ['GET'], urls: ['.*css'] },
-            { name: 'esbuildSourceMap', methods: ['GET'], urls: ['.*js.map'] },
+            { name: 'esbuildJsAssets', methods: ['GET'], urls: ['.*js$'] },
+            { name: 'esbuildCssAssets', methods: ['GET'], urls: ['.*css$'] },
+            { name: 'esbuildImgAssets', methods: ['GET'], urls: ['.*(png|jpg|jpeg)$'] },
+            { name: 'esbuildJsonAssets', methods: ['GET'], urls: ['.*json$'] },
+            { name: 'esbuildSourceMap', methods: ['GET'], urls: ['.*js.map$'] },
             {
                 name: 'projectRefocusRemote',
                 methods: ['GET'],
@@ -35,6 +37,14 @@ const esbuildPluginProxyConfiguration = {
             host: 'localhost',
             port: internalPort,
             path: '/css/index.css'
+        },
+        esbuildImgAssets: {
+            host: 'localhost',
+            port: internalPort
+        },
+        esbuildJsonAssets: {
+            host: 'localhost',
+            port: internalPort
         },
         esbuildSourceMap: {
             host: 'localhost',
