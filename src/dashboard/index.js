@@ -1,3 +1,3 @@
-import DashboardGraph from './DashboardGraph';
+import DashboardLineGraph from './DashboardLineGraph';
 
-export { DashboardGraph };
+export { DashboardLineGraph };

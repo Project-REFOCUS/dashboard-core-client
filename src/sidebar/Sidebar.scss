@@ -1,0 +1,50 @@
+@import '../styles/variables/colors';
+
+$sidebar-active-border-left-width: 4px;
+
+.border-left-hot-pink {
+  border-left: $sidebar-active-border-left-width solid $hot-pink;
+}
+
+.border-left-purple {
+  border-left: $sidebar-active-border-left-width solid $purple;
+}
+
+.border-left-yellow {
+  border-left: $sidebar-active-border-left-width solid $yellow;
+}
+
+.border-left-green-1 {
+  border-left: $sidebar-active-border-left-width solid $green-1;
+}
+
+.border-left-orange {
+  border-left: $sidebar-active-border-left-width solid $orange;
+}
+
+.border-left-red {
+  border-left: $sidebar-active-border-left-width solid $red;
+}
+
+.border-left-pink {
+  border-left: $sidebar-active-border-left-width solid $pink;
+}
+
+.border-left-black {
+  border-left: $sidebar-active-border-left-width solid $black;
+}
+
+.border-left-blue-2 {
+  border-left: $sidebar-active-border-left-width solid $blue-2;
+}
+
+.sidebar-navigation {
+  .list-group-item {
+    padding: 0.8rem;
+  }
+
+  .list-group-item-secondary {
+    background-color: $grey-4;
+    color: $grey-1;
+  }
+}

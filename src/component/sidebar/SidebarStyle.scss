@@ -12,11 +12,11 @@
   border-left: 4px solid $custom-green-1 !important;
 }
 
-.border-left-purple{
+.border-left-purple {
   border-left: 4px solid $custom-purple !important;
 }
 
-.border-left-green-2{
+.border-left-green-2 {
   border-left: 4px solid $custom-green-2 !important;
 }
 
@@ -28,19 +28,19 @@
   border-left: 4px solid $custom-blue-1 !important;
 }
 
-#sidebarNavigation{
-  .list-group-item{
+#sidebarNavigation {
+  .list-group-item {
     @include borderWRad1(1px, solid, $custom-grey-3, 0);
     @include fontStyle1(inherit, $fontLato, 18px, 22px, normal, 400);
     padding: 0.8rem;
   }
 
-  .list-group-item-secondary{
+  .list-group-item-secondary {
     background-color: $custom-grey-4;
     color: $custom-grey-1
   }
 
-  .list-group-item.category-info-select-max-list-group-item{
+  .list-group-item.category-info-select-max-list-group-item {
     @include fontStyle1($custom-grey-1, $fontLato, 14px, 17px, normal, 400);
     background-color: inherit;
   }

@@ -18,7 +18,7 @@ const NavbarTabsItem = ({
           id={`tab-${tabKey}`}
           className={`nav-link ${tabIsActive ? `active` : ``}`}
           role="tab"
-          style={{ borderRadius: tabKey !== "Dashboard" && "4px 0px 0px 0px" }}
+          style={{ borderRadius: tabKey !== 'Dashboard' && '4px 0px 0px 0px' }}
           onClick={() => {
             handleTabChange(tabKey);
           }}
@@ -26,10 +26,10 @@ const NavbarTabsItem = ({
           {label}
         </button>
         {
-          length > 1 && 
+          length > 1 &&
           (
-            <span 
-              style={{ 
+            <span
+              style={{
                 position: "absolute",
                 top: "-12px",
                 right: "-8px"

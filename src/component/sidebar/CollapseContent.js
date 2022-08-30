@@ -4,6 +4,7 @@ import { PlusLg } from 'react-bootstrap-icons';
 import ReactSelect, { components, createFilter } from 'react-select';
 import { XLg } from "react-bootstrap-icons";
 import { getRaceEthnicityCategories, getListOfStates } from '../../common/services';
+import { getDataOrientationOptions } from '../../common/orientation';
 
 import { dataOrientationOption } from '../../data';
 import { fontStyles, customFontStyles } from '../customFontStyleHelper';
@@ -211,6 +212,7 @@ const ReactSelectStyle1 = {
 };
 
 const CollapseContent = ({
+  label,
   showCollapse,
   type,
   handleContentChange,
@@ -292,7 +294,7 @@ const CollapseContent = ({
         <div className="mb-2">
           <Form.Label className="mb-0">Data Orientation</Form.Label>
           <ReactSelect
-            options={dataOrientationOption}
+            options={getDataOrientationOptions(label)}
             styles={ReactSelectStyle1}
             name="dataOrientationSelectName"
             onChange={handleReactSelectChange}

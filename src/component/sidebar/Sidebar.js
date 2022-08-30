@@ -114,7 +114,7 @@ const Sidebar = ({ setCategories, categories }) => {
   const handleContentChange = (type, payload, ctType = "first") => {
     let newCategories = [...categories];
     // same categories and diff categories
-    if (categories.length === 0) throw new Error("Modifying empty categories");
+    // if (categories.length === 0) throw new Error("Modifying empty categories");
 
     if (isDuplicate !== "") {
       // there is duplication
@@ -148,9 +148,7 @@ const Sidebar = ({ setCategories, categories }) => {
             <React.Fragment key={key}>
               <ListGroup.Item
                 variant={showCollapse ? `light` : `secondary`}
-                className={`${
-                  showCollapse ? `border-left-${borderLeftColor}` : ``
-                }`}
+                className={`${showCollapse ? `border-left-${borderLeftColor}` : ``}`}
               >
                 {/* sidebar collapse toggle */}
                 <CollapseToggle
@@ -172,6 +170,7 @@ const Sidebar = ({ setCategories, categories }) => {
                 />
                 {/* sidebar collapse content */}
                 <CollapseContent
+                  label={label}
                   showCollapse={showCollapse}
                   type={key}
                   handleContentChange={handleContentChange}

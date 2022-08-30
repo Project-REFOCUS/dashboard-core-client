@@ -1,8 +1,8 @@
-import React from "react";
-import { Form } from "react-bootstrap";
-import { PlusLg } from "react-bootstrap-icons";
+import React from 'react';
+import { Form } from 'react-bootstrap';
+import { PlusLg } from 'react-bootstrap-icons';
 
-import "../customStyles.scss";
+import '../customStyles.scss';
 
 const CollapseToggle = ({
   handleCollapseToggle,
@@ -13,7 +13,7 @@ const CollapseToggle = ({
   categories,
   handleIsDuplicate,
   isDuplicate,
-  ctType = "first",
+  ctType = 'first',
 }) => {
   const disabledCategory =
     (categories.length === 2 &&
@@ -34,12 +34,10 @@ const CollapseToggle = ({
             id={label}
             type="checkbox"
             checked={showCollapse}
-            disabled={disabledCategory ? false : true}
+            disabled={!disabledCategory}
             readOnly
           />
-          <Form.Check.Label
-            className={showCollapse ? `text-blue-3 pointer` : `pointer`}
-          >
+          <Form.Check.Label className={showCollapse ? 'text-blue-3 pointer' : 'pointer'}>
             {label}
           </Form.Check.Label>
         </Form.Check>

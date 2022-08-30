@@ -29,13 +29,13 @@ const NavbarTabs = () => {
 
   useEffect(
     () => {
-      if(!tabList.some((tab) => tab.tabIsActive === true)){
+      if(!tabList.some((tab) => tab.tabIsActive)){
        setTabList(
           tabList.map(
             (tab, index) => {
               if(index === 0)
                 return { ...tab, tabIsActive: true };
-               
+
               return tab;
             }
           )
@@ -55,26 +55,11 @@ const NavbarTabs = () => {
 
   const handleRemoveTab = (key) => {
     tabList.forEach((tab, index) => {
-      if(tab.key === key) setLastCurrentTab(index); 
+      if(tab.key === key) setLastCurrentTab(index);
     });
 
     setTabList(tabList.filter((tab) => tab.key !== key));
     setTabData(tabData.filter((tab) => tab.tabKey !== key));
-
-    
-    /* const newTabList = tabList.filter((item) => item.key !== key);
-    const newTabData = tabData.filter((item) => item.tabKey !== key);
-
-    newTabList.forEach((item, idx) => {
-      if (idx > 0) {
-        var [key, label] = [`Dashboard-${idx}`, `Dashboard ${idx}`];
-        newTabList[idx].key = key;
-        newTabList[idx].label = label;
-        newTabData[idx].tabKey = key;
-      }
-    });
-    setTabList(newTabList);
-    setTabData(newTabData); */
   };
 
   return (

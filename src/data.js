@@ -1,5 +1,9 @@
 export const dataOrientationOption = [
   {
+    value: 'daily',
+    label: 'Daily'
+  },
+  {
     value: "dailyPer100k",
     label: "Daily per 100,000"
   },

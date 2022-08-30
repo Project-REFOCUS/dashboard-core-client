@@ -3,7 +3,7 @@ import { Row, Col, Stack, Image, Form } from "react-bootstrap";
 import ReactSelect, { components } from "react-select";
 
 import Sidebar from "../sidebar/Sidebar";
-import { DashboardGraph } from '../../dashboard';
+import { DashboardLineGraph } from '../../dashboard';
 
 import { fontStyles, customFontStyles } from "../customFontStyleHelper";
 import {
@@ -51,8 +51,9 @@ const PeriodOptionComponent = ({ selectProps, ...props }) => {
 
 const DashboardContent = ({ setTabData, tabData, tabDataAll }) => {
   const [categories, setCategories] = useState([]);
-  const [messageText, setMessageText] = useState("");
+  const [messageText, setMessageText] = useState('');
   const [periodValue, setPeriodValue] = useState({});
+  const [graphIsLoading, setGraphIsLoading] = useState(false);
 
   const handlePeriodChange = (selected) => {
     setPeriodValue(selected);
@@ -382,7 +383,7 @@ const DashboardContent = ({ setTabData, tabData, tabDataAll }) => {
         </Col>
         <Col className="mb-sm-4 mb-4" xl={10} lg={9}>
           <div className="px-lg-3">
-            <DashboardGraph />
+            <DashboardLineGraph />
           </div>
         </Col>
       </Row>

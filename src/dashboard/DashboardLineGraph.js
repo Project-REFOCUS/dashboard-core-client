@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
 import React from 'react';
-import { useEffect, useMemo, useRef } from 'react';
-import { Image, Stack } from 'react-bootstrap';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Image, Spinner, Stack } from 'react-bootstrap';
 import EmptyDataImg from '../empty_data_img.png';
+import DashboardGraphSpinner from './DashboardGraphSpinner';
 
 const data = [
     {date: '2022-01-01T00:00', value: 5},
@@ -31,13 +32,15 @@ const data = [
     {date: '2022-01-24T00:00', value: 350},
 ];
 
-const DashboardGraph = () => {
+const DashboardLineGraph = ({ leftAxisData, isLoading }) => {
+    const [graphDimensions, setGraphDimensions] = useState(null);
     const graphContainerElement = useRef();
     const maxSignificantDigits = useMemo(
         () => data.reduce((maxValue, d) => Math.max(maxValue, String(d.value).length), 0),
         [data]
     );
     const marginLeft = maxSignificantDigits * 5 + 20
+    /* *
     useEffect(() => {
         const dimensions = graphContainerElement.current.getBoundingClientRect();
         const svg = d3.select('#data-content-container')
@@ -73,8 +76,10 @@ const DashboardGraph = () => {
                 .x(d => xAxisScale(new Date(d.date)))
                 .y(d => yAxisScale(d.value))
             );
+        setGraphDimensions(dimensions);
     }, []);
-    return !1 ? (
+    /* */
+    return !0 ? (
         <Stack id="data-content-container" className="d-flex justify-content-center align-items-center">
             <div className="d-flex justify-content-center align-items-center ellipse-style-1">
                 <Image src={EmptyDataImg} alt="empty-data" className="m-auto d-block" />
@@ -82,8 +87,10 @@ const DashboardGraph = () => {
             <p className="mt-2 paragraph-style-1">Select a category to start</p>
         </Stack>
     ) : (
-        <div id="data-content-container" ref={graphContainerElement} className="d-flex"></div>
+        <div id="data-content-container" ref={graphContainerElement} className="d-flex">
+            {graphDimensions && isLoading && <DashboardGraphSpinner dimensions={graphDimensions} yOffset={-30} xOffset={0} />}
+        </div>
     );
 };
 
-export default DashboardGraph;
+export default DashboardLineGraph;
