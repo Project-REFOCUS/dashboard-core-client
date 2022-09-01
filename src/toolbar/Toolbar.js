@@ -19,7 +19,7 @@ const Toolbar = ({ title }) => {
                     <div className="text-wrap text-break">{title}</div>
                 </Col>
                 <Col xl={3} lg={4} md={5} xs={12} className="g-0">
-                    <div className="pl-lg-0 pe-lg-3">
+                    <div className="pl-lg-0 pe-lg-2">
                         <Form.Label className="mb-0">Period:</Form.Label>
                         <ReactSelect
                             options={selectOptions}

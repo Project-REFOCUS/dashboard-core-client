@@ -44,7 +44,11 @@ const Sidebar = () => {
     };
     return (
         <ListGroup id="sidebarNavigation" className="sidebar-navigation" key="List-Group">
-            <ListGroup.Item key="label-1" className="category-info-select-max-list-group-item">
+            <ListGroup.Item
+                key="label-1"
+                variant="secondary"
+                className="category-info-select-max-list-group-item"
+            >
                 Select max. 2 categories
             </ListGroup.Item>
             <SidebarCasesPanel

@@ -19,7 +19,7 @@ label.form-label{
 
 .icon-style-1{
   @include wxhStyle1(16px, 16px);
-  color: $custom-grey-1; 
+  color: $custom-grey-1;
 }
 
 .text-blue-3{
@@ -37,7 +37,7 @@ label.form-label{
     @include wxhStyle1(15px, 15px);
     cursor: pointer;
     vertical-align: middle;
-    
+
     &:focus{
       outline: 0;
       box-shadow: none;
@@ -61,19 +61,19 @@ label.form-label{
   }
 
   .form-check-label{
-    padding-left: 0.2rem; 
+    padding-left: 0.2rem;
   }
-  
+
 }
 
 .ellipse-style-1{
-  @include wxhStyle1(295px, 295px);
+  @include wxhStyle1(200px, 200px);
   background-color: $custom-grey-3;
   border-radius: 50%;
 }
 
 .paragraph-style-1{
-  @include fontStyle1($custom-grey-1, $fontOpenSans, 24px, 33px, normal, 400);
+  @include fontStyle1($custom-grey-1, $fontOpenSans, 18px, 33px, normal, 400);
 }
 
 .custom-style-1{

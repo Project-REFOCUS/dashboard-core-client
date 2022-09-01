@@ -79,14 +79,7 @@ const DashboardLineGraph = ({ leftAxisData, isLoading }) => {
         setGraphDimensions(dimensions);
     }, []);
     /* */
-    return !0 ? (
-        <Stack id="data-content-container" className="d-flex justify-content-center align-items-center">
-            <div className="d-flex justify-content-center align-items-center ellipse-style-1">
-                <Image src={EmptyDataImg} alt="empty-data" className="m-auto d-block" />
-            </div>
-            <p className="mt-2 paragraph-style-1">Select a category to start</p>
-        </Stack>
-    ) : (
+    return (
         <div id="data-content-container" ref={graphContainerElement} className="d-flex">
             {graphDimensions && isLoading && <DashboardGraphSpinner dimensions={graphDimensions} yOffset={-30} xOffset={0} />}
         </div>
