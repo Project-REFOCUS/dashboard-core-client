@@ -11,7 +11,7 @@ const selectOptions = [
     { label: 'Last 365 days', value: 'last365Days' }
 ];
 
-const Toolbar = ({ title }) => {
+const Toolbar = ({ title, onPeriodSelect }) => {
     return (
         <div className="container-fluid g-sm-0 ps-2 py-sm-2 py-md-2">
             <Row className="g-0 d-flex justify-content-md-center align-items-md-center flex-md-row">
@@ -24,6 +24,7 @@ const Toolbar = ({ title }) => {
                         <ReactSelect
                             options={selectOptions}
                             styles={ReactSelectStyle}
+                            onChange={onPeriodSelect}
                         />
                     </div>
                 </Col>

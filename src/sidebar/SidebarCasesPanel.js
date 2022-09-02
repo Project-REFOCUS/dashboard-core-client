@@ -18,9 +18,14 @@ const dataOrientationOptions = [
     { label: 'Percent change in daily cases over 14 days', value: 'percentChangeInDailyOver14' }
 ];
 
-const SidebarCasesPanel = ({ active, disabled, id, setActive }) => {
+const SidebarCasesPanel = ({ active, disabled, id, setActive, onDataOrientationSelect }) => {
     const [raceCategoryLoading, setRaceCategoryLoading] = useState(true);
     const [raceCategoryOptions, setRaceCategoryOptions] = useState([]);
+    const [orientation, setOrientation] = useState(null);
+    const onDataOrientationChange = dataOrientation => {
+        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value });
+        setOrientation(dataOrientation);
+    };
     useEffect(() => {
         getRaceEthnicityCategories().then(options => {
             setRaceCategoryOptions(options);
@@ -35,7 +40,12 @@ const SidebarCasesPanel = ({ active, disabled, id, setActive }) => {
             <div className="d-flex justify-content-between align-items-center">
                 <div
                     className="d-flex flex-column flex-grow-1 pointer"
-                    onClick={() => !disabled && setActive(id)}
+                    onClick={() => {
+                        if (!disabled) {
+                            onDataOrientationChange(orientation);
+                            setActive(id);
+                        }
+                    }}
                 >
                     <Form.Check>
                         <Form.Check.Input
@@ -57,6 +67,8 @@ const SidebarCasesPanel = ({ active, disabled, id, setActive }) => {
                                 <ReactSelect
                                     options={dataOrientationOptions}
                                     styles={ReactSelectStyle}
+                                    onChange={value => onDataOrientationChange(value)}
+                                    value={orientation}
                                 />
                             </div>
                             <div className="mb-2" onClick={e => e.stopPropagation()}>

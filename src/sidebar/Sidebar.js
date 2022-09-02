@@ -17,25 +17,27 @@ import SidebarTwitterPanel from './SidebarTwitterPanel';
 import './Sidebar.scss';
 
 const PANELS = {
-    CASES: 'panel-cases',
-    DEATHS: 'panel-deaths',
-    TESTS: 'panel-tests',
-    VACCINATIONS: 'panel-vaccinations',
-    POLICE_SHOOTINGS: 'panel-police-shootings',
-    EVICTIONS: 'panel-evictions',
-    GOOGLE_MOBILITY: 'panel-google-mobility',
-    COVID_BEHIND_BARS: 'panel-covid-behind-bars',
-    TWITTER: 'panel-twitter'
+    CASES: 'cases',
+    DEATHS: 'deaths',
+    TESTS: 'tests',
+    VACCINATIONS: 'vaccinations',
+    POLICE_SHOOTINGS: 'police-shootings',
+    EVICTIONS: 'evictions',
+    GOOGLE_MOBILITY: 'google-mobility',
+    COVID_BEHIND_BARS: 'covid-behind-bars',
+    TWITTER: 'twitter'
 };
 
 const isDisabledPanel = (activeSet, id) => activeSet.size === 2 && !activeSet.has(id);
 
-const Sidebar = () => {
+const Sidebar = ({ onCategoryUpdate }) => {
     const [activePanelSet, setActivePanelSet] = useState(new Set());
     const toggleActivePanel = id => {
         const updatedActivePanelSet = new Set(activePanelSet);
-        if (updatedActivePanelSet.has(id)) {
+        const exists = updatedActivePanelSet.has(id);
+        if (exists) {
             updatedActivePanelSet.delete(id);
+            onCategoryUpdate({name: id}, exists);
         }
         else {
             updatedActivePanelSet.add(id);
@@ -56,30 +58,35 @@ const Sidebar = () => {
                 active={activePanelSet.has(PANELS.CASES)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.CASES)}
                 setActive={toggleActivePanel}
+                onDataOrientationSelect={onCategoryUpdate}
             />
             <SidebarDeathsPanel
                 id={PANELS.DEATHS}
                 active={activePanelSet.has(PANELS.DEATHS)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.DEATHS)}
                 setActive={toggleActivePanel}
+                onDataOrientationSelect={onCategoryUpdate}
             />
             <SidebarTestsPanel
                 id={PANELS.TESTS}
                 active={activePanelSet.has(PANELS.TESTS)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.TESTS)}
                 setActive={toggleActivePanel}
+                onDataOrientationSelect={onCategoryUpdate}
             />
             <SidebarVaccinationsPanel
                 id={PANELS.VACCINATIONS}
                 active={activePanelSet.has(PANELS.VACCINATIONS)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.VACCINATIONS)}
                 setActive={toggleActivePanel}
+                onDataOrientationSelect={onCategoryUpdate}
             />
             <SidebarPoliceShootingsPanel
                 id={PANELS.POLICE_SHOOTINGS}
                 active={activePanelSet.has(PANELS.POLICE_SHOOTINGS)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.POLICE_SHOOTINGS)}
                 setActive={toggleActivePanel}
+                onDataOrientationSelect={onCategoryUpdate}
             />
             {/* *}
             <SidebarEvictionsPanel

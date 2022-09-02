@@ -22,9 +22,14 @@ const dataOrientationOptions = [
     { label: 'Percent change in mortality rate over 14 days', value: 'percentChangeInMortalityRateOver14' }
 ];
 
-const SidebarDeathsPanel = ({ id, active, disabled, setActive }) => {
+const SidebarDeathsPanel = ({ id, active, disabled, setActive, onDataOrientationSelect }) => {
     const [raceCategoryLoading, setRaceCategoryLoading] = useState(true);
     const [raceCategoryOptions, setRaceCategoryOptions] = useState([]);
+    const [orientation, setOrientation] = useState(null);
+    const onDataOrientationChange = dataOrientation => {
+        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value });
+        setOrientation(dataOrientation);
+    };
     useEffect(() => {
         getRaceEthnicityCategories().then(options => {
             setRaceCategoryOptions(options);
@@ -39,7 +44,12 @@ const SidebarDeathsPanel = ({ id, active, disabled, setActive }) => {
             <div className="d-flex justify-content-between align-items-center">
                 <div
                     className="d-flex flex-column flex-grow-1 pointer"
-                    onClick={() => !disabled && setActive(id)}
+                    onClick={() => {
+                        if (!disabled) {
+                            onDataOrientationSelect(orientation?.value);
+                            setActive(id);
+                        }
+                    }}
                 >
                     <Form.Check>
                         <Form.Check.Input
@@ -63,6 +73,7 @@ const SidebarDeathsPanel = ({ id, active, disabled, setActive }) => {
                                 <ReactSelect
                                     options={dataOrientationOptions}
                                     styles={ReactSelectStyle}
+                                    onChange={onDataOrientationChange}
                                 />
                             </div>
                             <div className="mb-2" onClick={e => e.stopPropagation()}>
