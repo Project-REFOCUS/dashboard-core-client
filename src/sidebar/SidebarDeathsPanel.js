@@ -46,7 +46,7 @@ const SidebarDeathsPanel = ({ id, active, disabled, setActive, onDataOrientation
                     className="d-flex flex-column flex-grow-1 pointer"
                     onClick={() => {
                         if (!disabled) {
-                            onDataOrientationSelect(orientation?.value);
+                            onDataOrientationChange(orientation);
                             setActive(id);
                         }
                     }}

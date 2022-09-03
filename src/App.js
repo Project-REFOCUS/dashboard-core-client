@@ -7,52 +7,47 @@ import NavbarTabs from './navbar/NavbarTabs';
 import Toolbar from './toolbar/Toolbar';
 import Sidebar from './sidebar/Sidebar';
 import Dashboard from './dashboard/Dashboard';
+import { getDataFromQuery } from './common/services';
 
 import './App.scss';
 
-const hasNonEmptyValue = object => {
-    const keys = object ? Object.keys(object) : [];
-    return keys.length && keys.some(key => object[key]);
-};
+const noCategoryWithEmptyValue = categories =>
+    categories?.length && categories.every(category => category.orientation && category.name);
 
 const shouldRefreshData = query =>
-    query && hasNonEmptyValue(query.category) && query.period;
+    query && noCategoryWithEmptyValue(query.categories) && query.period;
 
 const App = () => {
     const [dashboardIsLoading, setDashboardIsLoading] = useState(false);
     const [selectedTabIndex, setSelectedTabIndex] = useState(0);
-    const [dashboardData, setDashboardData] = useState([{ query: {} }]);
-    const onCategoryUpdate = (category, shouldRemove) => {
-        const newDashboardData = [...dashboardData];
-        const { query: activeQuery } = newDashboardData[selectedTabIndex];
-        activeQuery.category = activeQuery.category ? {...activeQuery.category} : {};
-        if (shouldRemove) {
-            delete activeQuery[category.name];
-        }
-        else {
-            activeQuery.category[category.name] = category.orientation;
-        }
-
-        setDashboardData(newDashboardData);
+    const [dashboardQuery, setDashboardQuery] = useState([{}]);
+    const [dashboardData, setDashboardData] = useState([{}]);
+    const onCategoriesUpdate = (category, shouldRemove) => {
+        const newDashboardQuery = [...dashboardQuery];
+        const query = dashboardQuery[selectedTabIndex];
+        query.categories = query.categories || [];
+        query.categories = query.categories
+            .filter(query => query.name !== category.name)
+            .concat(shouldRemove ? [] : [category]);
+        setDashboardQuery(newDashboardQuery);
     };
     const onPeriodSelect = period => {
-        const newDashboardData = [...dashboardData];
-        const currentDashboard = newDashboardData[selectedTabIndex];
-        currentDashboard.query.period = {...period};
-        setDashboardData(newDashboardData);
+        const newDashboardQuery = [...dashboardQuery];
+        const query = dashboardQuery[selectedTabIndex];
+        query.period = {...period};
+        setDashboardQuery(newDashboardQuery);
     };
-    const activeQuery = dashboardData[selectedTabIndex].query;
+    const activeQuery = dashboardQuery[selectedTabIndex];
     useEffect(() => {
-        const currentDashboard = dashboardData[selectedTabIndex];
-        const { query } = currentDashboard;
-        if (shouldRefreshData(query)) {
+        if (shouldRefreshData(activeQuery)) {
             setDashboardIsLoading(true);
+            getDataFromQuery(activeQuery);
             window.setTimeout(() => {
                 setDashboardIsLoading(false);
             }, 2000);
         }
 
-    }, [activeQuery.period, activeQuery.category]);
+    }, [activeQuery.period, activeQuery.categories]);
     return (
         <div className="max-height">
             <Header />
@@ -63,7 +58,7 @@ const App = () => {
                     <Toolbar onPeriodSelect={onPeriodSelect} />
                     <div className="d-flex flex-row max-height overflow-hidden">
                         <Col xl={2} lg={3} md={4} xs={12} className="g-0 max-height overflow-scroll">
-                            <Sidebar onCategoryUpdate={onCategoryUpdate} />
+                            <Sidebar onCategoriesUpdate={onCategoriesUpdate} />
                         </Col>
                         <Col className="max-height mb-sm-4 mb-4" xl={10} lg={9}>
                             <Dashboard isLoading={dashboardIsLoading} />

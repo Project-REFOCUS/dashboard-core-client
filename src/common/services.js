@@ -1,3 +1,6 @@
+import { PERIOD_MAP } from './constants';
+import { getDateNDaysAgo } from './utils';
+
 const handleJsonResponse = response => response.json();
 
 export const getListOfStates = () =>
@@ -9,6 +12,34 @@ export const getRaceEthnicityCategories = () =>
     window.fetch('/dashboard-service/ethnicity')
         .then(handleJsonResponse)
         .then(results => results.map(ethnicity => ({ label: ethnicity.name, value: ethnicity.id })));
+
+const getCovidCasesData = ({ startDate, orientation }) =>
+    window.console.log(`/dashboard-service/covid/cases?startDate=${startDate}&orientation=${orientation}`);
+
+const getCovidDeathsData = ({ startDate, orientation }) =>
+    window.console.log(`/dashboard-service/covid/deaths?startDate=${startDate}&orientation=${orientation}`);
+
+const getCovidTestsData = ({ startDate, orientation }) =>
+    window.console.log(`/dashboard-service/covid/tests?startDate=${startDate}&orientation=${orientation}`);
+
+const getCovidVaccinationsData = ({ startDate, subCategory, orientation }) =>
+    window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation}&subCategory${subCategory}`);
+
+const categoryServicesMap = {
+    cases: getCovidCasesData,
+    deaths: getCovidDeathsData,
+    tests: getCovidTestsData,
+    vaccinations: getCovidVaccinationsData
+};
+
+export const getDataFromQuery = query => {
+    const { period } = query;
+    const startDate = getDateNDaysAgo(PERIOD_MAP[period.value]);
+    query.categories.forEach(category => {
+        const { name, orientation } = category;
+        categoryServicesMap[name]({ startDate, orientation });
+    });
+};
 
 export const getDailyCasesByState = states => {
     window.fetch('/dashboard-service/covid/cases?states=' + states)

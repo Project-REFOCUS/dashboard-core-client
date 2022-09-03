@@ -67,7 +67,7 @@ const SidebarCasesPanel = ({ active, disabled, id, setActive, onDataOrientationS
                                 <ReactSelect
                                     options={dataOrientationOptions}
                                     styles={ReactSelectStyle}
-                                    onChange={value => onDataOrientationChange(value)}
+                                    onChange={onDataOrientationChange}
                                     value={orientation}
                                 />
                             </div>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import {Collapse, Form, ListGroup} from 'react-bootstrap';
 import classnames from 'classnames';
 import ReactSelect from 'react-select';
@@ -22,7 +23,12 @@ const dataOrientationOptions = [
     { label: 'Percent change in positivity rate over 14 days', value: 'percentChangeInPositivityRateOver14' }
 ];
 
-const SidebarTestsPanel = ({ id, active, disabled, setActive }) => {
+const SidebarTestsPanel = ({ id, active, disabled, setActive, onDataOrientationSelect }) => {
+    const [orientation, setOrientation] = useState([]);
+    const onDataOrientationChange = dataOrientation => {
+        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value });
+        setOrientation(dataOrientation);
+    }
     return (
         <ListGroup.Item
             variant={active ? 'light' : 'secondary'}
@@ -31,7 +37,12 @@ const SidebarTestsPanel = ({ id, active, disabled, setActive }) => {
             <div className="d-flex justify-content-between align-items-center">
                 <div
                     className="d-flex flex-column flex-grow-1 pointer"
-                    onClick={() => !disabled && setActive(id)}
+                    onClick={() => {
+                        if (!disabled) {
+                            onDataOrientationChange(orientation);
+                            setActive(id);
+                        }
+                    }}
                 >
                     <Form.Check>
                         <Form.Check.Input
@@ -55,6 +66,7 @@ const SidebarTestsPanel = ({ id, active, disabled, setActive }) => {
                                 <ReactSelect
                                     options={dataOrientationOptions}
                                     styles={ReactSelectStyle}
+                                    onChange={onDataOrientationChange}
                                 />
                             </div>
                         </div>
