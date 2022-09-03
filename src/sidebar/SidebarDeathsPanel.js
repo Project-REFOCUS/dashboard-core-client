@@ -46,7 +46,7 @@ const SidebarDeathsPanel = ({ id, active, disabled, setActive, onDataOrientation
                     className="d-flex flex-column flex-grow-1 pointer"
                     onClick={() => {
                         if (!disabled) {
-                            onDataOrientationChange(orientation);
+                            setOrientation(null);
                             setActive(id);
                         }
                     }}
@@ -74,6 +74,7 @@ const SidebarDeathsPanel = ({ id, active, disabled, setActive, onDataOrientation
                                     options={dataOrientationOptions}
                                     styles={ReactSelectStyle}
                                     onChange={onDataOrientationChange}
+                                    value={orientation}
                                 />
                             </div>
                             <div className="mb-2" onClick={e => e.stopPropagation()}>

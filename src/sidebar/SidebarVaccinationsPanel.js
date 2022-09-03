@@ -29,12 +29,19 @@ const getDataOrientationOptions = ({ category }) => [
         : []
 );
 
-const SidebarVaccinationsPanel = ({ id, active, disabled, setActive }) => {
+const SidebarVaccinationsPanel = ({ id, active, disabled, setActive, onDataOrientationSelect }) => {
     const [raceCategoryLoading, setRaceCategoryLoading] = useState(true);
     const [raceCategoryOptions, setRaceCategoryOptions] = useState([]);
-    const [selectedSubCategory, setSelectedSubCategory] = useState(subCategoryOptions[0]);
-    const [selectedDataOrientation, setSelectedDataOrientation] =
-        useState(useMemo(() => getDataOrientationOptions(selectedSubCategory), []));
+    const [subCategory, setSubCategory] = useState(null);
+    const [orientation, setOrientation] = useState(null);
+    const onDataOrientationChange = dataOrientation => {
+        onDataOrientationSelect({
+            name: id,
+            orientation: dataOrientation?.value,
+            subCategory: subCategory.value
+        });
+        setOrientation(dataOrientation);
+    };
     useEffect(() => {
         getRaceEthnicityCategories().then(options => {
             setRaceCategoryOptions(options);
@@ -49,7 +56,14 @@ const SidebarVaccinationsPanel = ({ id, active, disabled, setActive }) => {
             <div className="d-flex justify-content-between align-items-center">
                 <div
                     className="d-flex flex-column flex-grow-1 pointer"
-                    onClick={() => !disabled && setActive(id)}
+                    onClick={() => {
+                        if (!disabled) {
+                            setSubCategory(null);
+                            setOrientation(null);
+
+                            setActive(id);
+                        }
+                    }}
                 >
                     <Form.Check>
                         <Form.Check.Input
@@ -74,19 +88,20 @@ const SidebarVaccinationsPanel = ({ id, active, disabled, setActive }) => {
                                     options={subCategoryOptions}
                                     styles={ReactSelectStyle}
                                     onChange={subCategory => {
-                                        setSelectedSubCategory(subCategory);
-                                        setSelectedDataOrientation(getDataOrientationOptions(subCategory)[0]);
+                                        setSubCategory(subCategory);
+                                        setOrientation(null);
                                     }}
-                                    value={selectedSubCategory}
+                                    value={subCategory}
                                 />
                             </div>
                             <div className="mb-2" onClick={e => e.stopPropagation()}>
                                 <Form.Label className="mb-0">Data orientation</Form.Label>
                                 <ReactSelect
-                                    options={getDataOrientationOptions(selectedSubCategory)}
+                                    options={subCategory ? getDataOrientationOptions(subCategory) : []}
                                     styles={ReactSelectStyle}
-                                    onChange={dataOrientation => setSelectedDataOrientation(dataOrientation)}
-                                    value={selectedDataOrientation}
+                                    isDisabled={!subCategory}
+                                    onChange={onDataOrientationChange}
+                                    value={orientation}
                                 />
                             </div>
                             <div className="mb-2" onClick={e => e.stopPropagation()}>

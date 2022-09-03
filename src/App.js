@@ -41,6 +41,7 @@ const App = () => {
     useEffect(() => {
         if (shouldRefreshData(activeQuery)) {
             setDashboardIsLoading(true);
+            window.console.log(activeQuery);
             getDataFromQuery(activeQuery);
             window.setTimeout(() => {
                 setDashboardIsLoading(false);

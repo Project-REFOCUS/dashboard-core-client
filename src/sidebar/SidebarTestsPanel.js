@@ -39,7 +39,7 @@ const SidebarTestsPanel = ({ id, active, disabled, setActive, onDataOrientationS
                     className="d-flex flex-column flex-grow-1 pointer"
                     onClick={() => {
                         if (!disabled) {
-                            onDataOrientationChange(orientation);
+                            setOrientation(null);
                             setActive(id);
                         }
                     }}
@@ -67,6 +67,7 @@ const SidebarTestsPanel = ({ id, active, disabled, setActive, onDataOrientationS
                                     options={dataOrientationOptions}
                                     styles={ReactSelectStyle}
                                     onChange={onDataOrientationChange}
+                                    value={orientation}
                                 />
                             </div>
                         </div>

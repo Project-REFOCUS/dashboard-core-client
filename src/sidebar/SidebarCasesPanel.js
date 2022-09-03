@@ -42,7 +42,7 @@ const SidebarCasesPanel = ({ active, disabled, id, setActive, onDataOrientationS
                     className="d-flex flex-column flex-grow-1 pointer"
                     onClick={() => {
                         if (!disabled) {
-                            onDataOrientationChange(orientation);
+                            setOrientation(null);
                             setActive(id);
                         }
                     }}

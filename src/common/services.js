@@ -23,7 +23,7 @@ const getCovidTestsData = ({ startDate, orientation }) =>
     window.console.log(`/dashboard-service/covid/tests?startDate=${startDate}&orientation=${orientation}`);
 
 const getCovidVaccinationsData = ({ startDate, subCategory, orientation }) =>
-    window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation}&subCategory${subCategory}`);
+    window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation}&subCategory=${subCategory}`);
 
 const categoryServicesMap = {
     cases: getCovidCasesData,
@@ -36,8 +36,8 @@ export const getDataFromQuery = query => {
     const { period } = query;
     const startDate = getDateNDaysAgo(PERIOD_MAP[period.value]);
     query.categories.forEach(category => {
-        const { name, orientation } = category;
-        categoryServicesMap[name]({ startDate, orientation });
+        const { name, ...data } = category;
+        categoryServicesMap[name]({ startDate, ...data });
     });
 };
 
