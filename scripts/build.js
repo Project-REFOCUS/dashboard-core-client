@@ -1,11 +1,5 @@
 /* global require */
-const esbuildSassPlugin = require('esbuild-sass-plugin');
-const sassPluginConfig = esbuildSassPlugin.sassPlugin({ type: 'css' });
+const { createBuildConfig } = require('./options');
 
-require('esbuild').build({
-    entryPoints: ['./src/main'],
-    bundle: true,
-    loader: { '.js': 'jsx', '.ts': 'tsx' },
-    outfile: './dist/index.js',
-    plugins: [sassPluginConfig]
-}).then(() => console.log('Build Finished!'));
+require('esbuild').build(createBuildConfig(false))
+    .then(() => console.log('Build Finished!'));

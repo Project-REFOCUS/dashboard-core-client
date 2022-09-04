@@ -1,0 +1,46 @@
+@import '../CustomVariables.scss';
+
+#topNavbar{
+  background-color: $custom-pink;
+  height: 40px;
+}
+
+.logo-container{
+  @include wxhStyle1(179px, 74px);
+  @include posAbsStyle1(absolute, 6.25%, 1.25%, 86.32%, 0);
+  background-color: $custom-white;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  z-index: 1080;
+}
+
+.project-refocus-logo{
+  @include wxhStyle1(148px, 55px);
+  border-radius: 4px;
+  @include posAbsStyle1(absolute, 15.58%, 8%, 87.36%, 12.99%);
+}
+
+.banner-mask-container{
+  @include wxhStyle1(100%, 88px);
+  position: relative;
+}
+
+.banner-mask-overlay{
+  @include wxhStyle1(100%, 100%);
+  position: absolute;
+  z-index: 1050;
+  top: 0;
+  opacity: 0.4;
+  background-color: $custom-grey-3;
+  border: 1px solid $custom-grey-3;
+
+  mix-blend-mode: normal;
+}
+
+.imageMask-WxH1{
+  @include wxhStyle1(100%, 100%);
+}
+
+#account-log-name{
+  @include fontStyle1($custom-white, $fontLato, 14px, 17px, normal, 400);
+}

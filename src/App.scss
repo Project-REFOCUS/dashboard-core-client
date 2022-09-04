@@ -1,0 +1,12 @@
+html, body {
+  height: 100%;
+  margin: 0;
+
+  .main-container {
+    height: calc(98% - 120px);
+  }
+
+  .max-height {
+    height: 100%;
+  }
+}

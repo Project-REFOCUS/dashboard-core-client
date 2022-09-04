@@ -1,0 +1,103 @@
+@import '../CustomVariables.scss';
+
+#state-search.form-control{
+  background-color: $custom-white;
+  @include borderWRad1(1px, solid, $custom-grey-2, 4px);
+  @include fontStyle1($custom-black-1, $fontOpenSans, 14px, 19px, normal, 400);
+  &::placeholder{
+    @include fontStyle1($custom-grey-2, $fontOpenSans, 14px, 19px, normal, 400);
+  }
+  &:focus{
+    border-color: $custom-blue-4;
+    box-shadow: none;
+  }
+}
+
+label.form-label{
+  @include fontStyle1($custom-black-1, $fontOpenSans, 14px, 19px, normal, 400);
+}
+
+.icon-style-1{
+  @include wxhStyle1(16px, 16px);
+  color: $custom-grey-1;
+}
+
+.text-blue-3{
+  color: $custom-blue-3;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.form-check{
+
+  .form-check-input{
+    @include borderWRad1(1px, solid, $custom-grey-2, 4px);
+    @include wxhStyle1(15px, 15px);
+    cursor: pointer;
+    vertical-align: middle;
+
+    &:focus{
+      outline: 0;
+      box-shadow: none;
+    }
+
+    &:checked{
+      background-color: $custom-blue-4;
+    }
+
+    &:checked[type=checkbox]{
+      background-image: none;
+    }
+
+    &:disabled {
+      pointer-events: inherit;
+      cursor: not-allowed;
+      ~ .form-check-label{
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .form-check-label{
+    padding-left: 0.2rem;
+  }
+
+}
+
+.ellipse-style-1{
+  @include wxhStyle1(200px, 200px);
+  background-color: $custom-grey-3;
+  border-radius: 50%;
+}
+
+.paragraph-style-1{
+  @include fontStyle1($custom-grey-1, $fontOpenSans, 18px, 33px, normal, 400);
+}
+
+.custom-style-1{
+  @include fontStyle1($custom-grey-1, $fontLato, 12px, 15px, normal, 400);
+}
+
+.plusLgStyle1{
+  @include wxhStyle1(15px, 15px);
+  color: $custom-black-2;
+}
+
+.remove-tag-icon-1{
+  @include wxhStyle1(11px, 11px);
+  color: $custom-black-2;
+}
+
+.remove-tag-icon-2{
+  @include wxhStyle1(16px, 16px);
+  color: $custom-black-2;
+}
+
+.hr-style-1{
+  color: $custom-grey-3;
+  background-color: $custom-grey-3;
+  opacity: 1;
+  margin: 0.25rem 0 !important;
+}

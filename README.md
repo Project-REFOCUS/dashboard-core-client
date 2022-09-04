@@ -6,7 +6,7 @@ The source code for the core client facing dashboard user interface application
 ### Dependencies
 This project requires NodeJS to be run locally. The preferred way to install is with 
 [NVM](https://github.com/nvm-sh/nvm#installing-and-updating). 
-This project works with Node version 12.16.1 and greater.
+This project works with Node version 16 and greater.
 
 This project also uses [yarn](https://classic.yarnpkg.com/en/docs/install) as the preferred method of managing node module dependencies as
 opposed to npm. 
