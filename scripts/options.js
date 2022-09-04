@@ -13,7 +13,7 @@ module.exports = {
         minify: !isDevelopment,
         loader: { '.js': 'jsx', '.jsx': 'jsx', '.ts': 'tsx', '.tsx': 'tsx' },
         entryNames: '/[ext]/index',
-        outdir: './dist',
+        outdir: isDevelopment ? './dist' : './docker',
         plugins: [
             copy({
                 resolveFrom: 'cwd',
