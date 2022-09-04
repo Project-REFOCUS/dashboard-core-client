@@ -22,6 +22,7 @@ const App = () => {
     const [selectedTabIndex, setSelectedTabIndex] = useState(0);
     const [dashboardQuery, setDashboardQuery] = useState([{}]);
     const [dashboardData, setDashboardData] = useState([{}]);
+    const { xAxisData, yAxisData } = dashboardData[selectedTabIndex];
     const onCategoriesUpdate = (category, shouldRemove) => {
         const newDashboardQuery = [...dashboardQuery];
         const query = dashboardQuery[selectedTabIndex];
@@ -42,10 +43,17 @@ const App = () => {
         if (shouldRefreshData(activeQuery)) {
             setDashboardIsLoading(true);
             window.console.log(activeQuery);
-            getDataFromQuery(activeQuery);
-            window.setTimeout(() => {
-                setDashboardIsLoading(false);
-            }, 2000);
+            getDataFromQuery(activeQuery)
+                .then(results => {
+                    const newDashboardData = [...dashboardData];
+                    const [xAxisData, yAxisData] = results;
+                    window.console.log('LeftAxisData: ', xAxisData);
+                    window.console.log('RightAxisData: ', yAxisData);
+                    newDashboardData[selectedTabIndex] = {xAxisData, yAxisData};
+
+                    setDashboardData(newDashboardData);
+                    setDashboardIsLoading(false);
+                });
         }
 
     }, [activeQuery.period, activeQuery.categories]);
@@ -62,7 +70,7 @@ const App = () => {
                             <Sidebar onCategoriesUpdate={onCategoriesUpdate} />
                         </Col>
                         <Col className="max-height mb-sm-4 mb-4" xl={10} lg={9}>
-                            <Dashboard isLoading={dashboardIsLoading} />
+                            <Dashboard isLoading={dashboardIsLoading} xAxisData={xAxisData} yAxisData={yAxisData} />
                         </Col>
                     </div>
                 </Container>

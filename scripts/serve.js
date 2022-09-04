@@ -51,6 +51,10 @@ const esbuildPluginProxyConfiguration = {
             port: internalPort,
             path: '/js/index.js.map'
         },
+        projectRefocusLocal: {
+            host: 'localhost',
+            port: 8080
+        },
         projectRefocusRemote: {
             host: 'projectrefocus.gscbinc.com',
             port: 80

@@ -14,13 +14,16 @@ export const getRaceEthnicityCategories = () =>
         .then(results => results.map(ethnicity => ({ label: ethnicity.name, value: ethnicity.id })));
 
 const getCovidCasesData = ({ startDate, orientation }) =>
-    window.console.log(`/dashboard-service/covid/cases?startDate=${startDate}&orientation=${orientation}`);
+    window.fetch(`/dashboard-service/covid/cases?startDate=${startDate}&orientation=${orientation}&states`)
+        .then(handleJsonResponse);
 
 const getCovidDeathsData = ({ startDate, orientation }) =>
-    window.console.log(`/dashboard-service/covid/deaths?startDate=${startDate}&orientation=${orientation}`);
+    window.fetch(`/dashboard-service/covid/deaths?startDate=${startDate}&orientation=${orientation}&states`)
+        .then(handleJsonResponse);
 
 const getCovidTestsData = ({ startDate, orientation }) =>
-    window.console.log(`/dashboard-service/covid/tests?startDate=${startDate}&orientation=${orientation}`);
+    window.fetch(`/dashboard-service/covid/tests?startDate=${startDate}&orientation=${orientation}&states`)
+        .then(handleJsonResponse);
 
 const getCovidVaccinationsData = ({ startDate, subCategory, orientation }) =>
     window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation}&subCategory=${subCategory}`);
@@ -35,24 +38,8 @@ const categoryServicesMap = {
 export const getDataFromQuery = query => {
     const { period } = query;
     const startDate = getDateNDaysAgo(PERIOD_MAP[period.value]);
-    query.categories.forEach(category => {
+    return Promise.all(query.categories.map(category => {
         const { name, ...data } = category;
-        categoryServicesMap[name]({ startDate, ...data });
-    });
-};
-
-export const getDailyCasesByState = states => {
-    window.fetch('/dashboard-service/covid/cases?states=' + states)
-        .then(handleJsonResponse)
-        .then(results => {
-            const dailyCasesByDate = results.reduce((casesByDate, value) => {
-                if (casesByDate.get(value.date)) {
-                    casesByDate.set(value.date, 0);
-                }
-                casesByDate.set(value.date, casesByDate.get(value.date) + value.cases);
-
-                return casesByDate;
-            });
-            return [...dailyCasesByDate].map(([date, value]) => ({ date, value }));
-        });
+        return categoryServicesMap[name]({ startDate, ...data});
+    }));
 };
