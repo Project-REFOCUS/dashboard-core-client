@@ -22,12 +22,14 @@ const dataOrientationOptions = [
     { label: 'Percent change in mortality rate over 14 days', value: 'percentChangeInMortalityRateOver14' }
 ];
 
+const colorLabel = 'purple';
+
 const SidebarDeathsPanel = ({ id, active, disabled, setActive, onDataOrientationSelect }) => {
     const [raceCategoryLoading, setRaceCategoryLoading] = useState(true);
     const [raceCategoryOptions, setRaceCategoryOptions] = useState([]);
     const [orientation, setOrientation] = useState(null);
     const onDataOrientationChange = dataOrientation => {
-        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value });
+        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value, colorLabel });
         setOrientation(dataOrientation);
     };
     useEffect(() => {
@@ -39,7 +41,7 @@ const SidebarDeathsPanel = ({ id, active, disabled, setActive, onDataOrientation
     return (
         <ListGroup.Item
             variant={active ? 'light' : 'secondary'}
-            className={classnames({ 'border-left-purple': active })}
+            className={classnames({ [`border-left-${colorLabel}`]: active })}
         >
             <div className="d-flex justify-content-between align-items-center">
                 <div

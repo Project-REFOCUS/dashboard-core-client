@@ -23,16 +23,18 @@ const dataOrientationOptions = [
     { label: 'Percent change in positivity rate over 14 days', value: 'percentChangeInPositivityRateOver14' }
 ];
 
+const colorLabel = 'yellow';
+
 const SidebarTestsPanel = ({ id, active, disabled, setActive, onDataOrientationSelect }) => {
     const [orientation, setOrientation] = useState([]);
     const onDataOrientationChange = dataOrientation => {
-        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value });
+        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value, colorLabel });
         setOrientation(dataOrientation);
     }
     return (
         <ListGroup.Item
             variant={active ? 'light' : 'secondary'}
-            className={classnames({ 'border-left-yellow': active })}
+            className={classnames({ [`border-left-${colorLabel}`]: active })}
         >
             <div className="d-flex justify-content-between align-items-center">
                 <div
