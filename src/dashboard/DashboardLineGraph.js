@@ -5,18 +5,18 @@ import { useEffect, useMemo, useRef } from 'react';
 const SPACE_PER_CHARACTER = 5;
 const ADDITIONAL_PADDING = 20;
 
-const DashboardLineGraph = ({ xAxisData, yAxisData }) => {
+const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
     const graphContainerElement = useRef();
-    const xAxisMaxSignificantDigits = useMemo(
-        () => xAxisData.reduce((maxValue, d) => Math.max(maxValue, String(d.value).length), 0),
-        [xAxisData]
+    const leftAxisMaxSignificantDigits = useMemo(
+        () => leftAxis.data?.reduce((maxValue, d) => Math.max(maxValue, String(d.value).length), 0),
+        [leftAxis.data]
     );
-    const yAxisMaxSignificantDigits = useMemo(
-        () => yAxisData.reduce((maxValue, d) => Math.max(maxValue, String(d.value).length), 0),
-        [yAxisData]
+    const rightAxisMaxSignificantDigits = useMemo(
+        () => rightAxis.data ? rightAxis.data.reduce((maxValue, d) => Math.max(maxValue, String(d.value).length), 0) : 0,
+        [rightAxis.data]
     );
-    const marginLeft = xAxisMaxSignificantDigits * SPACE_PER_CHARACTER + ADDITIONAL_PADDING;
-    const offsetRight = yAxisMaxSignificantDigits * SPACE_PER_CHARACTER + ADDITIONAL_PADDING;
+    const marginLeft = leftAxisMaxSignificantDigits * SPACE_PER_CHARACTER + ADDITIONAL_PADDING;
+    const offsetRight = rightAxisMaxSignificantDigits * SPACE_PER_CHARACTER + ADDITIONAL_PADDING;
 
     useEffect(() => {
         const dimensions = graphContainerElement.current.getBoundingClientRect();
@@ -26,7 +26,7 @@ const DashboardLineGraph = ({ xAxisData, yAxisData }) => {
             .attr('height', dimensions.height);
 
         const bottomAxisTimeScale = d3.scaleTime()
-            .domain([new Date(xAxisData[0].date), new Date(xAxisData.slice(-1)[0].date)])
+            .domain(leftAxis.data ? [new Date(leftAxis.data[0].date), new Date(leftAxis.data.slice(-1)[0].date)] : [])
             .range([Math.max(marginLeft, 25), dimensions.width - offsetRight]);
 
         const bottomAxis = d3.axisBottom(bottomAxisTimeScale)
@@ -37,42 +37,44 @@ const DashboardLineGraph = ({ xAxisData, yAxisData }) => {
             .attr('transform', 'translate(0, ' + (dimensions.height - 30) + ')')
             .call(bottomAxis);
 
-        const xAxisScale = d3.scaleLinear()
-            .domain([0, d3.max(xAxisData, d => +d.value)])
+        const leftAxisScale = d3.scaleLinear()
+            .domain([0, d3.max(leftAxis.data || [], d => +d.value)])
             .range([dimensions.height - 30, 10]);
 
         svg.append('g')
             .attr('transform', 'translate(' + marginLeft + ', 0)')
-            .call(d3.axisLeft(xAxisScale));
+            .call(d3.axisLeft(leftAxisScale));
 
-        const yAxisScale = d3.scaleLinear()
-            .domain([0, d3.max(yAxisData, d => +d.value)])
+        const rightAxisScale = d3.scaleLinear()
+            .domain([0, d3.max(rightAxis.data || [], d => +d.value)])
             .range([dimensions.height - 30, 10]);
 
         svg.append('g')
             .attr('transform', 'translate(' + (dimensions.width - offsetRight) + ', 0)')
-            .call(d3.axisRight(yAxisScale));
+            .call(d3.axisRight(rightAxisScale));
 
         svg.append('path')
-            .datum(xAxisData)
+            .datum(leftAxis.data || [])
             .attr('fill', 'none')
-            .attr('stroke', 'hotPink')
+            .attr('class', leftAxis.query.colorLabel)
+            // .attr('stroke', 'hotPink')
             .attr('stroke-width', 1.5)
             .attr('d', d3.line()
                 .x(d => bottomAxisTimeScale(new Date(d.date)))
-                .y(d => xAxisScale(d.value))
+                .y(d => leftAxisScale(d.value))
             );
 
         svg.append('path')
-            .datum(yAxisData)
+            .datum(rightAxis.data || [])
             .attr('fill', 'none')
-            .attr('stroke', 'purple')
+            .attr('class', rightAxis.query ? rightAxis.query.colorLabel : '')
+            // .attr('stroke', 'purple')
             .attr('stroke-width', 1.5)
             .attr('d', d3.line()
                 .x(d => bottomAxisTimeScale(new Date(d.date)))
-                .y(d => yAxisScale(d.value))
+                .y(d => rightAxisScale(d.value))
             );
-    }, [xAxisData, yAxisData]);
+    }, [leftAxis.data, rightAxis.data]);
     return <div id="data-content-container" ref={graphContainerElement} className="d-flex max-height"></div>;
 };
 

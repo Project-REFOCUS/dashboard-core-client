@@ -8,15 +8,15 @@ import './Dashboard.scss';
 
 const noData = [];
 
-const Dashboard = ({ isLoading, xAxisData, yAxisData }) => {
+const Dashboard = ({ isLoading, leftAxis, rightAxis }) => {
     return (
         <div className="dashboard mx-2 max-height">
             {isLoading ? (
                 <DashboardGraphSpinner />
             ) : (
                 <>
-                    {(xAxisData || yAxisData) && <DashboardLineGraph xAxisData={xAxisData || noData} yAxisData={yAxisData || noData} />}
-                    {!(xAxisData || yAxisData) && <DashboardEmpty />}
+                    {(leftAxis?.data || rightAxis?.data) && <DashboardLineGraph leftAxis={leftAxis} rightAxis={rightAxis} />}
+                    {!(leftAxis?.data || rightAxis?.data) && <DashboardEmpty />}
                 </>
             )}
 

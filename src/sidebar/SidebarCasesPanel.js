@@ -18,12 +18,14 @@ const dataOrientationOptions = [
     { label: 'Percent change in daily cases over 14 days', value: 'percentChangeInDailyOver14' }
 ];
 
+const colorLabel = 'hot-pink';
+
 const SidebarCasesPanel = ({ active, disabled, id, setActive, onDataOrientationSelect }) => {
     const [raceCategoryLoading, setRaceCategoryLoading] = useState(true);
     const [raceCategoryOptions, setRaceCategoryOptions] = useState([]);
     const [orientation, setOrientation] = useState(null);
     const onDataOrientationChange = dataOrientation => {
-        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value });
+        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value, colorLabel });
         setOrientation(dataOrientation);
     };
     useEffect(() => {
@@ -35,7 +37,7 @@ const SidebarCasesPanel = ({ active, disabled, id, setActive, onDataOrientationS
     return (
         <ListGroup.Item
             variant={active ? 'light' : 'secondary'}
-            className={classnames({ 'border-left-hot-pink': active })}
+            className={classnames({ [`border-left-${colorLabel}`]: active })}
         >
             <div className="d-flex justify-content-between align-items-center">
                 <div

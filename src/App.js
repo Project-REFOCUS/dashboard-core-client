@@ -22,7 +22,7 @@ const App = () => {
     const [selectedTabIndex, setSelectedTabIndex] = useState(0);
     const [dashboardQuery, setDashboardQuery] = useState([{}]);
     const [dashboardData, setDashboardData] = useState([{}]);
-    const { xAxisData, yAxisData } = dashboardData[selectedTabIndex];
+    const { leftAxis, rightAxis } = dashboardData[selectedTabIndex];
     const onCategoriesUpdate = (category, shouldRemove) => {
         const newDashboardQuery = [...dashboardQuery];
         const query = dashboardQuery[selectedTabIndex];
@@ -46,10 +46,12 @@ const App = () => {
             getDataFromQuery(activeQuery)
                 .then(results => {
                     const newDashboardData = [...dashboardData];
-                    const [xAxisData, yAxisData] = results;
-                    window.console.log('LeftAxisData: ', xAxisData);
-                    window.console.log('RightAxisData: ', yAxisData);
-                    newDashboardData[selectedTabIndex] = {xAxisData, yAxisData};
+                    const [leftAxisQuery, rightAxisQuery] = activeQuery.categories;
+                    const [leftAxisData, rightAxisData] = results;
+                    newDashboardData[selectedTabIndex] = {
+                        leftAxis: {data: leftAxisData, query: leftAxisQuery},
+                        rightAxis: {data: rightAxisData, query: rightAxisQuery}
+                    };
 
                     setDashboardData(newDashboardData);
                     setDashboardIsLoading(false);
@@ -70,7 +72,7 @@ const App = () => {
                             <Sidebar onCategoriesUpdate={onCategoriesUpdate} />
                         </Col>
                         <Col className="max-height mb-sm-4 mb-4" xl={10} lg={9}>
-                            <Dashboard isLoading={dashboardIsLoading} xAxisData={xAxisData} yAxisData={yAxisData} />
+                            <Dashboard isLoading={dashboardIsLoading} leftAxis={leftAxis} rightAxis={rightAxis} />
                         </Col>
                     </div>
                 </Container>

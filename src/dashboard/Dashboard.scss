@@ -3,4 +3,20 @@
 .dashboard {
   border: 1px solid $grey-3;
   border-radius: 4px;
+
+  path {
+    &.black { stroke: $black; }
+    &.blue-2 { stroke: $blue-2; }
+    &.green-1 { stroke: $green-1; }
+    &.green-2 { stroke: $green-2; }
+    &.grey-1 { stroke: $grey-1; }
+    &.grey-3 { stroke: $grey-3; }
+    &.grey-4 { stroke: $grey-4; }
+    &.hot-pink { stroke: $hot-pink; }
+    &.orange { stroke: $orange; }
+    &.pink { stroke: $pink; }
+    &.purple { stroke: $purple; }
+    &.red { stroke: $red; }
+    &.yellow { stroke: $yellow; }
+  }
 }
