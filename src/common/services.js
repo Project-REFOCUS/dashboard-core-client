@@ -37,7 +37,7 @@ const categoryServicesMap = {
 
 export const getDataFromQuery = query => {
     const { period } = query;
-    const startDate = getDateNDaysAgo(PERIOD_MAP[period.value]);
+    const startDate = /^last\d{1,3}Days$/.test(period.value) ? getDateNDaysAgo(PERIOD_MAP[period.value]) : period.value;
     return Promise.all(query.categories.map(category => {
         const { name, ...data } = category;
         return categoryServicesMap[name]({ startDate, ...data});

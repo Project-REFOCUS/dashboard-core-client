@@ -8,7 +8,8 @@ const selectOptions = [
     { label: 'Last 7 days', value: 'last7Days' },
     { label: 'Last 30 days', value: 'last30Days' },
     { label: 'Last 90 days', value: 'last90Days' },
-    { label: 'Last 365 days', value: 'last365Days' }
+    { label: 'Last 365 days', value: 'last365Days' },
+    { label: 'From January 2020', value: '2020-01-01' }
 ];
 
 const Toolbar = ({ title, onPeriodSelect }) => {
