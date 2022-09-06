@@ -17,16 +17,16 @@ const getCovidCasesData = ({ startDate, orientation, states }) =>
     window.fetch(`/dashboard-service/covid/cases?startDate=${startDate}&orientation=${orientation}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
-const getCovidDeathsData = ({ startDate, orientation }) =>
-    window.fetch(`/dashboard-service/covid/deaths?startDate=${startDate}&orientation=${orientation}&states`)
+const getCovidDeathsData = ({ startDate, orientation, states }) =>
+    window.fetch(`/dashboard-service/covid/deaths?startDate=${startDate}&orientation=${orientation}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
-const getCovidTestsData = ({ startDate, orientation }) =>
-    window.fetch(`/dashboard-service/covid/tests?startDate=${startDate}&orientation=${orientation}&states`)
+const getCovidTestsData = ({ startDate, orientation, states }) =>
+    window.fetch(`/dashboard-service/covid/tests?startDate=${startDate}&orientation=${orientation}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
-const getCovidVaccinationsData = ({ startDate, subCategory, orientation }) =>
-    window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation}&subCategory=${subCategory}`);
+const getCovidVaccinationsData = ({ startDate, subCategory, orientation, states }) =>
+    window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation}&subCategory=${subCategory}&states=${toStatesParam(states)}`);
 
 const categoryServicesMap = {
     cases: getCovidCasesData,

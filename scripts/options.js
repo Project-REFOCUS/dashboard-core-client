@@ -2,7 +2,7 @@ const { copy } = require('esbuild-plugin-copy');
 const esbuildSassPlugin = require('esbuild-sass-plugin');
 
 const sassPluginConfig = esbuildSassPlugin.sassPlugin({ type: 'css', basedir: 'dist/css' });
-const inlineImage = require("esbuild-plugin-inline-image");
+const inlineImage = require('esbuild-plugin-inline-image');
 
 module.exports = {
     createBuildConfig: isDevelopment => ({

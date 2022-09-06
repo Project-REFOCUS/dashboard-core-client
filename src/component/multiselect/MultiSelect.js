@@ -27,8 +27,7 @@ const MultiSelect = ({ options, isLoading, onChange }) => {
             hideSelectedOptions={false}
             isSearchable={false}
             maxMenuHeight={250}
-            menuPlacement="top"
-            menuPosition="fixed"
+            menuPosition="absolute"
             value={values}
             isMulti
             onKeyDown={ignoreSpaceBar}
