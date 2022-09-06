@@ -29,13 +29,13 @@ const getDataOrientationOptions = ({ category }) => [
         : []
 );
 
-const SidebarVaccinationsPanel = ({ id, active, disabled, setActive, onDataOrientationSelect }) => {
+const SidebarVaccinationsPanel = ({ id, active, disabled, setActive, onQueryUpdate }) => {
     const [raceCategoryLoading, setRaceCategoryLoading] = useState(true);
     const [raceCategoryOptions, setRaceCategoryOptions] = useState([]);
     const [subCategory, setSubCategory] = useState(null);
     const [orientation, setOrientation] = useState(null);
     const onDataOrientationChange = dataOrientation => {
-        onDataOrientationSelect({
+        onQueryUpdate({
             name: id,
             orientation: dataOrientation?.value,
             subCategory: subCategory.value

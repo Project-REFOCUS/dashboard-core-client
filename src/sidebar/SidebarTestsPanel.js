@@ -1,10 +1,12 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {Collapse, Form, ListGroup} from 'react-bootstrap';
 import classnames from 'classnames';
 import ReactSelect from 'react-select';
+import MultiSelect from '../component/multiselect/MultiSelect';
 
 import { ReactSelectStyle } from '../styles/common';
+import {getListOfStates} from "../common/services";
 
 const dataOrientationOptions = [
     { label: 'Cumulative tests', value: 'cumulative' },
@@ -25,12 +27,25 @@ const dataOrientationOptions = [
 
 const colorLabel = 'yellow';
 
-const SidebarTestsPanel = ({ id, active, disabled, setActive, onDataOrientationSelect }) => {
+const SidebarTestsPanel = ({ id, active, disabled, setActive, onQueryUpdate }) => {
+    const [stateOptionsLoading, setStateOptionsLoading] = useState(true);
+    const [stateOptions, setStateOptions] = useState([]);
     const [orientation, setOrientation] = useState([]);
+    const [states, setStates] = useState(null);
     const onDataOrientationChange = dataOrientation => {
-        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value, colorLabel });
+        onQueryUpdate({ name: id, orientation: dataOrientation?.value, colorLabel, states });
         setOrientation(dataOrientation);
-    }
+    };
+    const onStatesChange = updatedStates => {
+        onQueryUpdate({ name: id, orientation: orientation?.value, colorLabel, states: updatedStates });
+        setStates(updatedStates);
+    };
+    useEffect(() => {
+        getListOfStates().then(options => {
+            setStateOptions(options);
+            setStateOptionsLoading(false);
+        });
+    }, []);
     return (
         <ListGroup.Item
             variant={active ? 'light' : 'secondary'}
@@ -70,6 +85,14 @@ const SidebarTestsPanel = ({ id, active, disabled, setActive, onDataOrientationS
                                     styles={ReactSelectStyle}
                                     onChange={onDataOrientationChange}
                                     value={orientation}
+                                />
+                            </div>
+                            <div className="mb-2" onClick={e => e.stopPropagation()}>
+                                <Form.Label className="mb-0">Geography</Form.Label>
+                                <MultiSelect
+                                    isLoading={stateOptionsLoading}
+                                    options={stateOptions}
+                                    onChange={onStatesChange}
                                 />
                             </div>
                         </div>

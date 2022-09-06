@@ -12,3 +12,5 @@ export const getDateNDaysAgo = n => {
     const nDaysAgo = new Date(todayInMillis - nDaysInMillis);
     return isoDateFormatter.format(nDaysAgo);
 };
+
+export const toStatesParam = states => states ? states.map(s => s.value).join(',') : '';

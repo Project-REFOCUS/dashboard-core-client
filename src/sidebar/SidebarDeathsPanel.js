@@ -3,8 +3,9 @@ import { useEffect, useState } from 'react';
 import {Collapse, Form, ListGroup} from 'react-bootstrap';
 import classnames from 'classnames';
 import ReactSelect from 'react-select';
+import MultiSelect from '../component/multiselect/MultiSelect';
 
-import {getRaceEthnicityCategories} from '../common/services';
+import {getRaceEthnicityCategories, getListOfStates} from '../common/services';
 import { ReactSelectStyle } from '../styles/common';
 
 const dataOrientationOptions = [
@@ -24,19 +25,30 @@ const dataOrientationOptions = [
 
 const colorLabel = 'purple';
 
-const SidebarDeathsPanel = ({ id, active, disabled, setActive, onDataOrientationSelect }) => {
+const SidebarDeathsPanel = ({ id, active, disabled, setActive, onQueryUpdate }) => {
     const [raceCategoryLoading, setRaceCategoryLoading] = useState(true);
     const [raceCategoryOptions, setRaceCategoryOptions] = useState([]);
+    const [stateOptionsLoading, setStateOptionsLoading] = useState(true);
+    const [stateOptions, setStateOptions] = useState([]);
     const [orientation, setOrientation] = useState(null);
+    const [states, setStates] = useState(null);
     const onDataOrientationChange = dataOrientation => {
-        onDataOrientationSelect({ name: id, orientation: dataOrientation?.value, colorLabel });
+        onQueryUpdate({ name: id, orientation: dataOrientation?.value, colorLabel, states });
         setOrientation(dataOrientation);
+    };
+    const onStatesChange = updatedStates => {
+        onQueryUpdate({ name: id, orientation: orientation?.value, colorLabel, states: updatedStates });
+        setStates(updatedStates);
     };
     useEffect(() => {
         getRaceEthnicityCategories().then(options => {
             setRaceCategoryOptions(options);
             setRaceCategoryLoading(false);
         });
+        getListOfStates().then(options => {
+            setStateOptions(options);
+            setStateOptionsLoading(false);
+        })
     }, []);
     return (
         <ListGroup.Item
@@ -85,6 +97,14 @@ const SidebarDeathsPanel = ({ id, active, disabled, setActive, onDataOrientation
                                     isLoading={raceCategoryLoading}
                                     options={raceCategoryOptions}
                                     styles={ReactSelectStyle}
+                                />
+                            </div>
+                            <div className="mb-2" onClick={e => e.stopPropagation()}>
+                                <Form.Label className="mb-0">Geography</Form.Label>
+                                <MultiSelect
+                                    isLoading={stateOptionsLoading}
+                                    options={stateOptions}
+                                    onChange={onStatesChange}
                                 />
                             </div>
                         </div>

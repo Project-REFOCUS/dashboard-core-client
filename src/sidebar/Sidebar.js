@@ -37,7 +37,7 @@ const Sidebar = ({ onCategoryUpdate, onCategoriesUpdate }) => {
         const exists = updatedActivePanelSet.has(id);
         const method = exists ? 'delete' : 'add';
         updatedActivePanelSet[method](id);
-        
+
         onCategoriesUpdate({ name: id }, exists);
         setActivePanelSet(updatedActivePanelSet);
     };
@@ -55,28 +55,28 @@ const Sidebar = ({ onCategoryUpdate, onCategoriesUpdate }) => {
                 active={activePanelSet.has(PANELS.CASES)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.CASES)}
                 setActive={toggleActivePanel}
-                onDataOrientationSelect={onCategoriesUpdate}
+                onQueryUpdate={onCategoriesUpdate}
             />
             <SidebarDeathsPanel
                 id={PANELS.DEATHS}
                 active={activePanelSet.has(PANELS.DEATHS)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.DEATHS)}
                 setActive={toggleActivePanel}
-                onDataOrientationSelect={onCategoriesUpdate}
+                onQueryUpdate={onCategoriesUpdate}
             />
             <SidebarTestsPanel
                 id={PANELS.TESTS}
                 active={activePanelSet.has(PANELS.TESTS)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.TESTS)}
                 setActive={toggleActivePanel}
-                onDataOrientationSelect={onCategoriesUpdate}
+                onQueryUpdate={onCategoriesUpdate}
             />
             <SidebarVaccinationsPanel
                 id={PANELS.VACCINATIONS}
                 active={activePanelSet.has(PANELS.VACCINATIONS)}
                 disabled={isDisabledPanel(activePanelSet, PANELS.VACCINATIONS)}
                 setActive={toggleActivePanel}
-                onDataOrientationSelect={onCategoriesUpdate}
+                onQueryUpdate={onCategoriesUpdate}
             />
             <SidebarPoliceShootingsPanel
                 id={PANELS.POLICE_SHOOTINGS}
