@@ -12,6 +12,7 @@ import { isEmptyKeyObject } from '../../utility_helpers';
 
 import '../customStyles.scss';
 import '../../CustomVariables.scss';
+import MultiSelectStyle from "../multiselect/MultiSelectStyle";
 
 const stateMenuListComponent = ({ selectProps, ...props }) => {
   const { onInputChange, stateInputValue, onMenuInputFocus } = selectProps;
@@ -336,56 +337,7 @@ const CollapseContent = ({
               GroupHeading: stateGroupHeadingComponent,
             }}
             isDisabled={isEmptyKeyObject(dataOrientation)}
-            styles={{
-              control: (base) => ({
-                ...base,
-                "&:hover": {
-                  backgroundColor: "#D3ECFF",
-                  cursor: "pointer",
-                },
-                minHeight: "30px",
-              }),
-              dropdownIndicator: (base) => ({
-                ...base,
-                justifyContent: "space-between",
-              }),
-              indicatorSeparator: (base) => ({
-                ...base,
-                width: 0,
-              }),
-              groupHeading: (base) => ({
-                ...base,
-                textTransform: "none",
-              }),
-              multiValue: (base) => ({
-                ...base,
-                ...customFontStyles({
-                  ...fontStyles,
-                  fontSize: "11px",
-                  lineHeight: "15px",
-                  color: "#000000",
-                }),
-                backgroundColor: "#DFE6E9",
-                borderRadius: "4px",
-              }),
-              option: (base, state) => ({
-                ...base,
-                ...customFontStyles({ ...fontStyles, color: "#000000" }),
-                backgroundColor: state.isSelected
-                  ? "#72BBF4"
-                  : base.backgroundColor,
-                "&:hover": {
-                  backgroundColor: state.isSelected
-                    ? "#086EBE"
-                    : base.backgroundColor,
-                  cursor: "pointer",
-                },
-              }),
-              placeholder: (base) => ({
-                ...base,
-                ...customFontStyles({ ...fontStyles, color: "#B2BEC3" }),
-              }),
-            }}
+            styles={MultiSelectStyle}
             pageSize={5}
             filterOption={createFilter({ matchFrom: "start" })}
             hideSelectedOptions={false}

@@ -1,5 +1,5 @@
 import { PERIOD_MAP } from './constants';
-import { getDateNDaysAgo } from './utils';
+import { getDateNDaysAgo, toStatesParam } from './utils';
 
 const handleJsonResponse = response => response.json();
 
@@ -13,8 +13,8 @@ export const getRaceEthnicityCategories = () =>
         .then(handleJsonResponse)
         .then(results => results.map(ethnicity => ({ label: ethnicity.name, value: ethnicity.id })));
 
-const getCovidCasesData = ({ startDate, orientation }) =>
-    window.fetch(`/dashboard-service/covid/cases?startDate=${startDate}&orientation=${orientation}&states`)
+const getCovidCasesData = ({ startDate, orientation, states }) =>
+    window.fetch(`/dashboard-service/covid/cases?startDate=${startDate}&orientation=${orientation}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
 const getCovidDeathsData = ({ startDate, orientation }) =>
