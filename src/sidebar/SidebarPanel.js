@@ -9,6 +9,7 @@ import MultiSelect from '../component/multiselect/MultiSelect';
 const shouldInvokeOptions = (options, disabled, dropdownMap) =>
     typeof options === 'function' && (!disabled || (typeof disabled === 'function' && !disabled(dropdownMap)));
 
+const isDuplicate = id => id.endsWith('duplicated');
 const isDisabled = (disabled, dropdownMap) => typeof disabled === 'function' ? disabled(dropdownMap) : disabled;
 const getOptions = (options, disabled, dropdownMap) => !isDisabled(disabled, dropdownMap) && typeof options === 'function' ? options(dropdownMap) : options || []
 const objectifyMap = dropdownMap =>
@@ -19,7 +20,7 @@ const objectifyMap = dropdownMap =>
 
 
 
-const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, setActive, onQueryUpdate, isDuplicated, onDuplicate, onRemove, duplicated }) => {
+const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, setActive, onQueryUpdate, canDuplicate, isDuplicated, onDuplicate, onRemove, duplicated }) => {
     const [dropdownMap, setDropdownMap] = useState(useMemo(() => dropdowns.reduce((map, dropdown) => map.set(dropdown.id, dropdown.value), new Map()), [dropdowns]));
     const onDropdownChange = ({ dropdown, value }) => {
         const updatedDropdownMap = new Map(dropdownMap);
@@ -38,7 +39,7 @@ const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, set
             <div className="d-flex justify-content-between align-items-center">
                 <div
                     className="d-flex flex-column flex-grow-1 pointer"
-                    onClick={() => !disabled && setActive(id)}
+                    onClick={() => !disabled && !isDuplicated && setActive(id)}
                 >
                     <div className="d-flex flex-row flex-grow-1 pointer justify-content-between align-items-center">
                         <Form.Check>
@@ -54,16 +55,16 @@ const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, set
                                 {label}
                             </Form.Check.Label>
                         </Form.Check>
-                        {active && !isDuplicated && typeof duplicated === 'function' && (
+                        {active && canDuplicate && (
                             <PlusLg
                                 className="icon-style-1 pointer"
                                 onClick={e => {
-                                    onDuplicate(id, duplicated);
+                                    onDuplicate(id);
                                     e.stopPropagation();
                                 }}
                             />
                         )}
-                        {active && isDuplicated && (
+                        {active && isDuplicate(id) && (
                             <Trash
                                 onClick={e => {
                                     onRemove(id);
