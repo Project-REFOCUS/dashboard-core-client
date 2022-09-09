@@ -29,7 +29,10 @@ const Sidebar = ({ onCategoriesUpdate }) => {
             panels.flatMap(panel => panel.id === id ? [panel, duplicated(panel)] : [panel])
         );
     };
-    const onRemove = id => setPanels(panels => panels.filter(panel => panel.id !== id));
+    const onRemove = id => {
+        toggleActivePanel(id);
+        setPanels(panels => panels.filter(panel => panel.id !== id));
+    };
     return (
         <ListGroup id="sidebarNavigation" className="sidebar-navigation" key="List-Group">
             <ListGroup.Item
@@ -45,7 +48,8 @@ const Sidebar = ({ onCategoriesUpdate }) => {
                     active={activePanelSet.has(panel.id)}
                     disabled={isDisabledPanel(activePanelSet, panel.id)}
                     duplicated={panel.duplicated}
-                    onDuplicate={onDuplicate}
+                    canDuplicate={panel.duplicated && activePanelSet.size < 2}
+                    onDuplicate={id => onDuplicate(id, panel.duplicated)}
                     onRemove={onRemove}
                     isDuplicated={isDuplicatedPanel(activePanelSet, panel.id)}
                     setActive={toggleActivePanel}
