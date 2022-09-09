@@ -14,19 +14,19 @@ export const getRaceEthnicityCategories = () =>
         .then(results => results.map(ethnicity => ({ label: ethnicity.name, value: ethnicity.id })));
 
 const getCovidCasesData = ({ startDate, orientation, states }) =>
-    window.fetch(`/dashboard-service/covid/cases?startDate=${startDate}&orientation=${orientation}&states=${toStatesParam(states)}`)
+    window.fetch(`/dashboard-service/covid/cases?startDate=${startDate}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
 const getCovidDeathsData = ({ startDate, orientation, states }) =>
-    window.fetch(`/dashboard-service/covid/deaths?startDate=${startDate}&orientation=${orientation}&states=${toStatesParam(states)}`)
+    window.fetch(`/dashboard-service/covid/deaths?startDate=${startDate}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
 const getCovidTestsData = ({ startDate, orientation, states }) =>
-    window.fetch(`/dashboard-service/covid/tests?startDate=${startDate}&orientation=${orientation}&states=${toStatesParam(states)}`)
+    window.fetch(`/dashboard-service/covid/tests?startDate=${startDate}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
 const getCovidVaccinationsData = ({ startDate, subCategory, orientation, states }) =>
-    window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation}&subCategory=${subCategory}&states=${toStatesParam(states)}`);
+    window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation.value}&subCategory=${subCategory.value}&states=${toStatesParam(states)}`);
 
 const categoryServicesMap = {
     cases: getCovidCasesData,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactSelect from 'react-select';
 import MultiSelectStyle from './MultiSelectStyle';
 
@@ -12,10 +12,21 @@ import MultiSelectGroupHeadingComponent from './MultiSelectGroupHeadingComponent
 
 const ignoreSpaceBar = e => e.keyCode === 32 && e.preventDefault();
 
-const MultiSelect = ({ options, isLoading, onChange }) => {
+const MultiSelect = ({ options: optionsProp, optionsPromise, onChange }) => {
     const [values, setValues] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [options, setOptions] = useState(optionsPromise ? [] : optionsProp);
     const [inputValue, setInputValue] = useState('');
     const [additionalProps, setAdditionalProps] = useState({});
+    useEffect(() => {
+        if (typeof optionsPromise === 'function') {
+            setIsLoading(true);
+            optionsPromise().then(results => {
+                setOptions(results);
+                setIsLoading(false);
+            });
+        }
+    }, [optionsPromise])
     return (
         <ReactSelect
             options={options}
