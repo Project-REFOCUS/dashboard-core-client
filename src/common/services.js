@@ -40,6 +40,6 @@ export const getDataFromQuery = query => {
     const startDate = /^last\d{1,3}Days$/.test(period.value) ? getDateNDaysAgo(PERIOD_MAP[period.value]) : period.value;
     return Promise.all(query.categories.map(category => {
         const { name, ...data } = category;
-        return categoryServicesMap[name.replace('-duplicated', '')]({ startDate, ...data});
+        return categoryServicesMap[name]({ startDate, ...data});
     }));
 };

@@ -19,7 +19,7 @@ const objectifyMap = dropdownMap =>
 
 
 
-const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, setActive, onQueryUpdate, isDuplicated, onDuplicate, onRemove, duplicated }) => {
+const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, setActive, onQueryUpdate, isDuplicated, onDuplicate, onRemove, duplicated }) => {
     const [dropdownMap, setDropdownMap] = useState(useMemo(() => dropdowns.reduce((map, dropdown) => map.set(dropdown.id, dropdown.value), new Map()), [dropdowns]));
     const onDropdownChange = ({ dropdown, value }) => {
         const updatedDropdownMap = new Map(dropdownMap);
@@ -28,7 +28,7 @@ const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, setActive
         setDropdownMap(updatedDropdownMap);
 
         typeof dropdown.onChange === 'function' && dropdown.onChange(updatedDropdownMap);
-        onQueryUpdate({ name: id, ...objectifyMap(updatedDropdownMap), color })
+        onQueryUpdate({ id, name, ...objectifyMap(updatedDropdownMap), color })
     };
     return (
         <ListGroup.Item

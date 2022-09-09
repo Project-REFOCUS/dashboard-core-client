@@ -20,7 +20,7 @@ const Sidebar = ({ onCategoriesUpdate }) => {
         const method = exists ? 'delete' : 'add';
         updatedActivePanelSet[method](id);
 
-        onCategoriesUpdate({ name: id }, exists);
+        onCategoriesUpdate({ id }, exists);
         setActivePanelSet(updatedActivePanelSet);
     };
     const onDuplicate = (id, duplicated) => {

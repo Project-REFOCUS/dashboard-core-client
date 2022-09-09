@@ -27,6 +27,7 @@ export const duplicateId = id => `${id}-duplicated`;
 export default [
     {
         id: 'cases',
+        name: 'cases',
         label: 'Cases',
         color: 'hot-pink',
         dropdowns: [
@@ -46,6 +47,7 @@ export default [
     },
     {
         id: 'deaths',
+        name: 'deaths',
         label: 'Deaths',
         color: 'purple',
         dropdowns: [
@@ -65,6 +67,7 @@ export default [
     },
     {
         id: 'tests',
+        name: 'tests',
         label: 'Tests',
         color: 'yellow',
         dropdowns: [
@@ -83,6 +86,7 @@ export default [
     },
     {
         id: 'vaccinations',
+        name: 'vaccinations',
         label: 'Vaccinations',
         classNames: {
             borderLeftColor: 'border-left-green1'
@@ -108,8 +112,10 @@ export default [
             id: duplicateId(thisItem.id)
         })
     },
+    /* *
     {
         id: 'police_shootings',
+        name: 'police_shootings',
         label: 'Police shootings',
         color: 'orange',
         dropdowns: [
@@ -126,4 +132,5 @@ export default [
             id: duplicateId(thisItem.id)
         })
     }
+    /* */
 ];

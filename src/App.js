@@ -28,7 +28,7 @@ const App = () => {
         const query = dashboardQuery[selectedTabIndex];
         query.categories = query.categories || [];
         query.categories = query.categories
-            .filter(query => query.name !== category.name)
+            .filter(query => query.id !== category.id)
             .concat(shouldRemove ? [] : [category]);
         setDashboardQuery(newDashboardQuery);
     };
