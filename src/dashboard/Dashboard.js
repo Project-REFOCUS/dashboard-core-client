@@ -1,16 +1,16 @@
 import React from 'react';
 
 import DashboardEmpty from './DashboardEmpty';
+import DashboardHeader from './DashboardHeader';
 import DashboardGraphSpinner from './DashboardGraphSpinner';
 import DashboardLineGraph from './DashboardLineGraph';
 
 import './Dashboard.scss';
 
-const noData = [];
-
 const Dashboard = ({ isLoading, leftAxis, rightAxis }) => {
     return (
-        <div className="dashboard mx-2 max-height">
+        <div className="dashboard mx-2 max-height d-flex flex-column">
+            <DashboardHeader leftAxisQuery={leftAxis?.query} rightAxisQuery={rightAxis?.query} />
             {isLoading ? (
                 <DashboardGraphSpinner />
             ) : (
@@ -19,7 +19,6 @@ const Dashboard = ({ isLoading, leftAxis, rightAxis }) => {
                     {!(leftAxis?.data || rightAxis?.data) && <DashboardEmpty />}
                 </>
             )}
-
         </div>
     );
 };
