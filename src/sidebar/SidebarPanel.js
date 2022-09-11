@@ -6,9 +6,6 @@ import classnames from 'classnames';
 import SingleSelect from '../component/select/SingleSelect';
 import MultiSelect from '../component/multiselect/MultiSelect';
 
-const shouldInvokeOptions = (options, disabled, dropdownMap) =>
-    typeof options === 'function' && (!disabled || (typeof disabled === 'function' && !disabled(dropdownMap)));
-
 const isDuplicate = id => id.endsWith('duplicated');
 const isDisabled = (disabled, dropdownMap) => typeof disabled === 'function' ? disabled(dropdownMap) : disabled;
 const getOptions = (options, disabled, dropdownMap) => !isDisabled(disabled, dropdownMap) && typeof options === 'function' ? options(dropdownMap) : options || []
@@ -20,7 +17,7 @@ const objectifyMap = dropdownMap =>
 
 
 
-const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, setActive, onQueryUpdate, canDuplicate, isDuplicated, onDuplicate, onRemove, duplicated }) => {
+const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, setActive, onQueryUpdate, canDuplicate, isDuplicated, onDuplicate, onRemove }) => {
     const [dropdownMap, setDropdownMap] = useState(useMemo(() => dropdowns.reduce((map, dropdown) => map.set(dropdown.id, dropdown.value), new Map()), [dropdowns]));
     const onDropdownChange = ({ dropdown, value }) => {
         const updatedDropdownMap = new Map(dropdownMap);
@@ -29,7 +26,7 @@ const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, set
         setDropdownMap(updatedDropdownMap);
 
         typeof dropdown.onChange === 'function' && dropdown.onChange(updatedDropdownMap);
-        onQueryUpdate({ id, name, ...objectifyMap(updatedDropdownMap), color })
+        onQueryUpdate({ id, name, label, ...objectifyMap(updatedDropdownMap), color })
     };
     return (
         <ListGroup.Item
@@ -80,7 +77,7 @@ const SidebarPanel = ({ active, color, disabled, label, dropdowns, id, name, set
                                     <Form.Label className="mb-0">{dropdown.label}</Form.Label>
                                     {dropdown.isMulti ? (
                                         <MultiSelect
-                                            options={shouldInvokeOptions(dropdown.options, dropdown.dis) ? dropdown.options(dropdownMap) : dropdown.options}
+                                            options={getOptions(dropdown.options, dropdown.disabled, dropdownMap)}
                                             optionsPromise={dropdown.optionsPromise}
                                             onChange={value => onDropdownChange({ dropdown, value})}
                                             value={dropdownMap.get(dropdown.id)}

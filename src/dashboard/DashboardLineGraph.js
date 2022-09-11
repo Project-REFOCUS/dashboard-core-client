@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from 'react';
 
 const SPACE_PER_CHARACTER = 5;
 const ADDITIONAL_PADDING = 20;
+const BOTTOM_PADDING = 30;
 
 const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
     const graphContainerElement = useRef();
@@ -34,12 +35,12 @@ const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
             .ticks(10);
 
         svg.append('g')
-            .attr('transform', 'translate(0, ' + (dimensions.height - 30) + ')')
+            .attr('transform', 'translate(0, ' + (dimensions.height - BOTTOM_PADDING) + ')')
             .call(bottomAxis);
 
         const leftAxisScale = d3.scaleLinear()
             .domain([0, d3.max(leftAxis.data || [], d => +d.value)])
-            .range([dimensions.height - 30, 10]);
+            .range([dimensions.height - BOTTOM_PADDING, 10]);
 
         svg.append('g')
             .attr('transform', 'translate(' + marginLeft + ', 0)')
@@ -47,7 +48,7 @@ const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
 
         const rightAxisScale = d3.scaleLinear()
             .domain([0, d3.max(rightAxis.data || [], d => +d.value)])
-            .range([dimensions.height - 30, 10]);
+            .range([dimensions.height - BOTTOM_PADDING, 10]);
 
         svg.append('g')
             .attr('transform', 'translate(' + (dimensions.width - offsetRight) + ', 0)')
@@ -57,7 +58,6 @@ const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
             .datum(leftAxis.data || [])
             .attr('fill', 'none')
             .attr('class', leftAxis.query.color)
-            // .attr('stroke', 'hotPink')
             .attr('stroke-width', 1.5)
             .attr('d', d3.line()
                 .x(d => bottomAxisTimeScale(new Date(d.date)))
@@ -68,7 +68,6 @@ const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
             .datum(rightAxis.data || [])
             .attr('fill', 'none')
             .attr('class', rightAxis.query ? rightAxis.query.color : '')
-            // .attr('stroke', 'purple')
             .attr('stroke-width', 1.5)
             .attr('d', d3.line()
                 .x(d => bottomAxisTimeScale(new Date(d.date)))
