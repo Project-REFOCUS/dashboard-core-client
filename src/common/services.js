@@ -26,7 +26,8 @@ const getCovidTestsData = ({ startDate, orientation, states }) =>
         .then(handleJsonResponse);
 
 const getCovidVaccinationsData = ({ startDate, subCategory, orientation, states }) =>
-    window.console.log(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation.value}&subCategory=${subCategory.value}&states=${toStatesParam(states)}`);
+    window.fetch(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation.value}&subCategory=${subCategory.value}&states=${toStatesParam(states)}`)
+        .then(handleJsonResponse);
 
 const categoryServicesMap = {
     cases: getCovidCasesData,

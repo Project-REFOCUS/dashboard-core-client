@@ -88,9 +88,7 @@ export default [
         id: 'vaccinations',
         name: 'vaccinations',
         label: 'Vaccinations',
-        classNames: {
-            borderLeftColor: 'border-left-green1'
-        },
+        color: 'green-1',
         dropdowns: [
             {
                 id: 'subCategory',
@@ -108,7 +106,7 @@ export default [
         ],
         duplicated: thisItem => ({
             ...thisItem,
-            color: 'grey-4',
+            color: 'grey-1',
             id: duplicateId(thisItem.id)
         })
     },
