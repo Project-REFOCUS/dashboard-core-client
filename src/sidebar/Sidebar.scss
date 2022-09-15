@@ -22,6 +22,10 @@ $sidebar-active-border-left-width: 4px;
   border-left: $sidebar-active-border-left-width solid $green-1;
 }
 
+.border-left-grey-1 {
+  border-left: $sidebar-active-border-left-width solid $grey-1;
+}
+
 .border-left-orange {
   border-left: $sidebar-active-border-left-width solid $orange;
 }
