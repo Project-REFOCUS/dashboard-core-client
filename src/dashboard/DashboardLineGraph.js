@@ -39,7 +39,7 @@ const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
             .call(bottomAxis);
 
         const leftAxisScale = d3.scaleLinear()
-            .domain([0, d3.max(leftAxis.data || [], d => +d.value)])
+            .domain([d3.min(leftAxis.data || [], d => d.value), d3.max(leftAxis.data || [], d => d.value)])
             .range([dimensions.height - BOTTOM_PADDING, 10]);
 
         svg.append('g')
@@ -47,7 +47,7 @@ const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
             .call(d3.axisLeft(leftAxisScale));
 
         const rightAxisScale = d3.scaleLinear()
-            .domain([0, d3.max(rightAxis.data || [], d => +d.value)])
+            .domain([d3.min(rightAxis.data || [], d => d.value), d3.max(rightAxis.data || [], d => d.value)])
             .range([dimensions.height - BOTTOM_PADDING, 10]);
 
         svg.append('g')
