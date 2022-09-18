@@ -18,7 +18,7 @@ const esbuildPluginProxyConfiguration = {
             { name: 'esbuildJsonAssets', methods: ['GET'], urls: ['.*json$'] },
             { name: 'esbuildSourceMap', methods: ['GET'], urls: ['.*js.map$'] },
             {
-                name: 'projectRefocusRemote',
+                name: process.env.USE_LOCALHOST ? 'projectRefocusLocal' : 'projectRefocusRemote',
                 methods: ['GET'],
                 urls: ['/dashboard-service/.*']
             }
