@@ -19,9 +19,11 @@ export const getDataOrientationOptionsForCases = () =>
 export const getDataOrientationOptionsForDeaths = () =>
     getBaseDataOrientationOptions('deaths').concat([
         { label: 'Mortality rate (death rate)', value: 'mortalityRate', order: 31 },
-        { label: 'Percent change in mortality rate', value: 'percentChangeInMortalityRate', order: 32 },
-        { label: 'Percent change in mortality rate over 7 days', value: 'percentChangeInMortalityRateOver7', order: 33 },
-        { label: 'Percent change in mortality rate over 14 days', value: 'percentChangeInMortalityRateOver14', order: 34 }
+        { label: 'Mortality rate over 7 days', value: 'mortalityRateOver7Days', order: 32 },
+        { label: 'Mortality rate over 14 days', value: 'mortalityRateOver14Days', order: 33 },
+        // { label: 'Percent change in mortality rate', value: 'percentChangeInMortalityRate', order: 34 },
+        // { label: 'Percent change in mortality rate over 7 days', value: 'percentChangeInMortalityRateOver7', order: 35 },
+        // { label: 'Percent change in mortality rate over 14 days', value: 'percentChangeInMortalityRateOver14', order: 36 }
     ]).sort(sortOrder).map(mappedOrientation);
 
 export const getDataOrientationOptionsForTests = () =>
