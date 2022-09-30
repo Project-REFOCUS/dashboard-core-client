@@ -1,4 +1,5 @@
 @import '../CustomVariables.scss';
+@import '../styles/variables/colors';
 
 #state-search.form-control{
   background-color: $custom-white;
@@ -90,9 +91,12 @@ label.form-label{
   color: $custom-black-2;
 }
 
-.remove-tag-icon-2{
+.remove-tag-icon-2 {
   @include wxhStyle1(16px, 16px);
   color: $custom-black-2;
+  &.active {
+    color: $blue-1;
+  }
 }
 
 .hr-style-1{
