@@ -5,24 +5,24 @@ import NavbarTabsItem from './NavbarTabsItem';
 
 import './NavbarTabs.scss';
 
-const NavbarTabs = () => {
+const NavbarTabs = ({ onTabAdded, onTabSelected, onTabRemoved }) => {
     const [tabList, setTabList] = useState([{ label: 'Dashboard', value: 'dashboard' }]);
     const [activeTab, setActiveTab] = useState('dashboard');
     const tabIdReference = useRef(0)
     const addTab = () => {
         tabIdReference.current += 1;
-        setTabList(originalTabList => (
-            originalTabList.concat({
-                label: 'Dashboard ' + tabIdReference.current,
-                value: 'dashboard' + tabIdReference.current
-            })
-        ));
+        const newTab = { label: 'Dashboard ' + tabIdReference.current, value: 'dashboard' + tabIdReference.current };
+        setTabList(originalTabList => (originalTabList.concat([newTab])));
         setActiveTab('dashboard' + tabIdReference.current);
+        onTabAdded(newTab.value);
     };
-    const removeTab = value => setTabList(list => list.filter(tab => tab.value !== value));
+    const removeTab = value => {
+        setTabList(list => list.filter(tab => tab.value !== value));
+        onTabRemoved(value);
+    };
     return (
         <div id="tabNavigation">
-            <ul className="nav nav-tabs" role="tablist">
+            <ul className="nav nav-tabs" role="tabList">
                 {tabList.map(tab => (
                     <NavbarTabsItem
                         key={tab.value}
@@ -30,7 +30,10 @@ const NavbarTabs = () => {
                         label={tab.label}
                         value={tab.value}
                         showClose={tabList.length > 1}
-                        onSelect={() => setActiveTab(tab.value)}
+                        onSelect={() => {
+                            setActiveTab(tab.value)
+                            onTabSelected(tab.value);
+                        }}
                         onRemove={() => removeTab(tab.value)}
                     />
                 ))}
