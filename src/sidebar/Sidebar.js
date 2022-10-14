@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ListGroup } from 'react-bootstrap';
 
 import SidebarPanel from './SidebarPanel';
@@ -11,7 +11,11 @@ import './Sidebar.scss';
 const isDisabledPanel = (activeSet, id) => activeSet.size === 2 && !activeSet.has(id);
 const isDuplicatedPanel = (activeSet, id) => activeSet.size === 2 && (id.endsWith('-duplicated') || activeSet.has(`${id}-duplicated`));
 
-const Sidebar = ({ onCategoriesUpdate }) => {
+const Sidebar = ({ onCategoriesUpdate, selectedCategories }) => {
+    const selectedCategoriesMap = useMemo(
+        () => selectedCategories?.reduce((map, category) => map.set(category.id, category), new Map()),
+        [selectedCategories]
+    );
     const [activePanelSet, setActivePanelSet] = useState(new Set());
     const [panels, setPanels] = useState(configuration);
     const toggleActivePanel = id => {
@@ -33,6 +37,12 @@ const Sidebar = ({ onCategoriesUpdate }) => {
         toggleActivePanel(id);
         setPanels(panels => panels.filter(panel => panel.id !== id));
     };
+    useEffect(() => {
+        const newPanels = configuration.flatMap(config => {
+            return selectedCategoriesMap.has(`${config.id}-duplicated`) ? [config, config.duplicated(config)] : [config];
+        });
+        setPanels(newPanels);
+    }, [selectedCategoriesMap]);
     return (
         <ListGroup id="sidebarNavigation" className="sidebar-navigation" key="List-Group">
             <ListGroup.Item
@@ -45,15 +55,16 @@ const Sidebar = ({ onCategoriesUpdate }) => {
             {panels.map(panel => (
                 <SidebarPanel
                     key={panel.id}
-                    active={activePanelSet.has(panel.id)}
-                    disabled={isDisabledPanel(activePanelSet, panel.id)}
+                    active={selectedCategoriesMap.has(panel.id)}
+                    disabled={isDisabledPanel(selectedCategoriesMap, panel.id)}
                     duplicated={panel.duplicated}
-                    canDuplicate={panel.duplicated && activePanelSet.size < 2}
+                    canDuplicate={panel.duplicated && selectedCategoriesMap.size < 2}
                     onDuplicate={id => onDuplicate(id, panel.duplicated)}
                     onRemove={onRemove}
-                    isDuplicated={isDuplicatedPanel(activePanelSet, panel.id)}
+                    isDuplicated={isDuplicatedPanel(selectedCategoriesMap, panel.id)}
                     setActive={toggleActivePanel}
                     onQueryUpdate={onCategoriesUpdate}
+                    selectedValues={selectedCategoriesMap.get(panel.id)}
                     {...panel}
                 />
             ))}

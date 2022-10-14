@@ -21,6 +21,7 @@ const DashboardLineGraph = ({ leftAxis, rightAxis }) => {
 
     useEffect(() => {
         const dimensions = graphContainerElement.current.getBoundingClientRect();
+        d3.select('#data-content-container svg').remove();
         const svg = d3.select('#data-content-container')
             .append('svg')
             .attr('width', dimensions.width)
