@@ -29,11 +29,16 @@ const getCovidVaccinationsData = ({ startDate, subCategory, orientation, states 
     window.fetch(`/dashboard-service/covid/vaccinations?startDate=${startDate}&orientation=${orientation.value}&subCategory=${subCategory.value}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
+const getFatalPoliceShootingsData = ({ startDate, orientation, states }) =>
+    window.fetch(`/dashboard-service/police/shootings?startDate=${startDate}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
+        .then(handleJsonResponse);
+
 const categoryServicesMap = {
     cases: getCovidCasesData,
     deaths: getCovidDeathsData,
     tests: getCovidTestsData,
-    vaccinations: getCovidVaccinationsData
+    vaccinations: getCovidVaccinationsData,
+    shootings: getFatalPoliceShootingsData,
 };
 
 export const getDataFromQuery = query => {
