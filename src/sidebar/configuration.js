@@ -110,10 +110,9 @@ export default [
             id: duplicateId(thisItem.id)
         })
     },
-    /* *
     {
-        id: 'police_shootings',
-        name: 'police_shootings',
+        id: 'shootings',
+        name: 'shootings',
         label: 'Police shootings',
         color: 'orange',
         dropdowns: [
@@ -122,6 +121,7 @@ export default [
                 label: 'Data orientation',
                 options: getDataOrientationOptionsForPoliceShootings
             },
+            geographyDropdown,
             raceEthnicityDropdown
         ],
         duplicated: thisItem => ({
@@ -130,5 +130,4 @@ export default [
             id: duplicateId(thisItem.id)
         })
     }
-    /* */
 ];
