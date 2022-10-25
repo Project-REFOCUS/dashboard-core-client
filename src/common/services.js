@@ -33,12 +33,17 @@ const getFatalPoliceShootingsData = ({ startDate, orientation, states }) =>
     window.fetch(`/dashboard-service/police/shootings?startDate=${startDate}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
+const getRacismDeclarations = ({ startDate, orientation, states }) =>
+    window.fetch(`/dashboard-service/apha/racism-declarations?startDate=${startDate}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
+        .then(handleJsonResponse);
+
 const categoryServicesMap = {
     cases: getCovidCasesData,
     deaths: getCovidDeathsData,
     tests: getCovidTestsData,
     vaccinations: getCovidVaccinationsData,
     shootings: getFatalPoliceShootingsData,
+    racismDeclarations: getRacismDeclarations,
 };
 
 export const getDataFromQuery = query => {

@@ -129,5 +129,26 @@ export default [
             color: 'grey-3',
             id: duplicateId(thisItem.id)
         })
+    },
+    {
+        id: 'racismDeclarations',
+        name: 'racismDeclarations',
+        label: 'Places that have declared racism a public health crisis',
+        color: 'grey-2',
+        dropdowns: [
+            {
+                id: 'orientation',
+                label: 'Data orientation',
+                options: [
+                    { label: 'Cumulative declarations', value: 'cumulative'}
+                ]
+            },
+            geographyDropdown
+        ],
+        duplicated: thisItem => ({
+            ...thisItem,
+            color: 'blue-3',
+            id: duplicateId(thisItem.id)
+        })
     }
 ];
