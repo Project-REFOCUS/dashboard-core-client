@@ -37,6 +37,10 @@ const getRacismDeclarations = ({ startDate, orientation, states }) =>
     window.fetch(`/dashboard-service/apha/racism-declarations?startDate=${startDate}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
+const getCovidBehindBarsData = ({ startDate, primaryCategory, secondaryCategory, orientation, states }) =>
+    window.fetch(`/dashboard-service/covid/behindbars?startDate=${startDate}&primaryCategory=${primaryCategory.value}&secondaryCategory=${secondaryCategory.value}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
+        .then(handleJsonResponse);
+
 const categoryServicesMap = {
     cases: getCovidCasesData,
     deaths: getCovidDeathsData,
@@ -44,6 +48,7 @@ const categoryServicesMap = {
     vaccinations: getCovidVaccinationsData,
     shootings: getFatalPoliceShootingsData,
     racismDeclarations: getRacismDeclarations,
+    covidBehindBars: getCovidBehindBarsData
 };
 
 export const getDataFromQuery = query => {

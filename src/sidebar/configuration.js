@@ -4,7 +4,8 @@ import {
     getDataOrientationOptionsForTests,
     getSubCategoryOptionsForVaccines,
     getDataOrientationOptionsForVaccines,
-    getDataOrientationOptionsForPoliceShootings
+    getDataOrientationOptionsForPoliceShootings,
+    getSecondaryCategoriesForCovidBehindBars
 } from '../common/options';
 import {getListOfStates, getRaceEthnicityCategories} from '../common/services';
 
@@ -150,5 +151,38 @@ export default [
             color: 'blue-3',
             id: duplicateId(thisItem.id)
         })
+    },
+    {
+        id: 'covidBehindBars',
+        name: 'covidBehindBars',
+        label: 'Covid behind bars',
+        color: 'blue-2',
+        dropdowns: [
+            {
+                id: 'primaryCategory',
+                name: 'primaryCategory',
+                label: 'Personnel',
+                options: [
+                    { label: 'Residents', value: 'residents' },
+                    { label: 'Staff', value: 'staff' }
+                ]
+            },
+            {
+                id: 'secondaryCategory',
+                name: 'secondaryCategory',
+                label: 'Metric',
+                disabled: dropdowns => !dropdowns.get('primaryCategory'),
+                options: dropdowns => getSecondaryCategoriesForCovidBehindBars(dropdowns.get('primaryCategory')),
+            },
+            {
+                id: 'orientation',
+                name: 'orientation',
+                label: 'Data orientation',
+                options: [
+                    { label: 'Cumulative', value: 'cumulative' }
+                ]
+            },
+            geographyDropdown
+        ]
     }
 ];
