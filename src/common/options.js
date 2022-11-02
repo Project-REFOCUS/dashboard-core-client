@@ -56,3 +56,17 @@ export const getDataOrientationOptionsForVaccines = ({ category: id, value }) =>
 export const getDataOrientationOptionsForPoliceShootings = () => ([
     { label: 'Cumulative shootings', value: 'cumulative' }
 ]);
+
+export const getSecondaryCategoriesForCovidBehindBars = ({ value }) =>
+    [
+        { label: 'Cases', value: 'cases', order: 0 },
+        { label: 'Deaths', value: 'deaths', order: 1 },
+        { label: 'Administered one dose', value: 'administeredOneDose', order: 5 },
+        { label: 'Administered two doses', value: 'administeredTwoDose', order: 7 }
+    ].concat(
+        value === 'residents'
+            ? [{ label: 'Tests', value: 'tests', order: 3 }]
+            : []
+    )
+        .sort(sortOrder)
+        .map(mappedOrientation);
