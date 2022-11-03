@@ -23,6 +23,14 @@ const raceEthnicityDropdown = {
     isMulti: true
 };
 
+const createDuplicate = color => {
+    return thisItem => ({
+        ...thisItem,
+        color,
+        id: duplicateId(thisItem.id)
+    })
+};
+
 export const duplicateId = id => `${id}-duplicated`;
 
 export default [
@@ -178,11 +186,33 @@ export default [
                 id: 'orientation',
                 name: 'orientation',
                 label: 'Data orientation',
+                disabled: dropdowns => !dropdowns.get('secondaryCategory'),
+                options: [
+                    { label: 'Cumulative', value: 'cumulative' },
+                    { label: 'Daily', value: 'daily' },
+                    { label: 'Daily 7-day average', value: 'daily7DayAvg' },
+                    { label: 'Daily 14-day average', value: 'daily14DayAvg' }
+                ]
+            },
+            geographyDropdown
+        ],
+        duplicated: createDuplicate('blue-4')
+    },
+    {
+        id: 'oshaComplaints',
+        name: 'oshaComplaints',
+        label: 'Osha complaints',
+        color: 'black',
+        dropdowns: [
+            {
+                id: 'orientation',
+                label: 'Data orientation',
                 options: [
                     { label: 'Cumulative', value: 'cumulative' }
                 ]
             },
             geographyDropdown
-        ]
+        ],
+        duplicated: createDuplicate('green-2')
     }
 ];

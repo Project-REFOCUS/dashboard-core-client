@@ -41,6 +41,10 @@ const getCovidBehindBarsData = ({ startDate, primaryCategory, secondaryCategory,
     window.fetch(`/dashboard-service/covid/behindbars?startDate=${startDate}&primaryCategory=${primaryCategory.value}&secondaryCategory=${secondaryCategory.value}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
         .then(handleJsonResponse);
 
+const getOshaComplaintsData = ({ startDate, orientation, states }) =>
+    window.fetch(`/dashboard-service/osha/complaints?startDate=${startDate}&orientation=${orientation.value}&states=${toStatesParam(states)}`)
+        .then(handleJsonResponse);
+
 const categoryServicesMap = {
     cases: getCovidCasesData,
     deaths: getCovidDeathsData,
@@ -48,7 +52,8 @@ const categoryServicesMap = {
     vaccinations: getCovidVaccinationsData,
     shootings: getFatalPoliceShootingsData,
     racismDeclarations: getRacismDeclarations,
-    covidBehindBars: getCovidBehindBarsData
+    covidBehindBars: getCovidBehindBarsData,
+    oshaComplaints: getOshaComplaintsData
 };
 
 export const getDataFromQuery = query => {
