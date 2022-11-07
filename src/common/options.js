@@ -2,18 +2,22 @@ const sortOrder = (a, b) => a.order - b.order;
 const mappedOrientation = ({ label, value }) => ({ label, value });
 
 const getBaseDataOrientationOptions = id => ([
-    { label: `Cumulative ${id}`, value: 'cumulative', order: 5 },
-    { label: `Daily ${id}`, value: 'daily', order: 10 },
-    { label: `Daily ${id} 7-day rolling average`, value: 'daily7DayAvg', order: 15 },
-    { label: `Daily ${id} 14-day rolling average`, value: 'daily14DayAvg', order: 20 },
-    { label: `Percent change in daily ${id} over 7 days`, value: 'percentChangeInDailyOver7', order: 25 },
-    { label: `Percent change in daily ${id} over 14 days`, value: 'percentChangeInDailyOver14', order: 30 }
+    { label: `Cumulative ${id}`, value: 'cumulative', order: 1 },
+    { label: `Daily ${id}`, value: 'daily', order: 5 },
+    { label: `Daily ${id} 7-day rolling average`, value: 'daily7DayAvg', order: 10 },
+    { label: `Daily ${id} 14-day rolling average`, value: 'daily14DayAvg', order: 15 },
+    { label: `Percent change in daily ${id} over 7 days`, value: 'percentChangeInDailyOver7', order: 20 },
+    { label: `Percent change in daily ${id} over 14 days`, value: 'percentChangeInDailyOver14', order: 21 },
+    { label: `Weekly ${id}`, value: 'weekly', order: 22 },
+    { label: `Weekly ${id} per 100K`, value: 'weeklyPer100K', order: 23 },
+    { label: `Monthly ${id}`, value: 'monthly', order: 24 },
+    { label: `Monthly ${id} per 100K`, value: 'monthlyPer100K', order: 25 }
 ]);
 
 export const getDataOrientationOptionsForCases = () =>
     getBaseDataOrientationOptions('cases').concat([
-        { label: 'Daily cases 7-day rolling average per 100K population', value: 'daily7DayAvgPer100K', order: 21 },
-        { label: 'Daily cases 14-day rolling average per 100K population', value: 'daily14DayAvgPer100K', order: 22 }
+        { label: 'Daily cases 7-day rolling average per 100K population', value: 'daily7DayAvgPer100K', order: 16 },
+        { label: 'Daily cases 14-day rolling average per 100K population', value: 'daily14DayAvgPer100K', order: 17 }
     ]).sort(sortOrder).map(mappedOrientation);
 
 export const getDataOrientationOptionsForDeaths = () =>
