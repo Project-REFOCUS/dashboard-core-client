@@ -9,6 +9,7 @@ import Sidebar from './sidebar/Sidebar';
 import Dashboard from './dashboard/Dashboard';
 import { getDataFromQuery } from './common/services';
 
+import './index.scss';
 import './App.scss';
 
 const initializeDashboardData = () => ({ query: { period: null, categories: [] }, data: {} });
