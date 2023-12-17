@@ -1,0 +1,29 @@
+# This workflow deploys the dashboard web client to Docker Hub
+name: docker-hub-deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Deploy to DockerHub
+    steps:
+      - uses: actions/checkout@v4
+        name: Checkout repository
+        with:
+          token: ${{ secrets.ACCESS_TOKEN }}
+      - name: Authorize DockerHub
+        run: echo $DOCKERHUB_PASSWORD | docker login --username $DOCKERHUB_USERNAME --password-stdin
+      - name: Yarn Build and Release
+        run: yarn release
+      - name: Docker build tag
+        run: yarn docker-build
+      - name: Docker push image
+        run: yarn docker-push
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
+      GIT_COMMITTER_EMAIL: ${{ vars.GIT_COMMITTER_EMAIL }}
+      GIT_COMMITTER_NAME: ${{ vars.GIT_COMMITTER_NAME }}
