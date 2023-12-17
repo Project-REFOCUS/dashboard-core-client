@@ -30,3 +30,4 @@ jobs:
       DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
       GIT_COMMITTER_EMAIL: ${{ vars.GIT_COMMITTER_EMAIL }}
       GIT_COMMITTER_NAME: ${{ vars.GIT_COMMITTER_NAME }}
+      ENVIRONMENT: production
