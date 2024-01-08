@@ -1,9 +1,12 @@
 import React from 'react';
 import Header from './v2/header/Header';
 import Sidebar from './v2/sidebar/Sidebar';
-import { Card, CardContent, Container } from '@mui/material';
+import StateMap from './v2/components/StateMap';
+import ChartCard from './v2/chart/ChartCard';
+import { Box, Card, CardContent, Container, Typography } from '@mui/material';
 
 import './v2/styles/index.scss';
+import StateSection from './v2/stateSection/StateSection';
 
 const CardSX = {
     width: '100%',
@@ -13,27 +16,42 @@ const CardSX = {
     backgroundColor: 'rgba(223, 230, 233, .2)'
 };
 
+//global state ideas
+
+// what states are selected
+// expand event 
+// what graph is expanded
+
+//global states
+//initial: state map & info card
+//  what states:[counties[cities[zipcodes ... ]]] are selected
+//analyze: statviewcard
+//expand: popup ? maybe we dont want to reload the iframe. We may just expand it where it is 
+//so there would be no need for global state
+//would the expand be a new tab or just cover the page?
+//consider if there are multiple items, then we can have the popup height just cover the screen size
+//make sure to include aria
+
 const App = () => {
     return (
-        <div>
+        <Box>
             <Header />
             <Container>
-                <Card elevation={0} sx={CardSX}>
-                    <CardContent>
-                        <Sidebar/>
-                        <div style={{ width: '250px', padding: '8px' }}>
-                            <Card elevation={0}>
-                                <CardContent>
-                                    Please select a category and state to drill down
-                                    and access more detailed information about that state's
-                                    data and statistics.
-                                </CardContent>
-                            </Card>
-                        </div>
-                    </CardContent>
-                </Card>
+                <Box>
+                    <Card elevation={0} sx={CardSX}>
+                        <CardContent sx={{display: 'flex'}}>
+                            <Sidebar/>
+                            {/* <StateMap/> */}
+                            <ChartCard/>
+                        </CardContent>
+                    </Card>
+                </Box>
+                <StateSection state={"New York"}/>
+                <Box id="chart-popup">
+                    {/**Try to do this inside of the Statistic Card */}
+                </Box>
             </Container>
-        </div>
+        </Box>
     );
 };
 

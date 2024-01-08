@@ -1,0 +1,25 @@
+#right-chart-panel {
+    width: 100%;
+}
+
+#chart-option-right{
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+// div#chart-options {
+//     height: 32px;
+// }
+
+#date-range-container{
+    display: flex;
+    justify-content: flex-end;
+
+    #date-selector{
+        width: 65%;
+    }
+}
+
+#chart-iframe{
+    padding: 8px;
+}
