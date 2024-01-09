@@ -10,7 +10,7 @@ function StateSection({state}) {
             <CardContent>
                 <Stack direction="row">
                     <SidebarFilter location={state}/>
-                    <ChartCard/>
+                    <ChartCard titleBreadcrumbs={[["New York"],["County"]]}/>
                 </Stack>
             </CardContent>
         </Card>

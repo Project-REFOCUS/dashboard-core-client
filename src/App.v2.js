@@ -42,7 +42,7 @@ const App = () => {
                         <CardContent sx={{display: 'flex'}}>
                             <Sidebar/>
                             {/* <StateMap/> */}
-                            <ChartCard/>
+                            <ChartCard titleBreadcrumbs={[["Covid Deaths"],["New York","Florida"]]}/>
                         </CardContent>
                     </Card>
                 </Box>

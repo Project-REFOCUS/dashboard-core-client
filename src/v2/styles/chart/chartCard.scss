@@ -2,24 +2,42 @@
     width: 100%;
 }
 
+#chart-section-container {
+    padding: 6px 14px;
+}
+
 #chart-option-right{
     gap: 12px;
     justify-content: flex-end;
 }
 
-// div#chart-options {
-//     height: 32px;
-// }
+#chart-section-header {
+    font-family: Lato;
+    font-size: 0.875em;
+    font-weight: 700;
+}
 
 #date-range-container{
     display: flex;
     justify-content: flex-end;
 
     #date-selector{
-        width: 65%;
+        width: 75%;
     }
 }
 
-#chart-iframe{
-    padding: 8px;
+// #chart-iframe{
+//     width: 100%
+// }
+
+#chart-header-container{
+    flex-wrap: wrap;
+}
+
+.flex-left-ratio {
+    flex: 1 1 0;
+}
+
+.flex-right-ratio {
+    flex: 2.8 2.8 0;
 }

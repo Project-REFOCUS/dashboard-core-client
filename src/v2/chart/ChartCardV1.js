@@ -44,11 +44,6 @@ subdivision
 
 // locationBreadcrumbs = [[],[],[]] an array of arrays
 
-// Main (Title lines up with the options, Title Visible when card invisible)
-// Main V2 (Title lines up with the options, Title Visible)
-// Secondary (Title is above the options, Lines up when Invisble
-// Extended ( like adds onto a Secondary, has a trash can icon to remove)
-
 const dateRanges = [
     { dateX: {month: 'January', year: '2023'}, dateY: {month: 'December', year: '2023'}},
     { dateX: {month: 'January', year: '2022'}, dateY: {month: 'December', year: '2022'}},
@@ -93,19 +88,32 @@ function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcru
     });
 
     return (
-        <Box id="chart-sidebar-panel" className="flex-right-ratio">
-            <Card className="inner-card">
-                <Box id="chart-section-container">
-                    <Stack spacing={1}>
-                        <Stack direction="row">
-                            <Stack id="chart-header-container" className="flex-left-ratio" direction="row" divider={<Typography id="chart-section-header">|</Typography>} spacing={0.5}>
+        <Box className='chart-sidebar-panel' sx={{ flex: '2.8 2.8 0' }}>
+            <Card className='inner-card'>
+                {/* <CardHeader title={location}/> */}
+                {/* Card Titles */}
+                {/* append the higher level locations */}
+                <CardContent>
+                    <Stack direction="row">
+                        <Stack id="left-chart-panel" sx={{ flex: '1 1 0' }}>
+                            <Stack id="chart-header-container" direction="row" divider={<Typography id="chart-section-header">|</Typography>} spacing={0.5}>
                                 {titleElements}
                             </Stack>
-                            <Stack id="chart-options" className="flex-right-ratio" direction="row" sx={{ justifyContent: 'space-between' }}>
-                                <Box className="flex-left-ratio">
+                            <Box>
+                                {/* Selected Location Labels List*/}
+                                {/* Where do the colors come from? */}
+                                <List>
+                                    <ListLabelDot title="New York" color="#6C60FF"/>
+                                    <ListLabelDot title="Florida" color="#DA5FB0"/>
+                                </List>
+                            </Box>
+                        </Stack>
+                        <Box id="right-chart-panel" sx={{ flex: '2.8 2.8 0' }}>
+                            <CardActions id="chart-options" direction="row" sx={{ justifyContent: 'space-between' }} fullWidth>
+                                <Box sx={{ display: 'flex', flex: '1 1 0' }}>
                                     <ChartToggleButton handleOnChange={handleChartToggle} selected={chartOption}/>
                                 </Box>
-                                <Stack direction="row" className="flex-right-ratio" id="chart-option-right">
+                                <Stack direction="row"  sx={{ flex: '2.8 2.8 0' }} id="chart-option-right">
                                     <Box className="fill-container" id="date-range-container">
                                         <FormControl id="date-selector" variant="standard">
                                             <Autocomplete
@@ -127,29 +135,15 @@ function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcru
                                     <VisibilityIcon handleOnClick={handleVisibilityToggle} isVisible={isVisible}/>
                                     <ExpandIcon handleOnClick={handleExpandOnClick}/>
                                 </Stack>
-                            </Stack>
-                        </Stack>
-                        { isVisible ? 
-                            <Stack direction="row">
-                                <Box className="flex-left-ratio">
-                                    {/* Selected Location Labels List*/}
-                                    {/* Where do the colors come from? */}
-                                    <List>
-                                        <ListLabelDot title="New York" color="#6C60FF"/>
-                                        <ListLabelDot title="Florida" color="#DA5FB0"/>
-                                    </List>
+                            </CardActions>
+                            <Box id="chart-iframe">
+                                <Box className="crop-container" sx={{ overflow: 'hidden'}}>
+                                    <img className="crop-image" src={GraphPlaceholder}/>
                                 </Box>
-                                <Box id="chart-iframe" className="flex-right-ratio">
-                                    <Box className="crop-container" sx={{ overflow: 'hidden'}}>
-                                        <img className="crop-image" src={GraphPlaceholder}/>
-                                    </Box>
-                                </Box>
-                            </Stack>
-                            : null
-                        }
+                            </Box>
+                        </Box>
                     </Stack>
-                    {/* Continued Chart elements would go here, they should also be affected by visibility toggle */}
-                </Box>
+                </CardContent>
             </Card>
         </Box>
     )
