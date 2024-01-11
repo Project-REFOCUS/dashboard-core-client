@@ -37,3 +37,33 @@ export const getListOfCounties = (state) => {
         resolve(states);
     });
 };
+
+//location should be a list each narrowing down location.
+//New York, Manhattan, Hell's Kitchen, 11213
+//state, county, filter{city, county subdiv, census tract}
+//state, county, county subdiv, filter{zipcode, census tract}
+export const getListOptionsFromLocationAndFilter = (location, filter) => {
+    return new Promise((resolve) => {
+        let items;
+        const states = [
+            { id: 2, name: 'Flushing'},
+            { id: 4, name: 'Astoria'},
+            { id: 6, name: 'Forest Hills'},
+            { id: 8, name: 'Kew Gardens'}
+        ];
+        resolve(states);
+    });
+};
+
+const filterOptions = [
+    { name :"State", options:["City", "County Subdivision", "Census Tract"] },
+    { name :"City", options:["Zipcode"] },
+    { name :"County Subdivision", options:["Census Tract","Zipcode"] },
+    { name :"Census Tract", options:["Zipcode"] }
+]
+
+export const getFilterDropdownOptions = (filter) => {
+
+    const foundItem = filterOptions.find(item => item.name === filter);
+    return foundItem ? foundItem.options : [];
+}

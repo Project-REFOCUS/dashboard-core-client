@@ -8,8 +8,8 @@ import '../styles/stateSection/sidebarFilter.scss';
 
 function SidebarFilter({location}) {
 
-    const [itemList, setItemList] = useState([]);
-    const [selectedItems, setSelectedItems] = useState([]);
+    const [ itemList, setItemList ] = useState([]);
+    const [ selectedItems, setSelectedItems ] = useState([]);
 
     useEffect(() => {
         getListOfCounties(location).then(counties => setItemList(counties));

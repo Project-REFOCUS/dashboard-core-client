@@ -48,3 +48,25 @@ div.fill-container{
 .wrap {
     flex-wrap: wrap;
 }
+
+.row{
+    display: flex;
+    flex-direction: row;
+}
+
+.vanish {
+    display: none !important;
+}
+
+.flex-left-ratio {
+    flex: 1 1 0;
+}
+
+.flex-right-ratio {
+    flex: 2.8 2.8 0;
+}
+
+.sidebar-spacer {
+    width: 250px;
+    padding: 8px;
+}

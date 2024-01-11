@@ -4,14 +4,8 @@ import {
     Autocomplete,
     Box,
     Card,
-    CardActions,
-    CardContent,
-    CardHeader,
     FormControl,
     List,
-    ListItem,
-    ListItemIcon,
-    ListItemText,
     Stack,
     TextField,
     Typography
@@ -24,17 +18,6 @@ import GraphPlaceholder from './Graph.png';
 import '../styles/chart/chartCard.scss';
 import ListLabelDot from '../components/ListLabelDot';
 
-
-//state card or {county or city or zipcode or block group or census tract} these can be grouped
-
-//county, 
-/*
-state
-county
-city, county subdivisions, census tract
-subdivision
-*/
-
 // export enum ChartCardType{
 //     STATE,
 //     COUNTY,
@@ -44,8 +27,8 @@ subdivision
 
 // locationBreadcrumbs = [[],[],[]] an array of arrays
 
-// Main (Title lines up with the options, Title Visible when card invisible)
-// Main V2 (Title lines up with the options, Title Visible)
+// Primary (Title lines up with the options, Title Visible when card invisible)
+// Primary V2 (Title lines up with the options, Title Visible)
 // Secondary (Title is above the options, Lines up when Invisble
 // Extended ( like adds onto a Secondary, has a trash can icon to remove)
 
@@ -56,7 +39,7 @@ const dateRanges = [
     { dateX: {month: 'January', year: '2020'}, dateY: {month: 'December', year: '2020'}},
 ]
 
-function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcrumbs, type}) {
+function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcrumbs, secondary=false}) {
 
     const [ chartOption, setChartOption ] = useState("chart");
     const [ selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
@@ -94,12 +77,17 @@ function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcru
 
     return (
         <Box id="chart-sidebar-panel" className="flex-right-ratio">
-            <Card className="inner-card">
+            <Card className="inner-card" elevation={0}>
                 <Box id="chart-section-container">
                     <Stack spacing={1}>
-                        <Stack direction="row">
-                            <Stack id="chart-header-container" className="flex-left-ratio" direction="row" divider={<Typography id="chart-section-header">|</Typography>} spacing={0.5}>
-                                {titleElements}
+                        <Stack direction="row" spacing={1}>
+                            <Stack id="chart-header-container" 
+                                className="flex-left-ratio" 
+                                direction="row" 
+                                divider={<Typography id="chart-section-header">|</Typography>}
+                                spacing={0.5}
+                            >
+                                { secondary || !isVisible ? titleElements : null}
                             </Stack>
                             <Stack id="chart-options" className="flex-right-ratio" direction="row" sx={{ justifyContent: 'space-between' }}>
                                 <Box className="flex-left-ratio">
@@ -110,7 +98,8 @@ function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcru
                                         <FormControl id="date-selector" variant="standard">
                                             <Autocomplete
                                                 options={dateRanges}
-                                                getOptionLabel={(dateRange) => `${dateRange.dateX.month} ${dateRange.dateX.year} - ${dateRange.dateY.month} ${dateRange.dateY.year}`}
+                                                getOptionLabel={(dateRange) =>
+                                                     `${dateRange.dateX.month} ${dateRange.dateX.year} - ${dateRange.dateY.month} ${dateRange.dateY.year}`}
                                                 key={(dateRange, index) => index }
                                                 value={selectedDateRange}
                                                 onChange={handleDateChange}
@@ -132,12 +121,9 @@ function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcru
                         { isVisible ? 
                             <Stack direction="row">
                                 <Box className="flex-left-ratio">
-                                    {/* Selected Location Labels List*/}
                                     {/* Where do the colors come from? */}
-                                    <List>
-                                        <ListLabelDot title="New York" color="#6C60FF"/>
-                                        <ListLabelDot title="Florida" color="#DA5FB0"/>
-                                    </List>
+                                    <ListLabelDot title="New York" color="#6C60FF"/>
+                                    <ListLabelDot title="Florida" color="#DA5FB0"/>
                                 </Box>
                                 <Box id="chart-iframe" className="flex-right-ratio">
                                     <Box className="crop-container" sx={{ overflow: 'hidden'}}>
@@ -148,7 +134,6 @@ function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcru
                             : null
                         }
                     </Stack>
-                    {/* Continued Chart elements would go here, they should also be affected by visibility toggle */}
                 </Box>
             </Card>
         </Box>

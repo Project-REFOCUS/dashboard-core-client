@@ -3,7 +3,7 @@ import Header from './v2/header/Header';
 import Sidebar from './v2/sidebar/Sidebar';
 import StateMap from './v2/components/StateMap';
 import ChartCard from './v2/chart/ChartCard';
-import { Box, Card, CardContent, Container, Typography } from '@mui/material';
+import { Box, Card, CardContent, Container, Stack, Typography } from '@mui/material';
 
 import './v2/styles/index.scss';
 import StateSection from './v2/stateSection/StateSection';
@@ -37,16 +37,18 @@ const App = () => {
         <Box>
             <Header />
             <Container>
-                <Box>
-                    <Card elevation={0} sx={CardSX}>
-                        <CardContent sx={{display: 'flex'}}>
-                            <Sidebar/>
-                            {/* <StateMap/> */}
-                            <ChartCard titleBreadcrumbs={[["Covid Deaths"],["New York","Florida"]]}/>
-                        </CardContent>
-                    </Card>
-                </Box>
-                <StateSection state={"New York"}/>
+                <Stack spacing={1}>
+                    <Box>
+                        <Card elevation={0} sx={CardSX}>
+                            <CardContent sx={{display: 'flex'}}>
+                                <Sidebar/>
+                                {/* <StateMap/> */}
+                                <ChartCard titleBreadcrumbs={[["Covid Deaths"],["New York","Florida"]]} primary={true}/>
+                            </CardContent>
+                        </Card>
+                    </Box>
+                    <StateSection state={"New York"}/>
+                </Stack>
                 <Box id="chart-popup">
                     {/**Try to do this inside of the Statistic Card */}
                 </Box>
