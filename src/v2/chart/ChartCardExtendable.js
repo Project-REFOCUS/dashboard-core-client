@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { 
     Autocomplete,
@@ -10,7 +10,7 @@ import {
     TextField,
     Typography
 } from '@mui/material'
-import ChartToggleButton from './ChartToggleButton'
+import ChartToggleButton from './ChartToggleButton';
 import VisibilityIcon from './VisibilityIcon';
 import ExpandIcon from './ExpandIcon';
 import GraphPlaceholder from './Graph.png';
@@ -18,8 +18,9 @@ import MultiButton from '../components/MultiButton';
 
 import '../styles/chart/chartCard.scss';
 import ListLabelDot from '../components/ListLabelDot';
+import FilterCard from '../components/FilterCard';
 import MultiInput from '../components/MultiInput';
-import { getListOptionsFromLocationAndFilter, getFilterDropdownOptions } from '../common/services'
+import { getCategoriesByLocationAndType, getFilterDropdownOptions } from '../common/services'
 
 // export enum ChartCardType{
 //     STATE,
@@ -56,7 +57,7 @@ function ChartCardExtendable({filterName, handleExpandOnClick, handleCloseExpand
     const [ selectedExtendedItems, setSelectedExtendedItems ] = useState([]);
 
     useEffect(() => {
-        getListOptionsFromLocationAndFilter(location, filterName).then(options => setLocationFilterList(options));
+        getCategoriesByLocationAndType(location, filterName).then(options => setLocationFilterList(options));
         setExtendedFilterOptions(getFilterDropdownOptions(filterName));
     }, []);
 
@@ -103,6 +104,8 @@ function ChartCardExtendable({filterName, handleExpandOnClick, handleCloseExpand
         return <Typography id="chart-section-header">{title}</Typography>;
     });
 
+    const filterCards = selectedLocationFilter.map((locationFilter) => <FilterCard location={locationFilter}  category="City" color="#DA5FB0" key={locationFilter.id}/>);
+
     const extensionCards = selectedLocationFilter.map((locationFilter) => {
         return selectedExtendedItems.map((extendedItem)=>{
             const newBreadcrumbs = [...titleBreadcrumbs, [locationFilter.name]];
@@ -125,13 +128,14 @@ function ChartCardExtendable({filterName, handleExpandOnClick, handleCloseExpand
                         </Stack>
                         <Box className={isVisible ? "row" : "flex-right-ratio"} id="chart-content-container">
                             {/* Dont forget the screen readers */}
-                            <Stack className={isVisible ? "flex-left-ratio" : "vanish"} id="chart-card-left-container" sx={{ justifyContent: 'space-between' }}>
+                            <Stack className={isVisible ? "flex-left-ratio" : "vanish"} id="chart-card-left-container" sx={{ justifyContent: 'space-between' }} spacing={1}>
                                 <Box>
                                     <MultiInput title={filterName} itemList={locationFilterList} handleOnChange={handleLocationFilterChange} size="small"/>
                                     <Box className="flex-left-ratio">
                                         {/* Where do the colors come from? */}
-                                        <ListLabelDot title="New York" color="#6C60FF"/>
-                                        <ListLabelDot title="Florida" color="#DA5FB0"/>
+                                        {/* <ListLabelDot title="New York" color="#6C60FF"/>
+                                        <ListLabelDot title="Florida" color="#DA5FB0"/> */}
+                                        {filterCards}
                                     </Box>
                                 </Box>
                                 <Box className={selectedLocationFilter.length && extendedFilterOptions.length ? "" : "vanish"}>
