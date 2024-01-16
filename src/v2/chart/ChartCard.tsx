@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { 
     Autocomplete,
+    AutocompleteChangeReason,
     Box,
     Card,
     FormControl,
@@ -13,10 +14,12 @@ import {
 import ChartToggleButton from './ChartToggleButton'
 import VisibilityIcon from './VisibilityIcon';
 import ExpandIcon from './ExpandIcon';
-import GraphPlaceholder from './Graph.png';
+import ListLabelDot from '../components/ListLabelDot';
+import { DateDelta } from '../common/types';
 
 import '../styles/chart/chartCard.scss';
-import ListLabelDot from '../components/ListLabelDot';
+
+const GraphPlaceholder = require('./Graph.png');
 
 // export enum ChartCardType{
 //     STATE,
@@ -32,21 +35,28 @@ import ListLabelDot from '../components/ListLabelDot';
 // Secondary (Title is above the options, Lines up when Invisble
 // Extended ( like adds onto a Secondary, has a trash can icon to remove)
 
-const dateRanges = [
-    { dateX: {month: 'January', year: '2023'}, dateY: {month: 'December', year: '2023'}},
-    { dateX: {month: 'January', year: '2022'}, dateY: {month: 'December', year: '2022'}},
-    { dateX: {month: 'January', year: '2021'}, dateY: {month: 'December', year: '2021'}},
-    { dateX: {month: 'January', year: '2020'}, dateY: {month: 'December', year: '2020'}},
+const dateRanges : DateDelta[] = [
+    { x: {month: 'January', year: '2023'}, y: {month: 'December', year: '2023'}},
+    { x: {month: 'January', year: '2022'}, y: {month: 'December', year: '2022'}},
+    { x: {month: 'January', year: '2021'}, y: {month: 'December', year: '2021'}},
+    { x: {month: 'January', year: '2020'}, y: {month: 'December', year: '2020'}},
 ]
 
-function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcrumbs, secondary=false}) {
+interface Props {
+    handleExpandOnClick: () => void;
+    handleClosePopUpOnClick?: () => void;
+    titleBreadcrumbs: string[][];
+    secondary?: boolean;
+}
 
-    const [ chartOption, setChartOption ] = useState("chart");
-    const [ selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
-    const [ isVisible, setIsVisible ] = useState(true);
-    const [ isExpanded, setIsExpanded ] = useState(false);
+function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrumbs, secondary=false}: Props) {
 
-    const handleChartToggle = (event, value) => {
+    const [ chartOption, setChartOption ] = useState<string>("chart");
+    const [ selectedDateRange, setSelectedDateRange] = useState<DateDelta | null>(dateRanges[0]);
+    const [ isVisible, setIsVisible ] = useState<boolean>(true);
+    const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
+
+    const handleChartToggle = (value : string) => {
         console.log("Chart Toggle value: " + value);
         setChartOption(value);
     }
@@ -56,21 +66,21 @@ function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcru
         setIsVisible(!isVisible);
     }
 
-    const handleDateChange = (event, dateRange, reason) => {
+    const handleDateChange = (event : React.SyntheticEvent<Element, Event>, dateRange : DateDelta | null, reason : AutocompleteChangeReason) => {
         console.log("Change Date reason: "+ reason +" states: " + JSON.stringify(dateRange));
-        
         setSelectedDateRange(dateRange);
     }
 
     const openPopUp = () => {
         setIsExpanded(true);
+        handleExpandOnClick()
     }
 
     const closePopUp = () => {
         setIsExpanded(false);
     }
 
-    const titleElements = titleBreadcrumbs.map( (titleArray, index) => {
+    const titleElements = titleBreadcrumbs.map( (titleArray : string[], index : number) => {
         const title = titleArray.join(', ');
         return <Typography id="chart-section-header">{title}</Typography>;
     });
@@ -99,8 +109,7 @@ function ChartCard({handleExpandOnClick, handleCloseExpandOnClick, titleBreadcru
                                             <Autocomplete
                                                 options={dateRanges}
                                                 getOptionLabel={(dateRange) =>
-                                                     `${dateRange.dateX.month} ${dateRange.dateX.year} - ${dateRange.dateY.month} ${dateRange.dateY.year}`}
-                                                key={(dateRange, index) => index }
+                                                     `${dateRange.x.month} ${dateRange.x.year} - ${dateRange.y.month} ${dateRange.y.year}`}
                                                 value={selectedDateRange}
                                                 onChange={handleDateChange}
                                                 renderInput={(params) => (

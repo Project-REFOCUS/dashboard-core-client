@@ -1,7 +1,12 @@
-import React from 'react'
-import { Box } from '@mui/material'
+import React from 'react';
+import { Box } from '@mui/material';
 
-function VisibilityIcon({handleOnClick, isVisible}) {
+interface Props {
+    handleOnClick: () => void;
+    isVisible : boolean;
+}
+
+function VisibilityIcon({ handleOnClick, isVisible } : Props) {
     return (
         <Box className="svg-container">
             { isVisible ?

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useState } from 'react';
 import { 
     Autocomplete,
+    AutocompleteChangeReason,
     Box,
     Card,
     FormControl,
@@ -13,14 +14,18 @@ import {
 import ChartToggleButton from './ChartToggleButton';
 import VisibilityIcon from './VisibilityIcon';
 import ExpandIcon from './ExpandIcon';
-import GraphPlaceholder from './Graph.png';
+// import GraphPlaceholder from './Graph.png';
 import MultiButton from '../components/MultiButton';
-
-import '../styles/chart/chartCard.scss';
 import ListLabelDot from '../components/ListLabelDot';
 import FilterCard from '../components/FilterCard';
 import MultiInput from '../components/MultiInput';
-import { getCategoriesByLocationAndType, getFilterDropdownOptions } from '../common/services'
+import { getSubGeographiesByGeographyAndType, getGeographyDropdownOptions } from '../common/services';
+import { GeographyEnum } from '../common/enum';
+import { DateDelta, Geography } from '../common/types';
+
+import '../styles/chart/chartCard.scss';
+
+const GraphPlaceholder = require('./Graph.png');
 
 // export enum ChartCardType{
 //     STATE,
@@ -36,32 +41,40 @@ import { getCategoriesByLocationAndType, getFilterDropdownOptions } from '../com
 // Secondary (Title is above the options, Lines up when Invisble
 // Extended ( like adds onto a Secondary, has a trash can icon to remove)
 
-const dateRanges = [
-    { dateX: {month: 'January', year: '2023'}, dateY: {month: 'December', year: '2023'}},
-    { dateX: {month: 'January', year: '2022'}, dateY: {month: 'December', year: '2022'}},
-    { dateX: {month: 'January', year: '2021'}, dateY: {month: 'December', year: '2021'}},
-    { dateX: {month: 'January', year: '2020'}, dateY: {month: 'December', year: '2020'}},
+const dateRanges : DateDelta[] = [
+    { x: {month: 'January', year: '2023'}, y: {month: 'December', year: '2023'}},
+    { x: {month: 'January', year: '2022'}, y: {month: 'December', year: '2022'}},
+    { x: {month: 'January', year: '2021'}, y: {month: 'December', year: '2021'}},
+    { x: {month: 'January', year: '2020'}, y: {month: 'December', year: '2020'}},
 ]
 
+interface Props {
+    handleExpandOnClick: () => void;
+    handleClosePopUpOnClick?: () => void;
+    titleBreadcrumbs: string[][];
+    geography: Geography;
+    filterName: GeographyEnum;
+}
+
 //location vs titleBreadcrumbs we need to keep one
-function ChartCardExtendable({filterName, handleExpandOnClick, handleCloseExpandOnClick, titleBreadcrumbs, location}) {
+function ChartCardExtendable ({filterName, handleExpandOnClick, titleBreadcrumbs, geography} : Props) {
 
-    const [ locationFilterList, setLocationFilterList ] = useState([]);
-    const [ selectedLocationFilter, setSelectedLocationFilter ] = useState([]);
-    const [ chartOption, setChartOption ] = useState("chart");
-    const [ selectedDateRange, setSelectedDateRange] = useState(dateRanges[0]);
-    const [ isVisible, setIsVisible ] = useState(true);
-    const [ isExpanded, setIsExpanded ] = useState(false);
+    const [ locationFilterList, setLocationFilterList ] = useState<Geography[]>([]);
+    const [ selectedLocationFilter, setSelectedLocationFilter ] = useState<Geography[]>([]);
+    const [ chartOption, setChartOption ] = useState<string>("chart");
+    const [ selectedDateRange, setSelectedDateRange] = useState<DateDelta | null>(dateRanges[0]);
+    const [ isVisible, setIsVisible ] = useState<boolean>(true);
+    const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
 
-    const [ extendedFilterOptions, setExtendedFilterOptions ] = useState([]);
-    const [ selectedExtendedItems, setSelectedExtendedItems ] = useState([]);
+    const [ extendedFilterOptions, setExtendedFilterOptions ] = useState<GeographyEnum[]>([]);
+    const [ selectedExtendedItems, setSelectedExtendedItems ] = useState<GeographyEnum[]>([]);
 
     useEffect(() => {
-        getCategoriesByLocationAndType(location, filterName).then(options => setLocationFilterList(options));
-        setExtendedFilterOptions(getFilterDropdownOptions(filterName));
+        getSubGeographiesByGeographyAndType(geography, filterName).then(options => setLocationFilterList(options));
+        setExtendedFilterOptions(getGeographyDropdownOptions(filterName));
     }, []);
 
-    const handleChartToggle = (event, value) => {
+    const handleChartToggle = (value : string) => {
         console.log("Chart Toggle value: " + value);
         setChartOption(value);
     }
@@ -71,32 +84,32 @@ function ChartCardExtendable({filterName, handleExpandOnClick, handleCloseExpand
         setIsVisible(!isVisible);
     }
 
-    const handleDateChange = (event, dateRange, reason) => {
+    const handleDateChange = (event : React.SyntheticEvent<Element, Event>, dateRange : DateDelta | null, reason : AutocompleteChangeReason) => {
         console.log("Change Date reason: "+ reason +" states: " + JSON.stringify(dateRange));
-        
         setSelectedDateRange(dateRange);
     }
 
     const openPopUp = () => {
         setIsExpanded(true);
+        handleExpandOnClick()
     }
 
     const closePopUp = () => {
         setIsExpanded(false);
     }
 
-    const handleFilterChange = (event, filter, reason) => {
-        console.log("Change filter reason: "+ reason +" "+ filterName +": " + JSON.stringify(filter));
-    }
-
-    const multiButtonOnChange = (event, values) => {
+    const multiButtonOnChange = (event : React.SyntheticEvent<Element, Event>, values : GeographyEnum[]) => {
         console.log("Change filter: " + JSON.stringify(values));
         setSelectedExtendedItems(values);
     }
 
-    const handleLocationFilterChange = (event, values, reason) => {
-        console.log("Change filter reason: "+ reason +" "+ filterName +": " + JSON.stringify(values));
+    const handleLocationFilterChange = (values : Geography[]) => {
+        console.log("Change filter: " + JSON.stringify(values));
         setSelectedLocationFilter(values);
+    }
+
+    const handleSubFilterChange = (values: GeographyEnum[]) => {
+
     }
 
     const titleElements = titleBreadcrumbs.map( (titleArray, index) => {
@@ -104,12 +117,12 @@ function ChartCardExtendable({filterName, handleExpandOnClick, handleCloseExpand
         return <Typography id="chart-section-header">{title}</Typography>;
     });
 
-    const filterCards = selectedLocationFilter.map((locationFilter) => <FilterCard location={locationFilter}  category="City" color="#DA5FB0" key={locationFilter.id}/>);
+    const filterCards = selectedLocationFilter.map((locationFilter) => <FilterCard geography={locationFilter} color="#DA5FB0" key={locationFilter.id} handleOnChange={handleSubFilterChange}/>);
 
     const extensionCards = selectedLocationFilter.map((locationFilter) => {
         return selectedExtendedItems.map((extendedItem)=>{
             const newBreadcrumbs = [...titleBreadcrumbs, [locationFilter.name]];
-            return <ChartCardExtendable filterName={extendedItem} titleBreadcrumbs={newBreadcrumbs} location={locationFilter.name}/>
+            return <ChartCardExtendable filterName={extendedItem} titleBreadcrumbs={newBreadcrumbs} geography={locationFilter} handleExpandOnClick={openPopUp}/>
         });
     });
 
@@ -139,7 +152,11 @@ function ChartCardExtendable({filterName, handleExpandOnClick, handleCloseExpand
                                     </Box>
                                 </Box>
                                 <Box className={selectedLocationFilter.length && extendedFilterOptions.length ? "" : "vanish"}>
-                                    <MultiButton listItems={extendedFilterOptions} handleOnChange={multiButtonOnChange} value={selectedExtendedItems}/>
+                                    <MultiButton 
+                                        itemList={extendedFilterOptions}
+                                        handleOnChange={(event, values, reason) => multiButtonOnChange(event, values as GeographyEnum[])}
+                                        value={selectedExtendedItems}
+                                    />
                                 </Box>
                             </Stack>
                             <Stack id="chart-card-right-container" className="flex-right-ratio" spacing={1}>
@@ -153,8 +170,7 @@ function ChartCardExtendable({filterName, handleExpandOnClick, handleCloseExpand
                                                 <Autocomplete
                                                     options={dateRanges}
                                                     getOptionLabel={(dateRange) =>
-                                                        `${dateRange.dateX.month} ${dateRange.dateX.year} - ${dateRange.dateY.month} ${dateRange.dateY.year}`}
-                                                    key={(dateRange, index) => index }
+                                                        `${dateRange.x.month} ${dateRange.x.year} - ${dateRange.y.month} ${dateRange.y.year}`}
                                                     value={selectedDateRange}
                                                     onChange={handleDateChange}
                                                     renderInput={(params) => (

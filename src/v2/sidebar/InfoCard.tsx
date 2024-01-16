@@ -13,9 +13,9 @@ const TextSX = {
     fontWeight: 1000,
 }
 
-function InfoCard() {
+const InfoCard : React.FC = () => {
     return (
-        <Box fullWidth>
+        <Box>
             <Card className='inner-card' elevation={0} sx={InfoCardSX}>
                 <CardContent>
                     <Typography sx={TextSX}>

@@ -3,21 +3,25 @@ import React from 'react'
 import SidebarFilter from './SidebarFilter'
 import ChartCard from '../chart/ChartCard'
 import ChartCardExtendable from '../chart/ChartCardExtendable'
+import { Geography } from '../common/types'
 
+interface Props {
+    state: Geography;
+}
 
-function StateSection({state}) {
+function StateSection({state} : Props) {
     return (
         <Card elevation={0}>
             <Stack spacing={1}>
                 <Stack direction="row" spacing={1}>
-                    <SidebarFilter location={state}/>
-                    <ChartCard titleBreadcrumbs={[["New York"],["Queens"]]} secondary/>
+                    <SidebarFilter geography={state}/>
+                    <ChartCard titleBreadcrumbs={[["New York"],["Queens"]]} secondary handleExpandOnClick={()=>{}}/>
                 </Stack>
                 <Stack direction="row" spacing={1}>
                     <Box className="sidebar-spacer flex-left-ratio"></Box>
                     <Box id="chart-sidebar-panel" className="flex-right-ratio">
                         <Card className="inner-card" elevation={0}>
-                            <ChartCardExtendable filterName={"City"} titleBreadcrumbs={[["New York"],["Queens"]]} />
+                            <ChartCardExtendable filterName={state.type} titleBreadcrumbs={[["New York"],["Queens"]]} geography={state} handleExpandOnClick={()=>{}}/>
                         </Card>
                     </Box>
                 </Stack>

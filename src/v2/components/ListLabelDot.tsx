@@ -7,12 +7,17 @@ import {
 
 //#6C60FF
 
+interface Props {
+    title: string;
+    color: string;
+}
+
 const listItemSX = {
     gap: '7.4px',
     padding: '0',
 }
 
-const ListLabelDot = ({title, color }) => {
+const ListLabelDot = ({title, color} : Props) => {
     return (
         <ListItem sx={listItemSX}>
             <ListItemIcon sx={{ minWidth: "min-content"}}>

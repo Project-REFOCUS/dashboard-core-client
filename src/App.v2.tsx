@@ -4,9 +4,11 @@ import Sidebar from './v2/sidebar/Sidebar';
 import StateMap from './v2/components/StateMap';
 import ChartCard from './v2/chart/ChartCard';
 import { Box, Card, CardContent, Container, Stack, Typography } from '@mui/material';
+import StateSection from './v2/stateSection/StateSection';
 
 import './v2/styles/index.scss';
-import StateSection from './v2/stateSection/StateSection';
+import { Geography } from './v2/common/types';
+import { GeographyEnum } from './v2/common/enum';
 
 const CardSX = {
     width: '100%',
@@ -32,7 +34,9 @@ const CardSX = {
 //consider if there are multiple items, then we can have the popup height just cover the screen size
 //make sure to include aria
 
-const App = () => {
+const newYork : Geography = {id: "2", name: "New York", shortName: "NY", type: GeographyEnum.STATE };
+
+const App: React.FC = () => {
     return (
         <Box>
             <Header />
@@ -43,11 +47,11 @@ const App = () => {
                             <CardContent sx={{display: 'flex'}}>
                                 <Sidebar/>
                                 {/* <StateMap/> */}
-                                <ChartCard titleBreadcrumbs={[["Covid Deaths"],["New York","Florida"]]} primary={true}/>
+                                <ChartCard titleBreadcrumbs={[["Covid Deaths"],["New York","Florida"]]} handleExpandOnClick={()=>{}} />
                             </CardContent>
                         </Card>
                     </Box>
-                    <StateSection state={"New York"}/>
+                    <StateSection state={newYork}/>
                 </Stack>
                 <Box id="chart-popup">
                     {/**Try to do this inside of the Statistic Card */}

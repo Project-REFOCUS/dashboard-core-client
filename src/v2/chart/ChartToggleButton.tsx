@@ -1,14 +1,19 @@
-import React from 'react'
-import { ToggleButtonGroup, ToggleButton } from '@mui/material'
+import React from 'react';
+import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 
-function ChartToggleButton({handleOnChange, selected}) {
+interface Props {
+    handleOnChange: (value : string) => void;
+    selected : string;
+}
+
+function ChartToggleButton({handleOnChange, selected}: Props) {
     return (
         <ToggleButtonGroup
             size="small"
             color="primary"
             value={selected}
             exclusive
-            onChange={handleOnChange}
+            onChange={(e, value) => {handleOnChange(value)}}
             aria-label="Chart or Bar Graph Toggle"
         >
             <ToggleButton  value="chart">

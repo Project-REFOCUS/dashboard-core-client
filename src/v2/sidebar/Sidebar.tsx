@@ -5,24 +5,17 @@ import {
     Card,
     CardContent,
     FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
     Stack,
     Typography,
     TextField,
-    Autocomplete
+    Autocomplete,
+    AutocompleteChangeReason
 } from '@mui/material';
-import { getIndicatorCategories , getListOfStates } from '../common/services';
-import { isArrayEmpty } from '../common/utils';
+import { getIndicatorCategories , getListOfStatesWithCategory } from '../common/services';
+import InfoCard from './InfoCard';
+import { Category, GeoCategory, Geography } from '../common/types';
 
 import '../styles/sidebar/sidebar.scss';
-import InfoCard from './InfoCard';
-
-const CardSX = {
-    backgroundColor: 'rgba(223, 230, 233, 0.20)',
-    borderRadius: 4
-};
 
 const InputLabelSX = {
     paddingBottom: '4px'
@@ -36,41 +29,41 @@ const InputLabelSX = {
 //it doesnt refresh the filters
 
 //@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
-const Sidebar = () => {
-    const [fullCategoryList, setFullCategoryList] = useState([]);
-    const [filteredCategoryList, setFilteredCategoryList] = useState([]);
-    const [selectedCategory, setSelectedCategory] = useState('');
+const Sidebar : React.FC = () => {
+    const [fullCategoryList, setFullCategoryList] = useState<Category[]>([]);
+    const [filteredCategoryList, setFilteredCategoryList] = useState<Category[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     
-    const [fullStateList, setFullStateList] = useState([]);
-    const [filteredStateList, setFilteredStateList] = useState([]);
-    const [selectedStates, setSelectedStates] = useState([]);
+    const [fullStateList, setFullStateList] = useState<GeoCategory[]>([]);
+    const [filteredStateList, setFilteredStateList] = useState<GeoCategory[]>([]);
+    const [selectedStates, setSelectedStates] = useState<GeoCategory[]>([]);
 
     useEffect(() => {
-        getIndicatorCategories().then(categories => setFullCategoryList(categories));
-        getListOfStates().then(states => setFullStateList(states));
+        getIndicatorCategories().then((categories : Category[]) => setFullCategoryList(categories));
+        getListOfStatesWithCategory().then((states : GeoCategory[]) => setFullStateList(states));
     }, []);
 
-    const handleCategoryChange = (event, category, reason) => {
+    const handleCategoryChange = (event: React.SyntheticEvent<Element, Event>, category: Category | null, reason: AutocompleteChangeReason) => {
         console.log("Change Category reason: "+ reason +" category: " + JSON.stringify(category));
 
-        if(reason == 'selectOption'){
+        if(reason == 'selectOption' && category !== null){
             setSelectedCategory(category);
 
-            let subjectStates = findStatesWithCategory(category.name, fullStateList);
+            let subjectStates = filterGeoCatWithCategoryName(category.name, fullStateList);
             setFilteredStateList(subjectStates);
-            setSelectedStates(findStatesWithCategory(category.name, selectedStates));
+            setSelectedStates(filterGeoCatWithCategoryName(category.name, selectedStates));
             
         }else if(reason == "removeOption" || reason === "clear"){
-            setSelectedCategory('');
+            setSelectedCategory(null);
             setFilteredStateList([]);
         }
     }
 
-    const findStatesWithCategory = (name, states) => {
-        return states.filter( states => states.categories.find(category => category.name == name))
+    const filterGeoCatWithCategoryName = (name: string, states : GeoCategory[]) => {
+        return states.filter( geoCategory => geoCategory.categories.find(category => category.name == name))
     }
 
-    const handleStateChange = (event, states, reason) => {
+    const handleStateChange = (event: React.SyntheticEvent<Element, Event>, states: GeoCategory[], reason: AutocompleteChangeReason) => {
         console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         
         setSelectedStates(states);
@@ -85,18 +78,17 @@ const Sidebar = () => {
             <Stack spacing={1}>
                 <Card className='inner-card' elevation={0}>
                     <CardContent>
-                        <Stack spacing={3} columns={1}>
+                        <Stack spacing={3}>
                             <Stack>
                                 <FormControl variant="standard" size="small" fullWidth>
                                     <Typography sx={InputLabelSX}>Category</Typography>
                                     <Autocomplete
-                                        select
+                                        // select
                                         size="small"
                                         id="category-selector"
                                         options={filteredCategoryList.length === 0 ? fullCategoryList : filteredCategoryList}
                                         value={selectedCategory ? selectedCategory : null}
                                         getOptionLabel={(category) => category.name}
-                                        key={(category) => category.id}
                                         disableListWrap
                                         onChange={handleCategoryChange}
                                         renderInput={(params) => (
@@ -118,8 +110,7 @@ const Sidebar = () => {
                                         size="small"
                                         id="state-selector"
                                         options={filteredStateList.length === 0 ? fullStateList : filteredStateList}
-                                        getOptionLabel={(state) => state.name}
-                                        key={(state) => state.id}
+                                        getOptionLabel={(geoCategory) => geoCategory.geography.name}
                                         filterSelectedOptions
                                         disableListWrap
                                         value={selectedStates}
@@ -127,7 +118,7 @@ const Sidebar = () => {
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
-                                                placeholder={selectedStates.length == 0 ? "Select..." : null}
+                                                placeholder={selectedStates.length == 0 ? "Select..." : undefined}
                                                 variant="outlined"
                                             />
                                         )}
