@@ -33,7 +33,6 @@ export const getSubGeographiesByGeographyAndType : (state: Geography, geography 
     });
 };
 
-
 export const getGeographyDropdownOptions = (geoType : GeographyEnum) => {
     // find by id
     const foundItem = mockFilterOptions.find(item => item.type === geoType);

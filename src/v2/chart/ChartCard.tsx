@@ -5,9 +5,7 @@ import {
     AutocompleteChangeReason,
     Box,
     Card,
-    Dialog,
     FormControl,
-    List,
     Stack,
     TextField,
     Typography
@@ -18,6 +16,8 @@ import ExpandIcon from './ExpandIcon';
 import ListLabelDot from '../components/ListLabelDot';
 import { DateDelta, Geography } from '../common/types';
 import CloseIcon from './CloseIcon';
+import appStore from '../stores/appStore'
+import { dateRanges } from '../common/constants';
 
 import '../styles/chart/chartCard.scss';
 
@@ -28,22 +28,14 @@ const GraphXL = require('../../graph_xl.png');
 // Primary (Title lines up with the options, Title Visible when card invisible)
 // Secondary (Title lines up with the options, Title Visible)
 
-const dateRanges : DateDelta[] = [
-    { x: {month: 'January', year: '2023'}, y: {month: 'December', year: '2023'}},
-    { x: {month: 'January', year: '2022'}, y: {month: 'December', year: '2022'}},
-    { x: {month: 'January', year: '2021'}, y: {month: 'December', year: '2021'}},
-    { x: {month: 'January', year: '2020'}, y: {month: 'December', year: '2020'}},
-]
-
 interface Props {
     titleBreadcrumbs: string[][];
     secondary?: boolean;
     geographies: Geography[];
-    handleExpandOnClick: () => void;
     handleClosePopUpOnClick?: () => void;
 }
 
-const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleExpandOnClick, handleClosePopUpOnClick}: Props) => {
+const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleClosePopUpOnClick}: Props) => {
 
     const [ chartOption, setChartOption ] = useState<string>("chart");
     const [ selectedDateRange, setSelectedDateRange] = useState<DateDelta | null>(dateRanges[0]);
@@ -52,8 +44,7 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleExpand
 
     const handleChartToggle = (value : string) => {
         console.log("Chart Toggle value: " + value);
-        if(value !== null)
-            setChartOption(value);
+        setChartOption(value);
     }
 
     const handleVisibilityToggle = () => {
@@ -74,11 +65,12 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleExpand
             setIsVisible(true);
         }
         setIsExpanded(true);
-        handleExpandOnClick()
+        appStore.setIsExpanded(true);
     }
 
     const closePopUp = () => {
         setIsExpanded(false);
+        appStore.setIsExpanded(false);
     }
 
     const titleElements = titleBreadcrumbs.map( (titleArray : string[], index : number) => {

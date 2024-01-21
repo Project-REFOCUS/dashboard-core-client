@@ -3,16 +3,22 @@ import { useState } from 'react';
 import { AppBar, Box, Toolbar, Typography } from '@mui/material';
 
 import '../styles/header/header.scss';
+import { observer } from 'mobx-react';
+import appStore from '../stores/appStore';
 
 
 const refocusLogo = require("../../Project_Refocus_Logo.png");
 
-const Header: React.FC = () => {
+const headerSX = {
+    zIndex: 999
+};
+
+const Header: React.FC = observer(() => {
 
     return (
-        <Box sx={{zIndex: 999}}>
+        <Box sx={appStore.isExpanded ? headerSX : {}}>
             <AppBar
-                position="static"
+                position={appStore.isExpanded ? "fixed" :"static"}
                 component="nav"
                 color="inherit"
                 elevation={0}
@@ -27,6 +33,6 @@ const Header: React.FC = () => {
             </AppBar>
         </Box>
     );
-};
+});
 
 export default Header;

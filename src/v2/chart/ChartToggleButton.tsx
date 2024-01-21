@@ -1,30 +1,8 @@
 import React from 'react';
-import { ToggleButtonGroup, ToggleButton, createTheme } from '@mui/material';
-
-// declare module '@mui/material/styles' {
-//     interface PaletteColor {
-//         focus?: string;
-// }
-
-// interface SimplePaletteColorOptions {
-//         focus?: string;
-//     }
-// }
-
-// const theme = createTheme({
-//     palette: {
-//         primary: {
-//             main: '#286FEB',
-//             light: '#00AEEF',
-//             dark: '#A29415',
-//             contrastText: '#242105',
-//             focus: '"#286FEB"'
-//         },
-//     },
-// });
+import { ToggleButtonGroup, ToggleButton } from '@mui/material';
 
 const buttonSX = {
-    padding: '9px 8px',
+    padding: '8px 8px',
     '&.Mui-selected': {
         backgroundColor: 'primary.main'
     },
@@ -40,13 +18,20 @@ interface Props {
 }
 
 function ChartToggleButton({handleOnChange, selected}: Props) {
+
+    const toggleOnChange = (value : string) => {
+        if(value !== null){
+            handleOnChange(value);
+        }      
+    }
+
     return (
         <ToggleButtonGroup
             size="small"
             color="primary"
             value={selected}
             exclusive
-            onChange={(e, value) => {handleOnChange(value)}}
+            onChange={(e, value) => toggleOnChange(value)}
             aria-label="Chart Line or Bar Graph Toggle"
         >
             <ToggleButton value="chart" sx={buttonSX}>
@@ -56,7 +41,7 @@ function ChartToggleButton({handleOnChange, selected}: Props) {
                     </g>
                     <defs>
                         <clipPath id="clip0_3204_1695">
-                            <rect width="14" height="14" fill={"white"} transform="translate(0.932129 0.0947266)"/>
+                            <rect width="14" height="14" fill="white" transform="translate(0.932129 0.0947266)"/>
                         </clipPath>
                     </defs>
                 </svg>

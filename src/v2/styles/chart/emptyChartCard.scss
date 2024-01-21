@@ -1,5 +1,13 @@
-#chart-section-container {
-    height: 351.59px;
+#empty-chart-panel {
+    .inner-card{
+        #chart-section-container{
+            height: 351.59px;
+
+            @media (max-width: 800px) {
+              height: 30vh, // Adjust the height for smaller screens
+            }
+        }
+    }
 }
 
 .overlay-wrapper {

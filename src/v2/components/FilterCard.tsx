@@ -8,15 +8,10 @@ import {
 import ListLabelDot from './ListLabelDot';
 import MultiButton from './MultiButton';
 import { getGeographyDropdownOptions } from '../common/services'
-import { Category, Geography } from '../common/types';
-
-import '../styles/stateSection/filterCard.scss'
+import { Geography } from '../common/types';
 import { GeographyEnum } from '../common/enum';
 
-
-const filterOptions = ["County Subdivision", "City", "Census Track"];
-
-//category= {id:"",name:""}
+import '../styles/stateSection/filterCard.scss'
 
 interface Props {
     geography: Geography;
@@ -27,7 +22,6 @@ interface Props {
 
 function FilterCard({geography, color, selectedItems=[], handleOnChange}: Props) {
 
-    //const [selectedItems, setSelectedItems] = useState<GeographyEnum[]>(selectedOptions);
     const [filterOptions, setFilterItems] = useState<GeographyEnum[]>([]);
 
     useEffect(() => {
@@ -36,17 +30,11 @@ function FilterCard({geography, color, selectedItems=[], handleOnChange}: Props)
 
     const selectedOnChange= (event: React.SyntheticEvent<Element, Event>, values: GeographyEnum[], reason: AutocompleteChangeReason) => {
         console.log("Change filter: " + JSON.stringify(values));
-        //setSelectedItems(values);
         handleOnChange(values);
     }
 
     const handleChipDelete = (label: GeographyEnum, key : number) => {
         console.log("Delete chip: "+ label + " " + key);
-        // setSelectedItems((prevSelectedItems)=> {
-        //     const filteredItems = selectedItems.filter((item, index) => index !== key);
-        //     handleOnChange(filteredItems, geography);
-        //     return filteredItems;
-        // });
 
         const filteredItems = selectedItems.filter((item, index) => index !== key);
         handleOnChange(filteredItems);

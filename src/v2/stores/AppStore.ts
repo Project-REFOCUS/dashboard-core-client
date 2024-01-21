@@ -16,24 +16,17 @@ class AppStore {
         makeObservable(this);
     }
 
-    @action setCategory = (category : Category | null) : void => {
-        this.category = category;
-        console.log("Category value: "+ JSON.stringify(this.category));
+    @action setStates = (states : Geography[]) : void => {
+        this.states = states;
     }
 
-    // @action getIndicatorCategories : () => Promise<Category[]> = () => {
-    //     return new Promise((resolve) => {
-    //         this.categoryLegend = mockCategories;
-    //         resolve(mockCategories);
-    //     });
-    // };
+    @action setIsExpanded = (isExpanded : boolean) => {
+        this.isExpanded = isExpanded;
+    }
 
-    // @action getListOfStatesWithCategory : () => Promise<GeoCategory[]> = () =>
-    //     new Promise<GeoCategory[]> ((resolve) => {
-    //         this.stateCategoryLegend = mockGeoCategories;
-    //         resolve(mockGeoCategories);
-    //     }
-    // );
+    @action setCategory = (category : Category) => {
+        this.category = category;
+    }
 
 }
 

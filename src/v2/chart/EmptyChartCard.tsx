@@ -16,10 +16,6 @@ const textSX = {
     fontSize: '18px',
 };
 
-const circleSX = {
-
-};
-
 type Props = {}
 
 const EmptyChartCard = (props: Props) => {

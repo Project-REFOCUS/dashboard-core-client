@@ -4,9 +4,7 @@ import {
     Autocomplete,
     AutocompleteChangeReason,
     Box,
-    Card,
     FormControl,
-    List,
     Stack,
     TextField,
     Typography
@@ -14,56 +12,33 @@ import {
 import ChartToggleButton from './ChartToggleButton';
 import VisibilityIcon from './VisibilityIcon';
 import ExpandIcon from './ExpandIcon';
-// import GraphPlaceholder from './Graph.png';
-import MultiButton from '../components/MultiButton';
-import ListLabelDot from '../components/ListLabelDot';
 import FilterCard from '../components/FilterCard';
 import MultiInput from '../components/MultiInput';
-import { getSubGeographiesByGeographyAndType, getGeographyDropdownOptions } from '../common/services';
+import { getSubGeographiesByGeographyAndType } from '../common/services';
 import { GeographyEnum } from '../common/enum';
 import { DateDelta, Geography } from '../common/types';
+import TrashIcon from './TrashIcon';
+import appStore from '../stores/appStore';
+import CloseIcon from './CloseIcon';
+import { dateRanges } from '../common/constants';
 
 import '../styles/chart/chartCard.scss';
-import { GeoTreeNode } from '../common/classes';
-import TrashIcon from './TrashIcon';
 
 const GraphPlaceholder = require('./Graph.png');
-
-// export enum ChartCardType{
-//     STATE,
-//     COUNTY,
-//     SUBONE,
-//     SUBTWO
-// }
-
-// locationBreadcrumbs = [[],[],[]] an array of arrays
-
-// Primary (Title lines up with the options, Title Visible when card invisible)
-// Primary V2 (Title lines up with the options, Title Visible)
-// Secondary (Title is above the options, Lines up when Invisble
-// Extended ( like adds onto a Secondary, has a trash can icon to remove)
-
-const dateRanges : DateDelta[] = [
-    { x: {month: 'January', year: '2023'}, y: {month: 'December', year: '2023'}},
-    { x: {month: 'January', year: '2022'}, y: {month: 'December', year: '2022'}},
-    { x: {month: 'January', year: '2021'}, y: {month: 'December', year: '2021'}},
-    { x: {month: 'January', year: '2020'}, y: {month: 'December', year: '2020'}},
-]
+const GraphXL = require('../../graph_xl.png');
 
 interface Props {
-    handleExpandOnClick: () => void;
     handleClosePopUpOnClick?: () => void;
-    handleDelete: () => void;
+    handleDelete?: () => void;
     filterName: GeographyEnum;
     geography: Geography;
     state: Geography;
     ancestry: Geography[];
-    extension: boolean;
+    extension?: boolean;
 
-}
+};
 
-//location vs titleBreadcrumbs we need to keep one
-function ChartCardExtendable ({geography, filterName, ancestry, state, handleExpandOnClick, handleDelete, extension=false} : Props) {
+function ChartCardExtendable ({geography, filterName, ancestry, state, handleDelete=() => {}, extension=false} : Props) {
 
     const [ locationFilterList, setLocationFilterList ] = useState<Geography[]>([]);
     const [ selectedLocationFilterList, setSelectedLocationFilterList ] = useState<Geography[]>([]);
@@ -72,15 +47,11 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleExp
     const [ isVisible, setIsVisible ] = useState<boolean>(true);
     const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
 
-    //const [ extendedFilterOptions, setExtendedFilterOptions ] = useState<GeographyEnum[]>([]);
     const [ childFiltersArray, setChildFiltersArray ] = useState<GeographyEnum[][]>([]);
 
     useEffect(() => {
         getSubGeographiesByGeographyAndType(state, geography, filterName).then(options => setLocationFilterList(options));
-        //setExtendedFilterOptions(getGeographyDropdownOptions(filterName));
     }, []);
-
-    useEffect
 
     const handleChartToggle = (value : string) => {
         console.log("Chart Toggle value: " + value);
@@ -89,6 +60,9 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleExp
 
     const handleVisibilityToggle = () => {
         console.log("OnClick value: "+ !isVisible);
+        if(isExpanded && isVisible){
+            closePopUp();
+        }
         setIsVisible(!isVisible);
     }
 
@@ -98,12 +72,16 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleExp
     }
 
     const openPopUp = () => {
+        if(!isVisible){
+            setIsVisible(true);
+        }
         setIsExpanded(true);
-        handleExpandOnClick()
+        appStore.setIsExpanded(true);
     }
 
     const closePopUp = () => {
         setIsExpanded(false);
+        appStore.setIsExpanded(false);
     }
 
     const handleLocationFilterChange = (values : Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
@@ -121,7 +99,7 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleExp
     }
 
     const handleSubFilterChange = (values: GeographyEnum[], index: number) => {
-        console.log("Extendable node filter: index:"+ index +" " + JSON.stringify(values));
+        //console.log("Extendable node filter: index:"+ index +" " + JSON.stringify(values));
         
         setChildFiltersArray((prevFiltersArray) => {
             prevFiltersArray[index] = values;
@@ -130,10 +108,8 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleExp
     }
 
     const removeChildFilter = (geoIndex: number, removeIndex: number) => {
-
-        console.log("Remove child filter: index:"+ geoIndex +" "+removeIndex +" " + JSON.stringify(childFiltersArray[geoIndex]));
-        //setSelectedLocationFilterList((prevList)=> prevList.filter((location, index)=> index == removeIndex));
-
+        //console.log("Remove child filter: index:"+ geoIndex +" "+removeIndex +" " + JSON.stringify(childFiltersArray[geoIndex]));
+        
         setChildFiltersArray((prevFiltersArray) => {
             prevFiltersArray[geoIndex] = prevFiltersArray[geoIndex].filter((child, index) => index !== removeIndex);
             console.log("After remove: "+ JSON.stringify(prevFiltersArray[geoIndex]));
@@ -148,12 +124,12 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleExp
     const extensionCards = selectedLocationFilterList.length === 0 ? null : 
         selectedLocationFilterList.map((geography, geoIndex) => childFiltersArray[geoIndex] === undefined ? null :
         childFiltersArray[geoIndex].map((filter, filterIndex) =>
-            <ChartCardExtendable geography={geography} state={state} ancestry={[...ancestry, geography]} filterName={filter} handleExpandOnClick={()=>{}} handleDelete={()=>removeChildFilter(geoIndex, filterIndex)} extension/>
+            <ChartCardExtendable geography={geography} state={state} ancestry={[...ancestry, geography]} filterName={filter} handleDelete={()=>removeChildFilter(geoIndex, filterIndex)} extension/>
         )
     );
 
     return (
-        <Stack id="chart-extendable-container" spacing={1}>
+        <Stack id="chart-extendable-container" className={isExpanded ? "expand-popup" : ""} spacing={1}>
             <Box id="chart-section-container">
                 <Stack spacing={1}>
                     <Stack direction={isVisible ? "column" : "row"} spacing={1}>
@@ -173,9 +149,6 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleExp
                                 <Box>
                                     <MultiInput title={filterName} itemList={locationFilterList} handleOnChange={handleLocationFilterChange} size="small"/>
                                     <Box className="flex-left-ratio">
-                                        {/* Where do the colors come from? */}
-                                        {/* <ListLabelDot title="New York" color="#6C60FF"/>
-                                        <ListLabelDot title="Florida" color="#DA5FB0"/> */}
                                         {filterCards}
                                     </Box>
                                 </Box>
@@ -212,20 +185,18 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleExp
                                         </Box>
                                         {/* To do: there are hover over descriptions for the buttons */}
                                         <VisibilityIcon handleOnClick={handleVisibilityToggle} isVisible={isVisible}/>
-                                        <ExpandIcon handleOnClick={handleExpandOnClick}/>
+                                        { !isExpanded ? <ExpandIcon handleOnClick={openPopUp}/> : <CloseIcon handleOnClick={closePopUp}/>}
                                     </Stack>
                                 </Stack>
                                 <Box id="chart-iframe" className={ isVisible ? "flex-right-ratio" : "vanish" }>
-                                    <Box className="crop-container" sx={{ overflow: 'hidden'}}>
-                                        <img className="crop-image" src={GraphPlaceholder}/>
-                                    </Box>
+                                    <img className={isExpanded ? "img-expand": ""} src={isExpanded ? GraphXL : GraphPlaceholder}/>
                                 </Box>
                             </Stack>
                         </Box>
                     </Stack>
                 </Stack>
             </Box>
-            {extensionCards}
+            {!isExpanded ? extensionCards : null}
         </Stack>
     )
 }

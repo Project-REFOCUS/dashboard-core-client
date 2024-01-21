@@ -43,7 +43,7 @@
     z-index: 997;
     width: 95vw;
     height: calc(100vh - 75px);
-    background-color: #DFE6E9;
+    background-color: rgba(249,250,251,255);
     // top: 50%;
     // left: 50%;
     // transform: translate(-50%, -50%);
@@ -59,11 +59,11 @@
 
 #chart-iframe{
 
-    img {
+    img{
         width: 100%;
     }
 
-    .img-expand {
+    .img-expand{
         height: calc(85% - 75px);
     }
 }

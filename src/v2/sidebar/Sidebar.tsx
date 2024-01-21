@@ -17,26 +17,20 @@ import { Category, GeoCategory, Geography } from '../common/types';
 
 import '../styles/sidebar/sidebar.scss';
 import { observer } from 'mobx-react';
+import appStore from '../stores/appStore';
 
 const InputLabelSX = {
     paddingBottom: '4px'
 };
 
-//use a flatmap and a set to get the values
-
-//if the state is already selected but the category changes
-//i want to show it but cross it out
-
-//it doesnt refresh the filters
-
 //@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
 
 interface Props {
     handleCategoryOnChange : (category : Category | null) => void,
-    handleGeographyOnChange : (geography : Geography[]) => void
+    // handleGeographyOnChange : (geography : Geography[]) => void
 }
 
-const Sidebar : React.FC<Props> = ({handleCategoryOnChange, handleGeographyOnChange}: Props) => {
+const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => {
     const [fullCategoryList, setFullCategoryList] = useState<Category[]>([]);
     const [filteredCategoryList, setFilteredCategoryList] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -55,9 +49,10 @@ const Sidebar : React.FC<Props> = ({handleCategoryOnChange, handleGeographyOnCha
 
         if(reason == 'selectOption' && category !== null){
             setSelectedCategory((prevCategory) => {
-                let subjectStates = filterGeoCatWithCategoryName(category.name, fullStateList);
-                setFilteredStateList(subjectStates);
-                setSelectedStates(filterGeoCatWithCategoryName(category.name, selectedStates));
+                setFilteredStateList(filterGeoCatWithCategoryName(category.name, fullStateList));
+                const subjectStates = filterGeoCatWithCategoryName(category.name, selectedStates);
+                setSelectedStates(subjectStates);
+                appStore.states = subjectStates.map((state) => state.geography);
                 return category
             });
 
@@ -77,7 +72,7 @@ const Sidebar : React.FC<Props> = ({handleCategoryOnChange, handleGeographyOnCha
         console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         
         setSelectedStates(states); 
-        handleGeographyOnChange(states.map((state) => state.geography));
+        appStore.states= states.map((state) => state.geography);
 
         let subjectCategories = states.flatMap(state => state.categories);
         let unqiqueCategorySet = new Set(subjectCategories);
@@ -143,6 +138,6 @@ const Sidebar : React.FC<Props> = ({handleCategoryOnChange, handleGeographyOnCha
             </Stack>
         </Box>
     );
-};
+});
 
 export default Sidebar;
