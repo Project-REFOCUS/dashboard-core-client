@@ -10,7 +10,7 @@ const refocusLogo = require("../../Project_Refocus_Logo.png");
 const Header: React.FC = () => {
 
     return (
-        <Box>
+        <Box sx={{zIndex: 999}}>
             <AppBar
                 position="static"
                 component="nav"

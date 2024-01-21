@@ -3,7 +3,8 @@ import {
     Autocomplete,
     AutocompleteChangeReason,
     Box,
-    Button
+    Button,
+    Popper
 } from '@mui/material'
 import { DownArrow } from './CustomIcons';
 
@@ -38,6 +39,11 @@ function MultiButton<T>({itemList, handleOnChange, value} : Props<T>){
                     </Button>
                 </Box>
             )}
+            PopperComponent={(props) => (
+                <Popper {...props} style={{ zIndex: 9999}}>
+                  {props.children}
+                </Popper>
+              )}
         />
     )
 }

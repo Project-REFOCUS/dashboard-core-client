@@ -5,35 +5,28 @@ import {
     AutocompleteChangeReason,
     Box,
     Card,
+    Dialog,
     FormControl,
     List,
     Stack,
     TextField,
     Typography
-} from '@mui/material'
+} from '@mui/material';
 import ChartToggleButton from './ChartToggleButton'
 import VisibilityIcon from './VisibilityIcon';
 import ExpandIcon from './ExpandIcon';
 import ListLabelDot from '../components/ListLabelDot';
-import { DateDelta } from '../common/types';
+import { DateDelta, Geography } from '../common/types';
+import CloseIcon from './CloseIcon';
 
 import '../styles/chart/chartCard.scss';
 
+
 const GraphPlaceholder = require('./Graph.png');
-
-// export enum ChartCardType{
-//     STATE,
-//     COUNTY,
-//     SUBONE,
-//     SUBTWO
-// }
-
-// locationBreadcrumbs = [[],[],[]] an array of arrays
+const GraphXL = require('../../graph_xl.png');
 
 // Primary (Title lines up with the options, Title Visible when card invisible)
-// Primary V2 (Title lines up with the options, Title Visible)
-// Secondary (Title is above the options, Lines up when Invisble
-// Extended ( like adds onto a Secondary, has a trash can icon to remove)
+// Secondary (Title lines up with the options, Title Visible)
 
 const dateRanges : DateDelta[] = [
     { x: {month: 'January', year: '2023'}, y: {month: 'December', year: '2023'}},
@@ -43,13 +36,14 @@ const dateRanges : DateDelta[] = [
 ]
 
 interface Props {
-    handleExpandOnClick: () => void;
-    handleClosePopUpOnClick?: () => void;
     titleBreadcrumbs: string[][];
     secondary?: boolean;
+    geographies: Geography[];
+    handleExpandOnClick: () => void;
+    handleClosePopUpOnClick?: () => void;
 }
 
-function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrumbs, secondary=false}: Props) {
+const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleExpandOnClick, handleClosePopUpOnClick}: Props) => {
 
     const [ chartOption, setChartOption ] = useState<string>("chart");
     const [ selectedDateRange, setSelectedDateRange] = useState<DateDelta | null>(dateRanges[0]);
@@ -58,11 +52,15 @@ function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrum
 
     const handleChartToggle = (value : string) => {
         console.log("Chart Toggle value: " + value);
-        setChartOption(value);
+        if(value !== null)
+            setChartOption(value);
     }
 
     const handleVisibilityToggle = () => {
         console.log("OnClick value: "+ !isVisible);
+        if(isExpanded && isVisible){
+            closePopUp();
+        }
         setIsVisible(!isVisible);
     }
 
@@ -72,6 +70,9 @@ function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrum
     }
 
     const openPopUp = () => {
+        if(!isVisible){
+            setIsVisible(true);
+        }
         setIsExpanded(true);
         handleExpandOnClick()
     }
@@ -85,8 +86,10 @@ function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrum
         return <Typography id="chart-section-header">{title}</Typography>;
     });
 
+    const listLabelDots = geographies.map(geography => <ListLabelDot title={geography.name} color="#DA5FB0"/>);
+
     return (
-        <Box id="chart-sidebar-panel" className="flex-right-ratio">
+        <Box id="chart-sidebar-panel" className={isExpanded ? "expand-popup" : "flex-right-ratio"}>
             <Card className="inner-card" elevation={0}>
                 <Box id="chart-section-container">
                     <Stack spacing={1}>
@@ -97,7 +100,7 @@ function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrum
                                 divider={<Typography id="chart-section-header">|</Typography>}
                                 spacing={0.5}
                             >
-                                { secondary || !isVisible ? titleElements : null}
+                                { secondary || !isVisible || isExpanded ? titleElements : null}
                             </Stack>
                             <Stack id="chart-options" className="flex-right-ratio" direction="row" sx={{ justifyContent: 'space-between' }}>
                                 <Box className="flex-left-ratio">
@@ -109,13 +112,14 @@ function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrum
                                             <Autocomplete
                                                 options={dateRanges}
                                                 getOptionLabel={(dateRange) =>
-                                                     `${dateRange.x.month} ${dateRange.x.year} - ${dateRange.y.month} ${dateRange.y.year}`}
+                                                    `${dateRange.x.month} ${dateRange.x.year} - ${dateRange.y.month} ${dateRange.y.year}`}
                                                 value={selectedDateRange}
                                                 onChange={handleDateChange}
                                                 renderInput={(params) => (
                                                     <TextField
                                                         {...params}
-                                                        variant="outlined"
+                                                        // variant="outlined"
+                                                        sx={{padding: 0}}
                                                     />
                                                 )}
                                             />
@@ -123,24 +127,20 @@ function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrum
                                     </Box>
                                     {/* To do: there are hover over descriptions for the buttons */}
                                     <VisibilityIcon handleOnClick={handleVisibilityToggle} isVisible={isVisible}/>
-                                    <ExpandIcon handleOnClick={handleExpandOnClick}/>
+                                    { !isExpanded ? <ExpandIcon handleOnClick={openPopUp}/> : <CloseIcon handleOnClick={closePopUp}/>}
                                 </Stack>
                             </Stack>
                         </Stack>
-                        { isVisible ? 
+                        { isVisible &&
                             <Stack direction="row">
                                 <Box className="flex-left-ratio">
                                     {/* Where do the colors come from? */}
-                                    <ListLabelDot title="New York" color="#6C60FF"/>
-                                    <ListLabelDot title="Florida" color="#DA5FB0"/>
+                                    {listLabelDots}
                                 </Box>
-                                <Box id="chart-iframe" className="flex-right-ratio">
-                                    <Box className="crop-container" sx={{ overflow: 'hidden'}}>
-                                        <img className="crop-image" src={GraphPlaceholder}/>
-                                    </Box>
+                                <Box id="chart-iframe" className="flex-right-ratio" >
+                                    <img className={isExpanded ? "img-expand": ""} src={isExpanded ? GraphXL : GraphPlaceholder}/>
                                 </Box>
                             </Stack>
-                            : null
                         }
                     </Stack>
                 </Box>
@@ -150,3 +150,9 @@ function ChartCard({handleExpandOnClick, handleClosePopUpOnClick, titleBreadcrum
 }
 
 export default ChartCard
+
+{/* <Box id="chart-iframe" className="flex-right-ratio">
+                                    <Box className="crop-container" sx={{ overflow: 'hidden'}}>
+                                        <img className="crop-image" src={isExpanded ? GraphXL : GraphPlaceholder}/>
+                                    </Box>
+                                </Box> */}

@@ -7,40 +7,49 @@ import { Category, Geography } from '../common/types';
 import { GeographyEnum } from '../common/enum';
 
 import '../styles/stateSection/sidebarFilter.scss';
-
+import { GeoTreeNode } from '../common/classes';
 
 interface Props {
-    geography: Geography;
+    state: Geography;
+    handleGeoOnChange: (geographies: Geography[], removedIndex: number, reason: AutocompleteChangeReason) => void;
+    handleFilterOnChange: (filters: GeographyEnum[], index: number) => void;
 }
 
-function SidebarFilter({geography} : Props) {
+function SidebarFilter({state, handleGeoOnChange, handleFilterOnChange} : Props) {
 
     const [ itemList, setItemList ] = useState<Geography[]>([]);
     const [ selectedItems, setSelectedItems ] = useState<Geography[]>([]);
 
+    const [ subFiltersArray, setSubFiltersArray ] = useState<GeographyEnum[][]>([]);
+
     useEffect(() => {
-        getListOfCounties(geography).then(counties => setItemList(counties));
+        getListOfCounties(state).then(counties => setItemList(counties));
     }, []);
 
-    const countyOnChange = (values: Geography[]) => {
-        setSelectedItems(values);
+    const countyOnChange = (values: Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
+        setSelectedItems([...values]);
+        handleGeoOnChange(values, removedIndex, reason);
     }
 
-    const handleSubFilterChange = (values: GeographyEnum[]) => {
-
+    const handleSubFilterChange = (values: GeographyEnum[], index: number) => {
+        setSubFiltersArray((prevFiltersArray) => {
+            prevFiltersArray[index] = values;
+            return [...prevFiltersArray];
+        });
+        handleFilterOnChange(values, index);
     }
 
-    const filterCards = selectedItems.map((county) => 
-        <FilterCard geography={county} color="#DA5FB0" key={county.id} handleOnChange={handleSubFilterChange}/>
+    const filterCards = selectedItems.map((county, index) => 
+        <FilterCard geography={county} color="#DA5FB0" key={index} handleOnChange={(values)=> handleSubFilterChange(values, index)} selectedItems={subFiltersArray[index]}/>
     );
 
     return (
         <Box className="sidebar-panel">
             <Card elevation={0}>
-                <Typography id="state-section-header">{geography.name}</Typography>
+                <Typography id="state-section-header">{state.name}</Typography>
                 <Stack spacing={1}>
                     <Box>
-                        <MultiInput title={geography.type} itemList={itemList} handleOnChange={countyOnChange}/>
+                        <MultiInput title={state.type} itemList={itemList} handleOnChange={countyOnChange}/>
                     </Box>
                     {filterCards}
                 </Stack>

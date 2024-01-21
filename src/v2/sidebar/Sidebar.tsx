@@ -16,6 +16,7 @@ import InfoCard from './InfoCard';
 import { Category, GeoCategory, Geography } from '../common/types';
 
 import '../styles/sidebar/sidebar.scss';
+import { observer } from 'mobx-react';
 
 const InputLabelSX = {
     paddingBottom: '4px'
@@ -29,7 +30,13 @@ const InputLabelSX = {
 //it doesnt refresh the filters
 
 //@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
-const Sidebar : React.FC = () => {
+
+interface Props {
+    handleCategoryOnChange : (category : Category | null) => void,
+    handleGeographyOnChange : (geography : Geography[]) => void
+}
+
+const Sidebar : React.FC<Props> = ({handleCategoryOnChange, handleGeographyOnChange}: Props) => {
     const [fullCategoryList, setFullCategoryList] = useState<Category[]>([]);
     const [filteredCategoryList, setFilteredCategoryList] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
@@ -43,30 +50,34 @@ const Sidebar : React.FC = () => {
         getListOfStatesWithCategory().then((states : GeoCategory[]) => setFullStateList(states));
     }, []);
 
-    const handleCategoryChange = (event: React.SyntheticEvent<Element, Event>, category: Category | null, reason: AutocompleteChangeReason) => {
+    const categoryChange = (event: React.SyntheticEvent<Element, Event>, category: Category | null, reason: AutocompleteChangeReason) => {
         console.log("Change Category reason: "+ reason +" category: " + JSON.stringify(category));
 
         if(reason == 'selectOption' && category !== null){
-            setSelectedCategory(category);
+            setSelectedCategory((prevCategory) => {
+                let subjectStates = filterGeoCatWithCategoryName(category.name, fullStateList);
+                setFilteredStateList(subjectStates);
+                setSelectedStates(filterGeoCatWithCategoryName(category.name, selectedStates));
+                return category
+            });
 
-            let subjectStates = filterGeoCatWithCategoryName(category.name, fullStateList);
-            setFilteredStateList(subjectStates);
-            setSelectedStates(filterGeoCatWithCategoryName(category.name, selectedStates));
-            
-        }else if(reason == "removeOption" || reason === "clear"){
+        }else if(reason == "removeOption" || reason == "clear"){
             setSelectedCategory(null);
             setFilteredStateList([]);
         }
+
+        handleCategoryOnChange(category);
     }
 
     const filterGeoCatWithCategoryName = (name: string, states : GeoCategory[]) => {
-        return states.filter( geoCategory => geoCategory.categories.find(category => category.name == name))
+        return states.filter(geoCategory => geoCategory.categories.find(category => category.name == name))
     }
 
-    const handleStateChange = (event: React.SyntheticEvent<Element, Event>, states: GeoCategory[], reason: AutocompleteChangeReason) => {
+    const stateChange = (event: React.SyntheticEvent<Element, Event>, states: GeoCategory[], reason: AutocompleteChangeReason) => {
         console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         
-        setSelectedStates(states);
+        setSelectedStates(states); 
+        handleGeographyOnChange(states.map((state) => state.geography));
 
         let subjectCategories = states.flatMap(state => state.categories);
         let unqiqueCategorySet = new Set(subjectCategories);
@@ -90,7 +101,7 @@ const Sidebar : React.FC = () => {
                                         value={selectedCategory ? selectedCategory : null}
                                         getOptionLabel={(category) => category.name}
                                         disableListWrap
-                                        onChange={handleCategoryChange}
+                                        onChange={categoryChange}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
@@ -114,7 +125,7 @@ const Sidebar : React.FC = () => {
                                         filterSelectedOptions
                                         disableListWrap
                                         value={selectedStates}
-                                        onChange={handleStateChange}
+                                        onChange={stateChange}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
@@ -128,7 +139,7 @@ const Sidebar : React.FC = () => {
                         </Stack>
                     </CardContent>
                 </Card>
-                { !selectedCategory && selectedStates.length == 0 ? <InfoCard/> : null }
+                { (selectedCategory === null || selectedStates.length === 0) ? <InfoCard/> : null }
             </Stack>
         </Box>
     );

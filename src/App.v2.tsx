@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState }from 'react';
 import Header from './v2/header/Header';
 import Sidebar from './v2/sidebar/Sidebar';
 import StateMap from './v2/components/StateMap';
@@ -7,8 +7,11 @@ import { Box, Card, CardContent, Container, Stack, Typography } from '@mui/mater
 import StateSection from './v2/stateSection/StateSection';
 
 import './v2/styles/index.scss';
-import { Geography } from './v2/common/types';
+import { Category, Geography } from './v2/common/types';
 import { GeographyEnum } from './v2/common/enum';
+import { observer, useLocalStore } from 'mobx-react';
+import appStore from './v2/stores/appStore';
+// import AppStore from './v2/stores/AppStore';
 
 const CardSX = {
     width: '100%',
@@ -36,7 +39,14 @@ const CardSX = {
 
 const newYork : Geography = {id: "2", name: "New York", shortName: "NY", type: GeographyEnum.STATE };
 
-const App: React.FC = () => {
+const App: React.FC = observer(() => {
+
+    const [ appCategory, setAppCategory ] = useState<Category | null>(null);
+    const [ appStates, setAppStates ] = useState<Geography[]>([]);
+
+    const stateSections = (appStates.length > 0) && appCategory !== null ? 
+        appStates.map((state: Geography) => <StateSection state={state}/>) : null;
+
     return (
         <Box>
             <Header />
@@ -45,13 +55,16 @@ const App: React.FC = () => {
                     <Box>
                         <Card elevation={0} sx={CardSX}>
                             <CardContent sx={{display: 'flex'}}>
-                                <Sidebar/>
-                                {/* <StateMap/> */}
-                                <ChartCard titleBreadcrumbs={[["Covid Deaths"],["New York","Florida"]]} handleExpandOnClick={()=>{}} />
+                                <Sidebar handleCategoryOnChange={setAppCategory} handleGeographyOnChange={setAppStates}/>
+                                { (appStates.length > 0) && appCategory !== null ?
+                                <ChartCard geographies={appStates} titleBreadcrumbs={[[appCategory?.name], appStates.map((state: Geography)=> state.name)]} handleExpandOnClick={()=>{}} />
+                                :
+                                <StateMap/>
+                                }
                             </CardContent>
                         </Card>
                     </Box>
-                    <StateSection state={newYork}/>
+                    {stateSections}
                 </Stack>
                 <Box id="chart-popup">
                     {/**Try to do this inside of the Statistic Card */}
@@ -59,6 +72,6 @@ const App: React.FC = () => {
             </Container>
         </Box>
     );
-};
+});
 
 export default App;

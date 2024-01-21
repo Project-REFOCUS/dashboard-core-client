@@ -22,11 +22,12 @@ interface Props {
     geography: Geography;
     color: string;
     handleOnChange: (values : GeographyEnum[]) => void;
+    selectedItems: GeographyEnum[];
 }
 
-function FilterCard({geography, color, handleOnChange}: Props) {
+function FilterCard({geography, color, selectedItems=[], handleOnChange}: Props) {
 
-    const [selectedItems, setSelectedItems] = useState<GeographyEnum[]>([]);
+    //const [selectedItems, setSelectedItems] = useState<GeographyEnum[]>(selectedOptions);
     const [filterOptions, setFilterItems] = useState<GeographyEnum[]>([]);
 
     useEffect(() => {
@@ -35,14 +36,20 @@ function FilterCard({geography, color, handleOnChange}: Props) {
 
     const selectedOnChange= (event: React.SyntheticEvent<Element, Event>, values: GeographyEnum[], reason: AutocompleteChangeReason) => {
         console.log("Change filter: " + JSON.stringify(values));
-        setSelectedItems(values);
+        //setSelectedItems(values);
         handleOnChange(values);
     }
 
-    const handleChipDelete = (label : GeographyEnum, key : number) => {
+    const handleChipDelete = (label: GeographyEnum, key : number) => {
         console.log("Delete chip: "+ label + " " + key);
-        setSelectedItems((selectedItems)=> selectedItems.filter((item, index) => index !== key));
-        handleOnChange(selectedItems);
+        // setSelectedItems((prevSelectedItems)=> {
+        //     const filteredItems = selectedItems.filter((item, index) => index !== key);
+        //     handleOnChange(filteredItems, geography);
+        //     return filteredItems;
+        // });
+
+        const filteredItems = selectedItems.filter((item, index) => index !== key);
+        handleOnChange(filteredItems);
     }
 
     const labelChips = selectedItems.map((item, index) => 

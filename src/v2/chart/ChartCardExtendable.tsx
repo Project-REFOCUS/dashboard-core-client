@@ -24,6 +24,8 @@ import { GeographyEnum } from '../common/enum';
 import { DateDelta, Geography } from '../common/types';
 
 import '../styles/chart/chartCard.scss';
+import { GeoTreeNode } from '../common/classes';
+import TrashIcon from './TrashIcon';
 
 const GraphPlaceholder = require('./Graph.png');
 
@@ -51,28 +53,34 @@ const dateRanges : DateDelta[] = [
 interface Props {
     handleExpandOnClick: () => void;
     handleClosePopUpOnClick?: () => void;
-    titleBreadcrumbs: string[][];
-    geography: Geography;
+    handleDelete: () => void;
     filterName: GeographyEnum;
+    geography: Geography;
+    state: Geography;
+    ancestry: Geography[];
+    extension: boolean;
+
 }
 
 //location vs titleBreadcrumbs we need to keep one
-function ChartCardExtendable ({filterName, handleExpandOnClick, titleBreadcrumbs, geography} : Props) {
+function ChartCardExtendable ({geography, filterName, ancestry, state, handleExpandOnClick, handleDelete, extension=false} : Props) {
 
     const [ locationFilterList, setLocationFilterList ] = useState<Geography[]>([]);
-    const [ selectedLocationFilter, setSelectedLocationFilter ] = useState<Geography[]>([]);
+    const [ selectedLocationFilterList, setSelectedLocationFilterList ] = useState<Geography[]>([]);
     const [ chartOption, setChartOption ] = useState<string>("chart");
     const [ selectedDateRange, setSelectedDateRange] = useState<DateDelta | null>(dateRanges[0]);
     const [ isVisible, setIsVisible ] = useState<boolean>(true);
     const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
 
-    const [ extendedFilterOptions, setExtendedFilterOptions ] = useState<GeographyEnum[]>([]);
-    const [ selectedExtendedItems, setSelectedExtendedItems ] = useState<GeographyEnum[]>([]);
+    //const [ extendedFilterOptions, setExtendedFilterOptions ] = useState<GeographyEnum[]>([]);
+    const [ childFiltersArray, setChildFiltersArray ] = useState<GeographyEnum[][]>([]);
 
     useEffect(() => {
-        getSubGeographiesByGeographyAndType(geography, filterName).then(options => setLocationFilterList(options));
-        setExtendedFilterOptions(getGeographyDropdownOptions(filterName));
+        getSubGeographiesByGeographyAndType(state, geography, filterName).then(options => setLocationFilterList(options));
+        //setExtendedFilterOptions(getGeographyDropdownOptions(filterName));
     }, []);
+
+    useEffect
 
     const handleChartToggle = (value : string) => {
         console.log("Chart Toggle value: " + value);
@@ -98,46 +106,66 @@ function ChartCardExtendable ({filterName, handleExpandOnClick, titleBreadcrumbs
         setIsExpanded(false);
     }
 
-    const multiButtonOnChange = (event : React.SyntheticEvent<Element, Event>, values : GeographyEnum[]) => {
+    const handleLocationFilterChange = (values : Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
         console.log("Change filter: " + JSON.stringify(values));
-        setSelectedExtendedItems(values);
+        if(reason == "removeOption" && removedIndex !== -1){
+            setChildFiltersArray((prevFiltersArray) => {
+                if(prevFiltersArray[removedIndex].length > 0){
+                    prevFiltersArray[removedIndex] = [];
+                }
+
+                return [...prevFiltersArray];
+            });
+        }
+        setSelectedLocationFilterList(values);
     }
 
-    const handleLocationFilterChange = (values : Geography[]) => {
-        console.log("Change filter: " + JSON.stringify(values));
-        setSelectedLocationFilter(values);
-    }
-
-    const handleSubFilterChange = (values: GeographyEnum[]) => {
-
-    }
-
-    const titleElements = titleBreadcrumbs.map( (titleArray, index) => {
-        const title = titleArray.join(', ');
-        return <Typography id="chart-section-header">{title}</Typography>;
-    });
-
-    const filterCards = selectedLocationFilter.map((locationFilter) => <FilterCard geography={locationFilter} color="#DA5FB0" key={locationFilter.id} handleOnChange={handleSubFilterChange}/>);
-
-    const extensionCards = selectedLocationFilter.map((locationFilter) => {
-        return selectedExtendedItems.map((extendedItem)=>{
-            const newBreadcrumbs = [...titleBreadcrumbs, [locationFilter.name]];
-            return <ChartCardExtendable filterName={extendedItem} titleBreadcrumbs={newBreadcrumbs} geography={locationFilter} handleExpandOnClick={openPopUp}/>
+    const handleSubFilterChange = (values: GeographyEnum[], index: number) => {
+        console.log("Extendable node filter: index:"+ index +" " + JSON.stringify(values));
+        
+        setChildFiltersArray((prevFiltersArray) => {
+            prevFiltersArray[index] = values;
+            return [...prevFiltersArray];
         });
-    });
+    }
+
+    const removeChildFilter = (geoIndex: number, removeIndex: number) => {
+
+        console.log("Remove child filter: index:"+ geoIndex +" "+removeIndex +" " + JSON.stringify(childFiltersArray[geoIndex]));
+        //setSelectedLocationFilterList((prevList)=> prevList.filter((location, index)=> index == removeIndex));
+
+        setChildFiltersArray((prevFiltersArray) => {
+            prevFiltersArray[geoIndex] = prevFiltersArray[geoIndex].filter((child, index) => index !== removeIndex);
+            console.log("After remove: "+ JSON.stringify(prevFiltersArray[geoIndex]));
+            return [...prevFiltersArray];
+        });
+    }
+
+    const titleElements = ancestry.map((geography, index) => <Typography id="chart-section-header" key={index}>{geography.name}</Typography>);
+
+    const filterCards = selectedLocationFilterList.map((locationFilter, index) => <FilterCard geography={locationFilter} color="#DA5FB0" key={index} handleOnChange={(values)=> handleSubFilterChange(values, index)} selectedItems={childFiltersArray[index]}/>);
+
+    const extensionCards = selectedLocationFilterList.length === 0 ? null : 
+        selectedLocationFilterList.map((geography, geoIndex) => childFiltersArray[geoIndex] === undefined ? null :
+        childFiltersArray[geoIndex].map((filter, filterIndex) =>
+            <ChartCardExtendable geography={geography} state={state} ancestry={[...ancestry, geography]} filterName={filter} handleExpandOnClick={()=>{}} handleDelete={()=>removeChildFilter(geoIndex, filterIndex)} extension/>
+        )
+    );
 
     return (
         <Stack id="chart-extendable-container" spacing={1}>
             <Box id="chart-section-container">
                 <Stack spacing={1}>
                     <Stack direction={isVisible ? "column" : "row"} spacing={1}>
-                        <Stack id="chart-header-container" 
-                            className={"flex-left-ratio"}
-                            direction="row" 
-                            divider={<Typography id="chart-section-header">|</Typography>}
-                            spacing={0.5}
-                        >
+                        <Stack id="chart-header-container" className={"flex-left-ratio"} direction="row" spacing={0.5}>
+                            <Stack
+                                direction="row" 
+                                divider={<Typography id="chart-section-header">|</Typography>}
+                                spacing={0.5}
+                            >
                             {titleElements}
+                            </Stack>
+                            {extension && <TrashIcon handleOnClick={handleDelete}/>}
                         </Stack>
                         <Box className={isVisible ? "row" : "flex-right-ratio"} id="chart-content-container">
                             {/* Dont forget the screen readers */}
@@ -151,13 +179,13 @@ function ChartCardExtendable ({filterName, handleExpandOnClick, titleBreadcrumbs
                                         {filterCards}
                                     </Box>
                                 </Box>
-                                <Box className={selectedLocationFilter.length && extendedFilterOptions.length ? "" : "vanish"}>
+                                {/* <Box className={selectedLocationFilter.length && extendedFilterOptions.length ? "" : "vanish"}>
                                     <MultiButton 
                                         itemList={extendedFilterOptions}
                                         handleOnChange={(event, values, reason) => multiButtonOnChange(event, values as GeographyEnum[])}
                                         value={selectedExtendedItems}
                                     />
-                                </Box>
+                                </Box> */}
                             </Stack>
                             <Stack id="chart-card-right-container" className="flex-right-ratio" spacing={1}>
                                 <Stack id="chart-options" direction="row" sx={{ justifyContent: 'space-between' }}>

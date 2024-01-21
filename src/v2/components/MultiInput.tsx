@@ -5,13 +5,13 @@ import '../styles/components/multiInput.scss';
 interface Props<T> {
     title: string;
     itemList: T[];
-    handleOnChange: (values: T[]) => void;
+    handleOnChange: (values: T[], removedIndex: number, reason: AutocompleteChangeReason) => void;
     labelFunc?: (item: T) => string;
     size?: string;
 }
 
 function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) => item.name, size="small"}: Props<T>) {
-
+    const [previousValues, setPreviousValues] = React.useState<T[]>([]);
     const [isEmpty, setIsEmpty] = useState(true);
 
     // const handleInputChange = (event: React.SyntheticEvent<Element, Event>, values: any[], reason: AutocompleteChangeReason) => {
@@ -21,9 +21,15 @@ function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) 
     // }
 
     const handleInputChange = (event: React.SyntheticEvent<Element, Event>, values: T[], reason: AutocompleteChangeReason) => {
-        console.log("Change Counties reason: "+ reason +" counties: " + JSON.stringify(values));
+        console.log("Change Counties reason: " + reason + " counties: " + JSON.stringify(values));
+        
+        // find removed element index
+        const removedElementIndex = previousValues.findIndex((prevValue) => !values.includes(prevValue));
+        
+        setPreviousValues([...values]);
+
         setIsEmpty(values.length === 0);
-        handleOnChange(values);
+        handleOnChange(values, removedElementIndex, reason);
     }
 
     return (
