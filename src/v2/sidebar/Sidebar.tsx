@@ -14,13 +14,24 @@ import {
 import { getIndicatorCategories , getListOfStatesWithCategory } from '../common/services';
 import InfoCard from './InfoCard';
 import { Category, GeoCategory, Geography } from '../common/types';
-
-import '../styles/sidebar/sidebar.scss';
 import { observer } from 'mobx-react';
 import appStore from '../stores/appStore';
 
+import '../styles/sidebar/sidebar.scss';
+
+
 const InputLabelSX = {
     paddingBottom: '4px'
+};
+
+const textFieldSX = {
+    color: 'var(--Gray-140, #2A3039)',
+
+    fontFamily: 'Avenir',
+    fontSize: '14px',
+    fontStyle: 'normal',
+    fontWeight: 350,
+    lineHeight: '16px',
 };
 
 //@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
@@ -52,7 +63,7 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                 setFilteredStateList(filterGeoCatWithCategoryName(category.name, fullStateList));
                 const subjectStates = filterGeoCatWithCategoryName(category.name, selectedStates);
                 setSelectedStates(subjectStates);
-                appStore.states = subjectStates.map((state) => state.geography);
+                appStore.setStates(subjectStates.map((state) => state.geography));
                 return category
             });
 
@@ -72,7 +83,7 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
         console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         
         setSelectedStates(states); 
-        appStore.states= states.map((state) => state.geography);
+        appStore.setStates(states.map((state) => state.geography));
 
         let subjectCategories = states.flatMap(state => state.categories);
         let unqiqueCategorySet = new Set(subjectCategories);
@@ -102,6 +113,7 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                                                 {...params}
                                                 placeholder="Select..."
                                                 variant="outlined"
+                                                sx={textFieldSX}
                                             />
                                         )}
                                     />
@@ -126,6 +138,7 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                                                 {...params}
                                                 placeholder={selectedStates.length == 0 ? "Select..." : undefined}
                                                 variant="outlined"
+                                                sx={textFieldSX}
                                             />
                                         )}
                                     />

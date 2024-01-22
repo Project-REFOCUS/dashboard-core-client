@@ -2,6 +2,16 @@
   margin: 0;
 }
 
+#default-dropdown-text{
+    color: var(--Gray-140, #2A3039);
+
+    font-family: Avenir;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 350;
+    line-height: 16px;
+}
+
 div.main-component {
   margin: 0 50px 0 50px;
 }
@@ -71,14 +81,37 @@ div.fill-container{
     padding: 8px;
 }
 
-div.css-1h51icj-MuiAutocomplete-root .MuiAutocomplete-inputRoot{
-    padding: 0px;
+.MuiAutocomplete-inputRoot{
+    padding-left: 4px !important;
+    padding-bottom: 4px !important;
+    padding-top: 4px !important;
 }
 
-.MuiCardContent-root.css-1u0k5eo-MuiCardContent-root {
+.MuiAutocomplete-input {
+    padding-left: 4px !important;
+    // padding-bottom: 4px !important;
+    // padding-top: 4px !important;
+}
+
+.MuiCardContent-root {
     padding: 8px !important;
 }
 
-.css-1h51icj-MuiAutocomplete-root .MuiOutlinedInput-root .MuiAutocomplete-input {
-    padding: 4px !important;
+.MuiContainer-root {
+    margin-bottom: 5vh;
+}
+
+.MuiTypography-root.MuiTypography-body1{
+    color: var(--black, #2D3436);
+    font-family: "Open Sans, sans-serif";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+span.MuiChip-label {
+    color: #000;
+    font-family: "Open Sans" !important;
+    font-size: 11px;
 }

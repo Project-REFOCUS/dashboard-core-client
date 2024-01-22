@@ -34,8 +34,9 @@
     flex-wrap: wrap;
 }
 
-#chart-content-container{
-    gap: 16px;
+#chart-card-left-container{
+    // gap: 16px;
+    padding-right: 8px;
 }
 
 .expand-popup{
@@ -66,4 +67,10 @@
     .img-expand{
         height: calc(85% - 75px);
     }
+}
+
+#date-range-dropdown.MuiOutlinedInput-root.MuiAutocomplete-input{
+    padding-left: 0px !important;
+    padding-bottom: 0px !important;
+    padding-top: 0px !important;
 }

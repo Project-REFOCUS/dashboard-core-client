@@ -37,6 +37,8 @@ function MultiButton<T>({itemList, handleOnChange, value} : Props<T>){
                     >
                     Add
                     </Button>
+                    {/*Prevent a revealing console log error expecting an input element*/}
+                    <input {...params.inputProps} style={{ display: 'none' }} />
                 </Box>
             )}
             PopperComponent={(props) => (

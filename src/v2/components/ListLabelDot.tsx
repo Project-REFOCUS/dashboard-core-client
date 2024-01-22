@@ -27,6 +27,7 @@ const ListLabelDot = ({title, color} : Props) => {
             </ListItemIcon>
             <ListItemText
                 primary={title}
+                sx={{ fontFamily: "Open Sans, sans-serif", fontSize: '14px', fontWeight: 400 }}
             />
         </ListItem>
     )

@@ -7,18 +7,21 @@ interface Props<T> {
     itemList: T[];
     handleOnChange: (values: T[], removedIndex: number, reason: AutocompleteChangeReason) => void;
     labelFunc?: (item: T) => string;
-    size?: string;
 }
 
-function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) => item.name, size="small"}: Props<T>) {
+const textFieldSX = {
+    color: 'var(--Gray-140, #2A3039)',
+
+    fontFamily: 'Avenir',
+    fontSize: '14px',
+    fontStyle: 'normal',
+    fontWeight: 350,
+    lineHeight: '16px',
+};
+
+function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) => item.name}: Props<T>) {
     const [previousValues, setPreviousValues] = React.useState<T[]>([]);
     const [isEmpty, setIsEmpty] = useState(true);
-
-    // const handleInputChange = (event: React.SyntheticEvent<Element, Event>, values: any[], reason: AutocompleteChangeReason) => {
-    //     console.log("Change Counties reason: "+ reason +" counties: " + JSON.stringify(values));
-    //     setIsEmpty(values.length === 0);
-    //     handleOnChange(values);
-    // }
 
     const handleInputChange = (event: React.SyntheticEvent<Element, Event>, values: T[], reason: AutocompleteChangeReason) => {
         console.log("Change Counties reason: " + reason + " counties: " + JSON.stringify(values));
@@ -49,6 +52,7 @@ function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) 
                         {...params}
                         placeholder={ isEmpty ? "Select..." : undefined}
                         variant="outlined"
+                        sx={textFieldSX}
                     />
                 )}
             />

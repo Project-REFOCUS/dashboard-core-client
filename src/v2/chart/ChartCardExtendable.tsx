@@ -29,7 +29,7 @@ const GraphXL = require('../../graph_xl.png');
 
 interface Props {
     handleClosePopUpOnClick?: () => void;
-    handleDelete?: () => void;
+    handleDelete?: () => void;  //only for recursive, used to remove the filterCard chips
     filterName: GeographyEnum;
     geography: Geography;
     state: Geography;
@@ -88,7 +88,7 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleDel
         console.log("Change filter: " + JSON.stringify(values));
         if(reason == "removeOption" && removedIndex !== -1){
             setChildFiltersArray((prevFiltersArray) => {
-                if(prevFiltersArray[removedIndex].length > 0){
+                if(prevFiltersArray[removedIndex]?.length > 0){
                     prevFiltersArray[removedIndex] = [];
                 }
 
@@ -124,7 +124,7 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleDel
     const extensionCards = selectedLocationFilterList.length === 0 ? null : 
         selectedLocationFilterList.map((geography, geoIndex) => childFiltersArray[geoIndex] === undefined ? null :
         childFiltersArray[geoIndex].map((filter, filterIndex) =>
-            <ChartCardExtendable geography={geography} state={state} ancestry={[...ancestry, geography]} filterName={filter} handleDelete={()=>removeChildFilter(geoIndex, filterIndex)} extension/>
+            <ChartCardExtendable geography={geography} state={state} ancestry={[...ancestry, geography]} filterName={filter} handleDelete={()=>removeChildFilter(geoIndex, filterIndex)} extension key={filterIndex}/>
         )
     );
 
@@ -147,7 +147,7 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleDel
                             {/* Dont forget the screen readers */}
                             <Stack className={isVisible ? "flex-left-ratio" : "vanish"} id="chart-card-left-container" sx={{ justifyContent: 'space-between' }} spacing={1}>
                                 <Box>
-                                    <MultiInput title={filterName} itemList={locationFilterList} handleOnChange={handleLocationFilterChange} size="small"/>
+                                    <MultiInput title={filterName} itemList={locationFilterList} handleOnChange={handleLocationFilterChange}/>
                                     <Box className="flex-left-ratio">
                                         {filterCards}
                                     </Box>
@@ -169,6 +169,7 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleDel
                                         <Box className="fill-container" id="date-range-container">
                                             <FormControl id="date-selector" variant="standard">
                                                 <Autocomplete
+                                                    size="small"
                                                     options={dateRanges}
                                                     getOptionLabel={(dateRange) =>
                                                         `${dateRange.x.month} ${dateRange.x.year} - ${dateRange.y.month} ${dateRange.y.year}`}

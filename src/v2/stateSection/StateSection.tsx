@@ -49,8 +49,8 @@ function StateSection({state} : Props) {
     
     const chartCardExtendable = geoArray.length === 0 ? null : 
     geoArray.map((geography, index) => (filtersArray[index] === undefined) ? null :
-        filtersArray[index].map((filter)=>
-            <Card className="inner-card" elevation={0}>
+        filtersArray[index].map((filter, filterIndex)=>
+            <Card className="inner-card" elevation={0} key={filterIndex}>
                 <ChartCardExtendable geography={geography} state={state} ancestry={[state, geography]} filterName={filter} />
             </Card>
         )
@@ -58,7 +58,7 @@ function StateSection({state} : Props) {
 
     return (
         <Card elevation={0}>
-            <Stack direction="row" spacing={1}>
+            <Stack direction="row">
                 <SidebarFilter state={state} handleGeoOnChange={handleGeoArrayChange} handleFilterOnChange={handleFilterChange}/>
                 <Stack className="flex-right-ratio" sx={{ paddingRight: '8px'}} spacing={1}>
                     <Card elevation={0}>

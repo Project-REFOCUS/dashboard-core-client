@@ -75,10 +75,10 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
 
     const titleElements = titleBreadcrumbs.map( (titleArray : string[], index : number) => {
         const title = titleArray.join(', ');
-        return <Typography id="chart-section-header">{title}</Typography>;
+        return <Typography id="chart-section-header" key={index}>{title}</Typography>;
     });
 
-    const listLabelDots = geographies.map(geography => <ListLabelDot title={geography.name} color="#DA5FB0"/>);
+    const listLabelDots = geographies.map((geography, index) => <ListLabelDot title={geography.name} color="#DA5FB0" key={index}/>);
 
     return (
         <Box id="chart-sidebar-panel" className={isExpanded ? "expand-popup" : "flex-right-ratio"}>
@@ -102,6 +102,8 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
                                     <Box className="fill-container" id="date-range-container">
                                         <FormControl id="date-selector" variant="standard">
                                             <Autocomplete
+                                                id="date-range-dropdown"
+                                                size="small"
                                                 options={dateRanges}
                                                 getOptionLabel={(dateRange) =>
                                                     `${dateRange.x.month} ${dateRange.x.year} - ${dateRange.y.month} ${dateRange.y.year}`}
