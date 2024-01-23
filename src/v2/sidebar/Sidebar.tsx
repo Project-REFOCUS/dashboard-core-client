@@ -95,8 +95,8 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
             <Stack spacing={1}>
                 <Card className='inner-card' elevation={0}>
                     <CardContent>
-                        <Stack spacing={3}>
-                            <Stack>
+                        <Stack spacing={2}>
+                            <Box>
                                 <FormControl variant="standard" size="small" fullWidth>
                                     <Typography sx={InputLabelSX}>Category</Typography>
                                     <Autocomplete
@@ -118,8 +118,8 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                                         )}
                                     />
                                 </FormControl>
-                            </Stack>
-                            <Stack>
+                            </Box>
+                            <Box>
                                 <FormControl variant="standard" size="small" fullWidth>
                                     <Typography sx={InputLabelSX}>State</Typography>
                                     <Autocomplete
@@ -143,7 +143,7 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                                         )}
                                     />
                                 </FormControl>
-                            </Stack>
+                            </Box>
                         </Stack>
                     </CardContent>
                 </Card>
