@@ -3,11 +3,10 @@ import { AutocompleteChangeReason, Box, Card, CardContent, Stack, Typography } f
 import MultiInput from '../components/MultiInput';
 import { getListOfCounties } from '../common/services';
 import FilterCard from '../components/FilterCard';
-import { Category, Geography } from '../common/types';
+import { Geography } from '../common/types';
 import { GeographyEnum } from '../common/enum';
 
 import '../styles/stateSection/sidebarFilter.scss';
-import { GeoTreeNode } from '../common/classes';
 
 interface Props {
     state: Geography;
@@ -46,10 +45,10 @@ function SidebarFilter({state, handleGeoOnChange, handleFilterOnChange} : Props)
     return (
         <Box className="sidebar-panel">
             <Card elevation={0}>
-                <Typography id="state-section-header">{state.name}</Typography>
                 <Stack spacing={1}>
+                    <Typography id="state-section-header">{state.name}</Typography>
                     <Box>
-                        <MultiInput title={state.type} itemList={itemList} handleOnChange={countyOnChange}/>
+                        <MultiInput title={GeographyEnum.COUNTY} itemList={itemList} handleOnChange={countyOnChange}/>
                     </Box>
                     {filterCards}
                 </Stack>

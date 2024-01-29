@@ -10,7 +10,7 @@ import './v2/styles/index.scss';
 import { Category, Geography } from './v2/common/types';
 import { GeographyEnum } from './v2/common/enum';
 import { observer, useLocalStore } from 'mobx-react';
-import appStore from './v2/stores/appStore';
+import AppStore from './v2/stores/AppStore';
 
 const CardSX = {
     width: '100%',
@@ -26,8 +26,8 @@ const App: React.FC = observer(() => {
     const [ appCategory, setAppCategory ] = useState<Category | null>(null);
 
 
-    const stateSections = (appStore.states.length > 0) && appCategory !== null ? 
-        appStore.states.map((state: Geography, index : number) => <StateSection state={state} key={index}/>) : null;
+    const stateSections = (AppStore.states.length > 0) && appCategory !== null ? 
+        AppStore.states.map((state: Geography, index : number) => <StateSection state={state} key={index}/>) : null;
         
     return (
         <Box>
@@ -40,8 +40,8 @@ const App: React.FC = observer(() => {
                                 <Stack direction='row' spacing={1}>
                                     <Sidebar handleCategoryOnChange={setAppCategory} />
 
-                                    { (appStore.states.length > 0) && appCategory !== null ?
-                                    <ChartCard geographies={appStore.states} titleBreadcrumbs={[[appCategory?.name], appStore.states.map((state: Geography)=> state.name)]} />
+                                    { (AppStore.states.length > 0) && appCategory !== null ?
+                                    <ChartCard geographies={AppStore.states} titleBreadcrumbs={[[appCategory?.name], AppStore.states.map((state: Geography)=> state.name)]} />
                                     :
                                     <StateMap/>
                                     }

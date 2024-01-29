@@ -15,7 +15,7 @@ import { getIndicatorCategories , getListOfStatesWithCategory } from '../common/
 import InfoCard from './InfoCard';
 import { Category, GeoCategory, Geography } from '../common/types';
 import { observer } from 'mobx-react';
-import appStore from '../stores/appStore';
+import AppStore from '../stores/AppStore';
 
 import '../styles/sidebar/sidebar.scss';
 
@@ -63,7 +63,7 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                 setFilteredStateList(filterGeoCatWithCategoryName(category.name, fullStateList));
                 const subjectStates = filterGeoCatWithCategoryName(category.name, selectedStates);
                 setSelectedStates(subjectStates);
-                appStore.setStates(subjectStates.map((state) => state.geography));
+                AppStore.setStates(subjectStates.map((state) => state.geography));
                 return category
             });
 
@@ -83,7 +83,7 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
         console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         
         setSelectedStates(states); 
-        appStore.setStates(states.map((state) => state.geography));
+        AppStore.setStates(states.map((state) => state.geography));
 
         let subjectCategories = states.flatMap(state => state.categories);
         let unqiqueCategorySet = new Set(subjectCategories);

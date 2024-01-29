@@ -16,7 +16,7 @@ import ExpandIcon from './ExpandIcon';
 import ListLabelDot from '../components/ListLabelDot';
 import { DateDelta, Geography } from '../common/types';
 import CloseIcon from './CloseIcon';
-import appStore from '../stores/appStore'
+import AppStore from '../stores/AppStore'
 import { dateRanges } from '../common/constants';
 
 import '../styles/chart/chartCard.scss';
@@ -65,12 +65,12 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
             setIsVisible(true);
         }
         setIsExpanded(true);
-        appStore.setIsExpanded(true);
+        AppStore.setIsExpanded(true);
     }
 
     const closePopUp = () => {
         setIsExpanded(false);
-        appStore.setIsExpanded(false);
+        AppStore.setIsExpanded(false);
     }
 
     const titleElements = titleBreadcrumbs.map( (titleArray : string[], index : number) => {

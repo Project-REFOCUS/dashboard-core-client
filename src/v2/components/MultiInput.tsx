@@ -11,7 +11,6 @@ interface Props<T> {
 
 const textFieldSX = {
     color: 'var(--Gray-140, #2A3039)',
-
     fontFamily: 'Avenir',
     fontSize: '14px',
     fontStyle: 'normal',

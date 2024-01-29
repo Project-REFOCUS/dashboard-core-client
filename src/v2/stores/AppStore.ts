@@ -1,9 +1,5 @@
-import { action, computed, makeObservable, observable } from 'mobx';
-import { Category, Geography, GeoCategory } from '../common/types';
-import { mockCategories, mockGeoCategories } from '../common/mockData';
-import { GeographyEnum } from '../common/enum';
-import { GeoTreeNode } from '../common/classes';
-
+import { action, makeObservable, observable } from 'mobx';
+import { Category, Geography } from '../common/types';
 
 class AppStore {
 

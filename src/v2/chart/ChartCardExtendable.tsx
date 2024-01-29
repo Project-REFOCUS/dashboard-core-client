@@ -18,7 +18,7 @@ import { getSubGeographiesByGeographyAndType } from '../common/services';
 import { GeographyEnum } from '../common/enum';
 import { DateDelta, Geography } from '../common/types';
 import TrashIcon from './TrashIcon';
-import appStore from '../stores/appStore';
+import AppStore from '../stores/AppStore';
 import CloseIcon from './CloseIcon';
 import { dateRanges } from '../common/constants';
 
@@ -76,12 +76,12 @@ function ChartCardExtendable ({geography, filterName, ancestry, state, handleDel
             setIsVisible(true);
         }
         setIsExpanded(true);
-        appStore.setIsExpanded(true);
+        AppStore.setIsExpanded(true);
     }
 
     const closePopUp = () => {
         setIsExpanded(false);
-        appStore.setIsExpanded(false);
+        AppStore.setIsExpanded(false);
     }
 
     const handleLocationFilterChange = (values : Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {

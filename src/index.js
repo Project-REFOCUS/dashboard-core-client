@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import App from './App.v2';
-import appStore from './v2/stores/appStore';
+import AppStore from './v2/stores/AppStore';
 import { Provider } from 'mobx-react';
 
 const root = ReactDOM.createRoot(
@@ -10,7 +10,7 @@ const root = ReactDOM.createRoot(
 );
 
 root.render(
-    <Provider appStore={appStore}>
+    <Provider AppStore={AppStore}>
         <React.StrictMode>
             <App />
         </React.StrictMode>
