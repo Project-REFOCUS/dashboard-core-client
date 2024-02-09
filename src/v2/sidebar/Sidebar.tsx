@@ -11,9 +11,9 @@ import {
     Autocomplete,
     AutocompleteChangeReason
 } from '@mui/material';
-import { getIndicatorCategories , getListOfStatesWithCategory } from '../common/services';
+import { fetchAllStates, fetchIndicatorCategories } from '../common/services';
 import InfoCard from './InfoCard';
-import { Category, GeoCategory, Geography } from '../common/types';
+import { Category, Geography } from '../common/types';
 import { observer } from 'mobx-react';
 import AppStore from '../stores/AppStore';
 
@@ -26,7 +26,6 @@ const InputLabelSX = {
 
 const textFieldSX = {
     color: 'var(--Gray-140, #2A3039)',
-
     fontFamily: 'Avenir',
     fontSize: '14px',
     fontStyle: 'normal',
@@ -34,60 +33,71 @@ const textFieldSX = {
     lineHeight: '16px',
 };
 
+// handleCategoryOnChange has to be removed.. double check
 //@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
 
 interface Props {
-    handleCategoryOnChange : (category : Category | null) => void,
+    // handleCategoryOnChange : (category : Category | null) => void,
     // handleGeographyOnChange : (geography : Geography[]) => void
 }
 
-const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => {
+const Sidebar : React.FC<Props> = observer(() => {
     const [fullCategoryList, setFullCategoryList] = useState<Category[]>([]);
     const [filteredCategoryList, setFilteredCategoryList] = useState<Category[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
-    
-    const [fullStateList, setFullStateList] = useState<GeoCategory[]>([]);
-    const [filteredStateList, setFilteredStateList] = useState<GeoCategory[]>([]);
-    const [selectedStates, setSelectedStates] = useState<GeoCategory[]>([]);
+    //const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
+    const [fullStateList, setFullStateList] = useState<Geography[]>([]);
+    const [filteredStateList, setFilteredStateList] = useState<Geography[]>([]);
+    //const [selectedStates, setSelectedStates] = useState<Geography[]>([]);
+    
     useEffect(() => {
-        getIndicatorCategories().then((categories : Category[]) => setFullCategoryList(categories));
-        getListOfStatesWithCategory().then((states : GeoCategory[]) => setFullStateList(states));
+        fetchIndicatorCategories().then((categories : Category[]) => setFullCategoryList(categories));
+        fetchAllStates().then((states : Geography[]) => setFullStateList(states));
     }, []);
 
+    //@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
     const categoryChange = (event: React.SyntheticEvent<Element, Event>, category: Category | null, reason: AutocompleteChangeReason) => {
         console.log("Change Category reason: "+ reason +" category: " + JSON.stringify(category));
 
         if(reason == 'selectOption' && category !== null){
-            setSelectedCategory((prevCategory) => {
-                setFilteredStateList(filterGeoCatWithCategoryName(category.name, fullStateList));
-                const subjectStates = filterGeoCatWithCategoryName(category.name, selectedStates);
-                setSelectedStates(subjectStates);
-                AppStore.setStates(subjectStates.map((state) => state.geography));
-                return category
-            });
+            // setSelectedCategory((prevCategory) => {
+            //     AppStore.setCategory(category);
+            //     AppStore.getMapStates(category).then(states => setFilteredStateList(states));
+            //     filterSelectedStates(category.id, selectedStates);
+            //     return category
+            // });
+
+            AppStore.setCategory(category);
+            AppStore.getMapStates(category).then(states => setFilteredStateList(states));
+            filterSelectedStates(category.id, AppStore.states);
 
         }else if(reason == "removeOption" || reason == "clear"){
-            setSelectedCategory(null);
+            // setSelectedCategory(null);
+            AppStore.setCategory(null);
             setFilteredStateList([]);
         }
 
-        handleCategoryOnChange(category);
+        // handleCategoryOnChange(category);
     }
 
-    const filterGeoCatWithCategoryName = (name: string, states : GeoCategory[]) => {
-        return states.filter(geoCategory => geoCategory.categories.find(category => category.name == name))
+    // checks to see if any of the selected state tokens should be removed
+    const filterSelectedStates = (categoryId: string, states : Geography[]) => {
+        const subjectStates = states.filter(state => {
+            const foundArray = AppStore.categoryStateMap.get(categoryId);
+            const foundIndex = foundArray?.findIndex((item)=> item.id === state.id);
+            return foundIndex !== -1;
+        });
+
+        // setSelectedStates(subjectStates);
+        AppStore.setStates(subjectStates);
     }
 
-    const stateChange = (event: React.SyntheticEvent<Element, Event>, states: GeoCategory[], reason: AutocompleteChangeReason) => {
+    const stateChange = (event: React.SyntheticEvent<Element, Event>, states: Geography[], reason: AutocompleteChangeReason) => {
         console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         
-        setSelectedStates(states); 
-        AppStore.setStates(states.map((state) => state.geography));
-
-        let subjectCategories = states.flatMap(state => state.categories);
-        let unqiqueCategorySet = new Set(subjectCategories);
-        setFilteredCategoryList(Array.from(unqiqueCategorySet));
+        AppStore.setStates(states);
+        // setSelectedStates(states); 
+        AppStore.getMapCategories(states).then(categories => setFilteredCategoryList(categories));
     }
 
     return (
@@ -104,10 +114,11 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                                         size="small"
                                         id="category-selector"
                                         options={filteredCategoryList.length === 0 ? fullCategoryList : filteredCategoryList}
-                                        value={selectedCategory ? selectedCategory : null}
+                                        value={AppStore.category ? AppStore.category : null}
                                         getOptionLabel={(category) => category.name}
                                         disableListWrap
                                         onChange={categoryChange}
+                                        isOptionEqualToValue={(option, value) => option.id === value.id}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
@@ -128,15 +139,16 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                                         size="small"
                                         id="state-selector"
                                         options={filteredStateList.length === 0 ? fullStateList : filteredStateList}
-                                        getOptionLabel={(geoCategory) => geoCategory.geography.name}
+                                        getOptionLabel={(state) => state.name}
                                         filterSelectedOptions
                                         disableListWrap
-                                        value={selectedStates}
+                                        value={AppStore.states}
                                         onChange={stateChange}
+                                        isOptionEqualToValue={(option, value) => option.id === value.id}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
-                                                placeholder={selectedStates.length == 0 ? "Select..." : undefined}
+                                                placeholder={AppStore.states.length === 0 ? "Select..." : undefined}
                                                 variant="outlined"
                                                 sx={textFieldSX}
                                             />
@@ -147,7 +159,7 @@ const Sidebar : React.FC<Props> = observer(({handleCategoryOnChange}: Props) => 
                         </Stack>
                     </CardContent>
                 </Card>
-                { (selectedCategory === null || selectedStates.length === 0) ? <InfoCard/> : null }
+                { (AppStore.category === null || AppStore.states.length === 0) ? <InfoCard/> : null }
             </Stack>
         </Box>
     );

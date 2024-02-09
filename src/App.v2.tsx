@@ -23,10 +23,9 @@ const CardSX = {
 
 const App: React.FC = observer(() => {
 
-    const [ appCategory, setAppCategory ] = useState<Category | null>(null);
+    // const [ appCategory, setAppCategory ] = useState<Category | null>(null);
 
-
-    const stateSections = (AppStore.states.length > 0) && appCategory !== null ? 
+    const stateSections = (AppStore.states.length > 0) && AppStore.category !== null ? 
         AppStore.states.map((state: Geography, index : number) => <StateSection state={state} key={index}/>) : null;
         
     return (
@@ -38,10 +37,12 @@ const App: React.FC = observer(() => {
                         <Card elevation={0} sx={CardSX}>
                             <CardContent>
                                 <Stack direction='row' spacing={1}>
-                                    <Sidebar handleCategoryOnChange={setAppCategory} />
-
-                                    { (AppStore.states.length > 0) && appCategory !== null ?
-                                    <ChartCard geographies={AppStore.states} titleBreadcrumbs={[[appCategory?.name], AppStore.states.map((state: Geography)=> state.name)]} />
+                                    {/* <Sidebar handleCategoryOnChange={setAppCategory} /> */}
+                                    <Sidebar/>
+                                    {/* { (AppStore.states.length > 0) && appCategory !== null ?
+                                    <ChartCard geographies={AppStore.states} titleBreadcrumbs={[[appCategory?.name], AppStore.states.map((state: Geography)=> state.name)]} /> */}
+                                    { (AppStore.states.length > 0) && AppStore.category !== null ?
+                                    <ChartCard geographies={AppStore.states} titleBreadcrumbs={[[AppStore.category?.name], AppStore.states.map((state: Geography)=> state.name)]} />
                                     :
                                     <StateMap/>
                                     }

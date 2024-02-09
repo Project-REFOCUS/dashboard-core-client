@@ -12,3 +12,7 @@ export function debugPrint(message: string, input: any): boolean {
     console.log("Input:", input);
     return true;
 }
+
+export const nameSort = (a: {name: string}, b: {name: string}) : number => {
+    return a.name.localeCompare(b.name);
+}

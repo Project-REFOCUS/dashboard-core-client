@@ -46,6 +46,7 @@ function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) 
                 filterSelectedOptions
                 disableListWrap
                 onChange={handleInputChange}
+                isOptionEqualToValue={(option, value) => JSON.stringify(option) === JSON.stringify(value)}
                 renderInput={(params) => (
                     <TextField
                         {...params}

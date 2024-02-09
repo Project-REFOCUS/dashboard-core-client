@@ -12,10 +12,10 @@ export interface Geography {
     shortName?: string
 }
 
-export type GeoCategory = { 
-    geography: Geography, 
-    categories: Category[] 
-}
+// export type GeoCategory = { 
+//     geography: Geography, 
+//     categories: Category[] 
+// }
 
 export type GeoFilterType = {
     type: GeographyEnum,
