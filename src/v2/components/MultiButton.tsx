@@ -34,6 +34,7 @@ function MultiButton<T>({itemList, handleOnChange, value} : Props<T>){
                         color='primary'
                         size="small"
                         href=""
+                        disabled={itemList.length === 0}
                     >
                     Add
                     </Button>

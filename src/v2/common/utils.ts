@@ -16,3 +16,14 @@ export function debugPrint(message: string, input: any): boolean {
 export const nameSort = (a: {name: string}, b: {name: string}) : number => {
     return a.name.localeCompare(b.name);
 }
+
+export const toCamelCase = (subject : string) => {
+    let array = subject.split(" ");
+
+    // if(array.length <= 1){
+    //     return subject
+    // }
+
+    return array.reduce((prev, curr) => 
+        prev + (curr.charAt(0).toUpperCase() + curr.slice(1).toLowerCase()));
+}

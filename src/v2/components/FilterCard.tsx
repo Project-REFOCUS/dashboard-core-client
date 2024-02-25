@@ -7,11 +7,13 @@ import {
 } from '@mui/material';
 import ListLabelDot from './ListLabelDot';
 import MultiButton from './MultiButton';
-import { getGeographyDropdownOptions } from '../common/services'
+import { getGeographyDropdownOptions, fetchSubGeographiesLegendMap } from '../common/services'
 import { Geography } from '../common/types';
 import { GeographyEnum } from '../common/enum';
+import AppStore from '../stores/AppStore';
 
 import '../styles/stateSection/filterCard.scss'
+import { observer } from 'mobx-react';
 
 interface Props {
     geography: Geography;
@@ -20,12 +22,17 @@ interface Props {
     selectedItems: GeographyEnum[];
 }
 
-function FilterCard({geography, color, selectedItems=[], handleOnChange}: Props) {
+const FilterCard = observer(({geography, color, selectedItems=[], handleOnChange}: Props) => {
 
     const [filterOptions, setFilterItems] = useState<GeographyEnum[]>([]);
 
     useEffect(() => {
-        setFilterItems(getGeographyDropdownOptions(geography.type));
+        // setFilterItems(getGeographyDropdownOptions(geography.type));
+        fetchSubGeographiesLegendMap(
+            AppStore.category ? AppStore.category.id : null,
+            geography.id,
+            geography.type
+        ).then(legendMap => setFilterItems(Array.from(legendMap.keys())))
     }, []);
 
     const selectedOnChange= (event: React.SyntheticEvent<Element, Event>, values: GeographyEnum[], reason: AutocompleteChangeReason) => {
@@ -49,7 +56,9 @@ function FilterCard({geography, color, selectedItems=[], handleOnChange}: Props)
             <Stack spacing={1}>
                 <Stack className="flex-center" direction="row">
                     <ListLabelDot title={geography.name} color={color}/>
-                    <MultiButton itemList={filterOptions} handleOnChange={(event, values, reason) => selectedOnChange(event, values as GeographyEnum[], reason)} value={selectedItems}/>
+                    {filterOptions.length > 0 && 
+                        <MultiButton itemList={filterOptions} handleOnChange={(event, values, reason) => selectedOnChange(event, values as GeographyEnum[], reason)} value={selectedItems}/>
+                    }
                 </Stack>
                 <Stack className="wrap" direction="row" spacing={1} useFlexGap>
                     {labelChips}
@@ -57,6 +66,6 @@ function FilterCard({geography, color, selectedItems=[], handleOnChange}: Props)
             </Stack>
         </Card>
     )
-}
+})
 
 export default FilterCard

@@ -15,6 +15,8 @@ function StateSection({state} : Props) {
 
     const [ geoArray, setGeoArray ] = useState<Geography[]>([]);
 
+    //filters corresponding to the index of the locations in the geoArray
+    // i.e. geoArray[1] has filters in filtersArray[1]. One to Many relationship
     const [ filtersArray, setFiltersArray ] = useState<GeographyEnum[][]>([]);
 
     const handleGeoArrayChange = (geographies: Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
@@ -49,7 +51,7 @@ function StateSection({state} : Props) {
     
     const chartCardExtendable = geoArray.length === 0 ? null : 
     geoArray.map((geography, index) => (filtersArray[index] === undefined) ? null :
-        filtersArray[index].map((filter, filterIndex)=>
+        filtersArray[index].map((filter, filterIndex) =>
             <Card className="inner-card" elevation={0} key={filterIndex}>
                 <ChartCardExtendable geography={geography} state={state} ancestry={[state, geography]} filterName={filter} />
             </Card>

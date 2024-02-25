@@ -1,6 +1,7 @@
+import { GraphTypeEnum } from './../common/enum';
 import { action, makeObservable, observable, runInAction } from 'mobx';
-import { Category, Geography } from '../common/types';
-import { fetchCategoriesByState, fetchStatesByCategory } from '../common/services';
+import { Category, Geography, GraphResource } from '../common/types';
+import { fetchCategoriesByState, fetchGraphDashboardUrl, fetchGraphUrl, fetchStatesByCategory } from '../common/services';
 import { GeographyEnum } from '../common/enum';
 
 class AppStore {
@@ -12,8 +13,15 @@ class AppStore {
     @observable stateCategoryMap : Map<string, Category[]> = observable.map();
     @observable categoryStateMap : Map<string, Geography[]> = observable.map();
 
+    graphDashboardMap : Map<GeographyEnum | string, GraphResource[]> = observable.map();
+
     constructor(){
         makeObservable(this);
+    }
+
+    @action
+    disposeUrls() : void {
+        this.graphDashboardMap.clear();
     }
 
     @action
@@ -35,24 +43,22 @@ class AppStore {
     async updateCategoriesByStates(states : Geography[]) : Promise<void> {
         console.log("Here is the states array: "+ JSON.stringify(states));
         const subjectStates : Geography[] = states.filter((state) => {
-            console.log(`Categories are already mapped for states: ${JSON.stringify(states)}`);
-            return !this.stateCategoryMap.has(state.id);
+            return !this.stateCategoryMap.has(state.name);
         });
 
         if(subjectStates.length === 0){
+            console.log(`Categories are already mapped for states: ${JSON.stringify(states)}`);
             return;
         }
         
-        await Promise.all(subjectStates.map(async(state) => {
+        await Promise.all(subjectStates.map( async(state) => {
             const categories = await fetchCategoriesByState(state);
             runInAction(() => {
-                this.stateCategoryMap.set(state.id, categories);
-                console.log("Added to state category map: key{"+ state.id + "} "+JSON.stringify(this.stateCategoryMap.get(state.id)));
+                this.stateCategoryMap.set(state.name, categories);
+                console.log("Added to state category map: key{" + state.name + "} " + JSON.stringify(this.stateCategoryMap.get(state.name)));
             });
-
         }));
     }
-
 
     @action 
     async updateStatesByCategory(category : Category) : Promise<void> {
@@ -74,19 +80,20 @@ class AppStore {
 
     async getMapCategories(states: Geography[]) : Promise<Category[]> {
 
+        // format to make sure that the states dont have the sub id's
+
         await this.updateCategoriesByStates(states);
             
         // @ts-ignore
         const categoriesForEachState : Category[][] = states.map((state) => {
-
-            console.log("Get operation in state category map returned: for key{"+ state.id + "} "+JSON.stringify(this.stateCategoryMap.get(state.id)));
-            if(!this.stateCategoryMap.has(state.id)){
-                console.error("Error state-category map doesnt have a key associated with state: "+ state.id + " " + state.name);
+            console.log("Get operation in state category map returned: for key{"+ state.name + "} "+ JSON.stringify(this.stateCategoryMap.get(state.name)));
+            
+            if(!this.stateCategoryMap.has(state.name)){
+                console.error("Error state-category map doesnt have a key associated with state: "+ state.name);
                 return [];
             }else{
-                return this.stateCategoryMap.get(state.id);
+                return this.stateCategoryMap.get(state.name);
             }
-
         });
 
         const subjectCategories = categoriesForEachState.flat();
@@ -115,6 +122,42 @@ class AppStore {
             // @ts-ignore
             return this.categoryStateMap.get(category.id);
         }
+    }
+
+    async getGraph(targets: Geography[], targetType?: GeographyEnum, graphType?: GraphTypeEnum) : Promise<{url : string, graphOptions : GraphTypeEnum[]}>{
+
+        //let dashboardUrl = "";
+        let dashboardUrlResources : GraphResource[] | undefined;
+        let mapKey = targetType ? targetType : "Dashboard";
+
+        // const index = graphType === GraphTypeEnum.BAR ? 0 : 1;
+        const firstIndex = 0;
+
+        if(this.graphDashboardMap.has(mapKey)){
+            dashboardUrlResources = this.graphDashboardMap.get(mapKey);
+            
+            if(!dashboardUrlResources || !dashboardUrlResources[firstIndex]){
+                throw new Error("Value of key {Dashboard} returned improper value: " + dashboardUrlResources);
+            }
+
+            //dashboardUrl = graphResourceItem.url;
+        }else{
+            dashboardUrlResources = await fetchGraphDashboardUrl(this.category?.id, targetType);
+            console.log("Value of the graph response retrieved is: "+ JSON.stringify(dashboardUrlResources));
+            
+            this.graphDashboardMap.set(mapKey, dashboardUrlResources);
+
+            //dashboardUrl = graphDashboardResources[index]?.url;
+        }
+
+        const graphResourceItem = graphType ? dashboardUrlResources.find((graphResource) => graphResource.type === graphType) : dashboardUrlResources[firstIndex];
+
+        if(!graphResourceItem){
+            throw new Error("Graph Resource Item returned improper resource: " + graphResourceItem);
+        }
+
+        const graphTargetResource: string = await fetchGraphUrl(graphResourceItem.url, targets);
+        return { url : graphTargetResource, graphOptions: dashboardUrlResources.map((graphResource)=> graphResource.type)};
     }
 }
 

@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { AutocompleteChangeReason, Box, Card, CardContent, Stack, Typography } from '@mui/material';
 import MultiInput from '../components/MultiInput';
-import { getListOfCounties } from '../common/services';
+import { fetchSubGeographies, getListOfCounties } from '../common/services';
 import FilterCard from '../components/FilterCard';
 import { Geography } from '../common/types';
 import { GeographyEnum } from '../common/enum';
 
 import '../styles/stateSection/sidebarFilter.scss';
+import { observer } from 'mobx-react';
+import AppStore from '../stores/AppStore';
 
 interface Props {
     state: Geography;
@@ -14,7 +16,7 @@ interface Props {
     handleFilterOnChange: (filters: GeographyEnum[], index: number) => void;
 }
 
-function SidebarFilter({state, handleGeoOnChange, handleFilterOnChange} : Props) {
+const SidebarFilter = observer(({state, handleGeoOnChange, handleFilterOnChange} : Props) => {
 
     const [ itemList, setItemList ] = useState<Geography[]>([]);
     const [ selectedItems, setSelectedItems ] = useState<Geography[]>([]);
@@ -22,7 +24,12 @@ function SidebarFilter({state, handleGeoOnChange, handleFilterOnChange} : Props)
     const [ subFiltersArray, setSubFiltersArray ] = useState<GeographyEnum[][]>([]);
 
     useEffect(() => {
-        getListOfCounties(state).then(counties => setItemList(counties));
+        // getListOfCounties(state).then(counties => setItemList(counties));
+        fetchSubGeographies(
+            AppStore.category ? AppStore.category.id : null, 
+            state.id, 
+            GeographyEnum.COUNTY
+        ).then(counties => setItemList(counties));
     }, []);
 
     const countyOnChange = (values: Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
@@ -55,6 +62,6 @@ function SidebarFilter({state, handleGeoOnChange, handleFilterOnChange} : Props)
             </Card>
         </Box>
     )
-}
+});
 
 export default SidebarFilter

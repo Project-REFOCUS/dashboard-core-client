@@ -20,6 +20,8 @@ import AppStore from '../stores/AppStore'
 import { dateRanges } from '../common/constants';
 
 import '../styles/chart/chartCard.scss';
+import GraphIframe from './GraphIframe';
+import { GraphTypeEnum } from '../common/enum';
 
 
 const GraphPlaceholder = require('./Graph.png');
@@ -37,12 +39,20 @@ interface Props {
 
 const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleClosePopUpOnClick}: Props) => {
 
-    const [ chartOption, setChartOption ] = useState<string>("chart");
+    const [ chartOption, setChartOption ] = useState<GraphTypeEnum>(GraphTypeEnum.BAR);
+    const [ chartOptionsList, setChartOptionsList ] = useState<GraphTypeEnum[]>([]);
     const [ selectedDateRange, setSelectedDateRange] = useState<DateDelta | null>(dateRanges[0]);
     const [ isVisible, setIsVisible ] = useState<boolean>(true);
     const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
 
-    const handleChartToggle = (value : string) => {
+    const handleGraphTypeOptions = (graphOptions : GraphTypeEnum[]) => {
+        console.log("Chart Toggle options values: " + JSON.stringify(graphOptions));
+        const option = graphOptions.length < 2 ? graphOptions[0] : graphOptions.find(graphOption => graphOption == chartOption)
+        setChartOptionsList(graphOptions);
+        setChartOption(option ? option : graphOptions[0]);
+    }
+
+    const handleChartToggle = (value : GraphTypeEnum) => {
         console.log("Chart Toggle value: " + value);
         setChartOption(value);
     }
@@ -96,7 +106,7 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
                             </Stack>
                             <Stack id="chart-options" className="flex-right-ratio" direction="row" sx={{ justifyContent: 'space-between' }}>
                                 <Box className="flex-left-ratio">
-                                    <ChartToggleButton handleOnChange={handleChartToggle} selected={chartOption}/>
+                                    <ChartToggleButton handleOnChange={handleChartToggle} selected={chartOption} options={chartOptionsList}/>
                                 </Box>
                                 <Stack direction="row" className="flex-right-ratio" id="chart-option-right">
                                     <Box className="fill-container" id="date-range-container">
@@ -132,7 +142,15 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
                                     {listLabelDots}
                                 </Box>
                                 <Box id="chart-iframe" className="flex-right-ratio" >
-                                    <img className={isExpanded ? "img-expand": ""} src={isExpanded ? GraphXL : GraphPlaceholder}/>
+                                    {/* <img className={isExpanded ? "img-expand": ""} src={isExpanded ? GraphXL : GraphPlaceholder}/> */}
+                                    <Box className="crop-container" sx={{ overflow: 'hidden'}}>
+                                        <GraphIframe 
+                                            className="crop-image" 
+                                            geographies={geographies} 
+                                            graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
+                                            handleGraphTypeOptions={handleGraphTypeOptions}
+                                        />
+                                    </Box>
                                 </Box>
                             </Stack>
                         }

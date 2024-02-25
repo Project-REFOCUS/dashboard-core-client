@@ -26,7 +26,7 @@ const App: React.FC = observer(() => {
     // const [ appCategory, setAppCategory ] = useState<Category | null>(null);
 
     const stateSections = (AppStore.states.length > 0) && AppStore.category !== null ? 
-        AppStore.states.map((state: Geography, index : number) => <StateSection state={state} key={index}/>) : null;
+        AppStore.states.map((state: Geography, index: number) => <StateSection state={state} key={index}/>) : null;
         
     return (
         <Box>

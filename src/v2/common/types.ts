@@ -1,4 +1,4 @@
-import { GeographyEnum } from "./enum"
+import { GeographyEnum, GraphTypeEnum } from "./enum"
 
 export interface Category {
     id: string,
@@ -30,4 +30,9 @@ export interface DateMY {
 export interface DateDelta {
     x: DateMY,
     y: DateMY
+}
+
+export interface GraphResource {
+    url: string,
+    type: GraphTypeEnum
 }

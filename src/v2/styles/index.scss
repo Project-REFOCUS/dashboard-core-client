@@ -81,6 +81,10 @@ div.fill-container{
     padding: 8px;
 }
 
+.disabled-cursor{
+    cursor: not-allowed !important;
+}
+
 .MuiAutocomplete-inputRoot{
     padding-left: 4px !important;
     padding-bottom: 4px !important;

@@ -84,7 +84,7 @@ const Sidebar : React.FC<Props> = observer(() => {
     const filterSelectedStates = (categoryId: string, states : Geography[]) => {
         const subjectStates = states.filter(state => {
             const foundArray = AppStore.categoryStateMap.get(categoryId);
-            const foundIndex = foundArray?.findIndex((item)=> item.id === state.id);
+            const foundIndex = foundArray?.findIndex((item)=> item.name === state.name);
             return foundIndex !== -1;
         });
 
