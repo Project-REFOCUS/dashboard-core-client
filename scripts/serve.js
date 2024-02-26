@@ -73,11 +73,12 @@ require('esbuild').serve(esbuildPluginProxyConfiguration.esbuild, createBuildCon
         }
     });
     http.createServer((req, res) => {
-        const { headers, method, url: path } = req;
+        const { headers, method, url } = req;
         const constructedBody = [];
         req.on('data', chunk => constructedBody.push(chunk));
         req.on('end', () => {
-            const httpRequest = { headers, method, path };
+            const httpRequest = { headers, method, path: url.replace(`http://${headers.host}`, '') };
+            const { path } = httpRequest;
             const matchedFilter = esbuildPluginProxyConfiguration.proxy.filters.find(filter =>
                 filter.methods.includes(method) && (!filter.urls || filter.urls.some(url => new RegExp(url + '$').test(path)))
             );
@@ -86,6 +87,7 @@ require('esbuild').serve(esbuildPluginProxyConfiguration.esbuild, createBuildCon
                 httpRequest.headers.host = `${configuredProxy.host}:${configuredProxy.port}`;
                 httpRequest.hostname = configuredProxy.host;
                 httpRequest.port = configuredProxy.port;
+                httpRequest.path = httpRequest.path.replace(httpRequest.host, '');
                 if (configuredProxy.path) {
                     httpRequest.path = configuredProxy.path.replace('[url]', path);
                 }
