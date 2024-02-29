@@ -7,7 +7,7 @@ import {
 } from '@mui/material';
 import ListLabelDot from './ListLabelDot';
 import MultiButton from './MultiButton';
-import { getGeographyDropdownOptions, fetchSubGeographiesLegendMap } from '../common/services'
+import { fetchSubGeographiesLegendMap } from '../common/services'
 import { Geography } from '../common/types';
 import { GeographyEnum } from '../common/enum';
 import AppStore from '../stores/AppStore';
@@ -27,7 +27,6 @@ const FilterCard = observer(({geography, color, selectedItems=[], handleOnChange
     const [filterOptions, setFilterItems] = useState<GeographyEnum[]>([]);
 
     useEffect(() => {
-        // setFilterItems(getGeographyDropdownOptions(geography.type));
         fetchSubGeographiesLegendMap(
             AppStore.category ? AppStore.category.id : null,
             geography.id,

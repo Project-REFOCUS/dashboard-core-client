@@ -20,7 +20,7 @@ import AppStore from '../stores/AppStore';
 import '../styles/sidebar/sidebar.scss';
 
 
-const InputLabelSX = {
+const inputLabelSX = {
     paddingBottom: '4px'
 };
 
@@ -33,22 +33,14 @@ const textFieldSX = {
     lineHeight: '16px',
 };
 
-// handleCategoryOnChange has to be removed.. double check
-//@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
-
-interface Props {
-    // handleCategoryOnChange : (category : Category | null) => void,
-    // handleGeographyOnChange : (geography : Geography[]) => void
-}
+interface Props {}
 
 const Sidebar : React.FC<Props> = observer(() => {
     const [fullCategoryList, setFullCategoryList] = useState<Category[]>([]);
     const [filteredCategoryList, setFilteredCategoryList] = useState<Category[]>([]);
-    //const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
 
     const [fullStateList, setFullStateList] = useState<Geography[]>([]);
     const [filteredStateList, setFilteredStateList] = useState<Geography[]>([]);
-    //const [selectedStates, setSelectedStates] = useState<Geography[]>([]);
     
     useEffect(() => {
         fetchIndicatorCategories().then((categories : Category[]) => setFullCategoryList(categories));
@@ -57,27 +49,15 @@ const Sidebar : React.FC<Props> = observer(() => {
 
     //@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
     const categoryChange = (event: React.SyntheticEvent<Element, Event>, category: Category | null, reason: AutocompleteChangeReason) => {
-        console.log("Change Category reason: "+ reason +" category: " + JSON.stringify(category));
-
+        // console.log("Change Category reason: "+ reason +" category: " + JSON.stringify(category));
         if(reason == 'selectOption' && category !== null){
-            // setSelectedCategory((prevCategory) => {
-            //     AppStore.setCategory(category);
-            //     AppStore.getMapStates(category).then(states => setFilteredStateList(states));
-            //     filterSelectedStates(category.id, selectedStates);
-            //     return category
-            // });
-
             AppStore.setCategory(category);
             AppStore.getMapStates(category).then(states => setFilteredStateList(states));
             filterSelectedStates(category.id, AppStore.states);
-
         }else if(reason == "removeOption" || reason == "clear"){
-            // setSelectedCategory(null);
             AppStore.setCategory(null);
             setFilteredStateList([]);
         }
-
-        // handleCategoryOnChange(category);
     }
 
     // checks to see if any of the selected state tokens should be removed
@@ -87,16 +67,13 @@ const Sidebar : React.FC<Props> = observer(() => {
             const foundIndex = foundArray?.findIndex((item)=> item.name === state.name);
             return foundIndex !== -1;
         });
-
-        // setSelectedStates(subjectStates);
-        AppStore.setStates(subjectStates);
+        AppStore.setStates([...subjectStates]);
     }
 
     const stateChange = (event: React.SyntheticEvent<Element, Event>, states: Geography[], reason: AutocompleteChangeReason) => {
         console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         
         AppStore.setStates(states);
-        // setSelectedStates(states); 
         AppStore.getMapCategories(states).then(categories => setFilteredCategoryList(categories));
     }
 
@@ -108,7 +85,7 @@ const Sidebar : React.FC<Props> = observer(() => {
                         <Stack spacing={2}>
                             <Box>
                                 <FormControl variant="standard" size="small" fullWidth>
-                                    <Typography sx={InputLabelSX}>Category</Typography>
+                                    <Typography sx={inputLabelSX}>Category</Typography>
                                     <Autocomplete
                                         // select
                                         size="small"
@@ -132,7 +109,7 @@ const Sidebar : React.FC<Props> = observer(() => {
                             </Box>
                             <Box>
                                 <FormControl variant="standard" size="small" fullWidth>
-                                    <Typography sx={InputLabelSX}>State</Typography>
+                                    <Typography sx={inputLabelSX}>State</Typography>
                                     <Autocomplete
                                         multiple
                                         limitTags={2}

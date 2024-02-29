@@ -39,7 +39,7 @@ interface Props {
     extension?: boolean;        // determines if this card populates within the parent card
 };
 
-const ChartCardExtendable = ({geography, filterName, ancestry, state, handleDelete=() => {}, extension=false} : Props) => {
+const ChartCardExtendable = observer(({geography, filterName, ancestry, state, handleDelete=() => {}, extension=false} : Props) => {
 
     const [ locationFilterList, setLocationFilterList ] = useState<Geography[]>([]);
     const [ selectedLocationFilterList, setSelectedLocationFilterList ] = useState<Geography[]>([]);
@@ -52,8 +52,6 @@ const ChartCardExtendable = ({geography, filterName, ancestry, state, handleDele
     const [ childFiltersArray, setChildFiltersArray ] = useState<GeographyEnum[][]>([]);
     
     useEffect(() => {
-        // getSubGeographiesByGeographyAndType(state, geography, filterName).then(options => setLocationFilterList(options));
-        
         fetchSubGeographies(
             AppStore.category ? AppStore.category.id : null,
             geography.id,
@@ -105,7 +103,6 @@ const ChartCardExtendable = ({geography, filterName, ancestry, state, handleDele
         if(reason == "removeOption" && removedIndex !== -1){
             setChildFiltersArray((prevFiltersArray) => {
                 if(prevFiltersArray[removedIndex]?.length > 0){
-                    // prevFiltersArray[removedIndex] = [];
                     prevFiltersArray.splice(removedIndex, 1);
                 }
 
@@ -117,8 +114,6 @@ const ChartCardExtendable = ({geography, filterName, ancestry, state, handleDele
 
     // Adding/Removing a new geography type toast to a Geography Card
     const handleSubFilterChange = (values: GeographyEnum[], index: number) => {
-        //console.log("Extendable node filter: index:"+ index +" " + JSON.stringify(values));
-        
         setChildFiltersArray((prevFiltersArray) => {
             prevFiltersArray[index] = values;
             return [...prevFiltersArray];
@@ -126,7 +121,6 @@ const ChartCardExtendable = ({geography, filterName, ancestry, state, handleDele
     }
 
     const removeChildFilter = (geoIndex: number, removeIndex: number) => {
-        //console.log("Remove child filter: index:"+ geoIndex +" "+removeIndex +" " + JSON.stringify(childFiltersArray[geoIndex]));
         
         setChildFiltersArray((prevFiltersArray) => {
             prevFiltersArray[geoIndex] = prevFiltersArray[geoIndex].filter((child, index) => index !== removeIndex);
@@ -177,13 +171,6 @@ const ChartCardExtendable = ({geography, filterName, ancestry, state, handleDele
                                         {filterCards}
                                     </Box>
                                 </Box>
-                                {/* <Box className={selectedLocationFilter.length && extendedFilterOptions.length ? "" : "vanish"}>
-                                    <MultiButton 
-                                        itemList={extendedFilterOptions}
-                                        handleOnChange={(event, values, reason) => multiButtonOnChange(event, values as GeographyEnum[])}
-                                        value={selectedExtendedItems}
-                                    />
-                                </Box> */}
                             </Stack>
                             <Stack id="chart-card-right-container" className="flex-right-ratio" spacing={1}>
                                 <Stack id="chart-options" direction="row" sx={{ justifyContent: 'space-between' }}>
@@ -209,20 +196,23 @@ const ChartCardExtendable = ({geography, filterName, ancestry, state, handleDele
                                                 />
                                             </FormControl>
                                         </Box>
-                                        {/* To do: there are hover over descriptions for the buttons */}
+                                        {/* Todo: there are hover over descriptions for the buttons */}
                                         <VisibilityIcon handleOnClick={handleVisibilityToggle} isVisible={isVisible}/>
                                         { !isExpanded ? <ExpandIcon handleOnClick={openPopUp}/> : <CloseIcon handleOnClick={closePopUp}/>}
                                     </Stack>
                                 </Stack>
                                 <Box id="chart-iframe" className={ isVisible ? "flex-right-ratio" : "vanish" }>
-                                    {/* <img className={isExpanded ? "img-expand": ""} src={isExpanded ? GraphXL : GraphPlaceholder}/> */}
                                     <Box className="crop-container" sx={{ overflow: 'hidden'}}>
+                                        { selectedLocationFilterList.length > 0 &&
                                         <GraphIframe 
                                             className="crop-image" 
                                             geographies={selectedLocationFilterList} 
+                                            targetType={geography.type} 
                                             graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
+                                            category={AppStore.category} 
                                             handleGraphTypeOptions={handleGraphTypeOptions}
                                         />
+                                        }
                                     </Box>
                                 </Box>
                             </Stack>
@@ -233,6 +223,6 @@ const ChartCardExtendable = ({geography, filterName, ancestry, state, handleDele
             {!isExpanded ? extensionCards : null}
         </Stack>
     )
-}
+})
 
 export default ChartCardExtendable

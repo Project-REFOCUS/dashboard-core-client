@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Box, Stack, AutocompleteChangeReason } from '@mui/material';
 import SidebarFilter from './SidebarFilter';
 import ChartCard from '../chart/ChartCard';
@@ -6,24 +6,27 @@ import ChartCardExtendable from '../chart/ChartCardExtendable';
 import { Geography } from '../common/types';
 import EmptyChartCard from '../chart/EmptyChartCard';
 import { GeographyEnum } from '../common/enum';
+import { observer } from 'mobx-react';
 
 interface Props {
-    state: Geography;
+    state: Geography,
 }
 
-function StateSection({state} : Props) {
+const StateSection = observer(({state} : Props) => {
 
     const [ geoArray, setGeoArray ] = useState<Geography[]>([]);
 
     //filters corresponding to the index of the locations in the geoArray
-    // i.e. geoArray[1] has filters in filtersArray[1]. One to Many relationship
+    // i.e. geoArray[1] has multiple filters in filtersArray[1]. One to Many relationship
     const [ filtersArray, setFiltersArray ] = useState<GeographyEnum[][]>([]);
 
+    // Adding or Removing the county cards that popuate under the input
     const handleGeoArrayChange = (geographies: Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
         if(reason == "removeOption" && removedIndex !== -1){
             setFiltersArray((prevFilterArray) => {
                 if(prevFilterArray[removedIndex]?.length > 0){
-                    prevFilterArray[removedIndex] = [];
+                    //prevFilterArray[removedIndex] = [];
+                    prevFilterArray.splice(removedIndex, 1);
                 }
                 return [...prevFilterArray];
             })
@@ -32,6 +35,7 @@ function StateSection({state} : Props) {
         setGeoArray(geographies);
     }
 
+    // Changing the filter with a corresponding index
     const handleFilterChange = (filters: GeographyEnum[], index: number) => {
         //console.log("State section node filter:" + JSON.stringify(filters[0]));
         
@@ -43,7 +47,8 @@ function StateSection({state} : Props) {
 
     const chartCard = geoArray.length === 0  ? <EmptyChartCard/> :
         <ChartCard 
-            geographies={geoArray} 
+            geographies={geoArray}
+            targetType={GeographyEnum.COUNTY} 
             titleBreadcrumbs={[[state.name],["County"]]} 
             secondary
         />
@@ -53,7 +58,7 @@ function StateSection({state} : Props) {
     geoArray.map((geography, index) => (filtersArray[index] === undefined) ? null :
         filtersArray[index].map((filter, filterIndex) =>
             <Card className="inner-card" elevation={0} key={filterIndex}>
-                <ChartCardExtendable geography={geography} state={state} ancestry={[state, geography]} filterName={filter} />
+                <ChartCardExtendable geography={geography} state={state} ancestry={[state, geography]} filterName={filter} key={filterIndex}/>
             </Card>
         )
     );
@@ -73,6 +78,6 @@ function StateSection({state} : Props) {
             </Stack>
         </Card>
     )
-}
+})
 
 export default StateSection

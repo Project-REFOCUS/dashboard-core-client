@@ -21,23 +21,21 @@ import { dateRanges } from '../common/constants';
 
 import '../styles/chart/chartCard.scss';
 import GraphIframe from './GraphIframe';
-import { GraphTypeEnum } from '../common/enum';
-
-
-const GraphPlaceholder = require('./Graph.png');
-const GraphXL = require('../../graph_xl.png');
+import { GeographyEnum, GraphTypeEnum } from '../common/enum';
+import { observer } from 'mobx-react';
 
 // Primary (Title lines up with the options, Title Visible when card invisible)
 // Secondary (Title lines up with the options, Title Visible)
 
 interface Props {
-    titleBreadcrumbs: string[][];
-    secondary?: boolean;
-    geographies: Geography[];
-    handleClosePopUpOnClick?: () => void;
+    titleBreadcrumbs: string[][],
+    secondary?: boolean,
+    geographies: Geography[],
+    targetType: GeographyEnum,
+    handleClosePopUpOnClick?: () => void,
 }
 
-const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleClosePopUpOnClick}: Props) => {
+const ChartCard = observer(({geographies, targetType, titleBreadcrumbs, secondary=false, handleClosePopUpOnClick}: Props) => {
 
     const [ chartOption, setChartOption ] = useState<GraphTypeEnum>(GraphTypeEnum.BAR);
     const [ chartOptionsList, setChartOptionsList ] = useState<GraphTypeEnum[]>([]);
@@ -122,14 +120,13 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
                                                 renderInput={(params) => (
                                                     <TextField
                                                         {...params}
-                                                        // variant="outlined"
                                                         sx={{padding: 0}}
                                                     />
                                                 )}
                                             />
                                         </FormControl>
                                     </Box>
-                                    {/* To do: there are hover over descriptions for the buttons */}
+                                    {/* Todo: there are hover over descriptions for the buttons */}
                                     <VisibilityIcon handleOnClick={handleVisibilityToggle} isVisible={isVisible}/>
                                     { !isExpanded ? <ExpandIcon handleOnClick={openPopUp}/> : <CloseIcon handleOnClick={closePopUp}/>}
                                 </Stack>
@@ -138,7 +135,7 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
                         { isVisible &&
                             <Stack direction="row">
                                 <Box className="flex-left-ratio">
-                                    {/* Where do the colors come from? */}
+                                    {/* Todo: Where do the colors come from? */}
                                     {listLabelDots}
                                 </Box>
                                 <Box id="chart-iframe" className="flex-right-ratio" >
@@ -146,8 +143,10 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
                                     <Box className="crop-container" sx={{ overflow: 'hidden'}}>
                                         <GraphIframe 
                                             className="crop-image" 
-                                            geographies={geographies} 
+                                            geographies={geographies}
+                                            targetType={targetType}
                                             graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
+                                            category={AppStore.category} 
                                             handleGraphTypeOptions={handleGraphTypeOptions}
                                         />
                                     </Box>
@@ -159,7 +158,7 @@ const ChartCard = ({geographies, titleBreadcrumbs, secondary=false, handleCloseP
             </Card>
         </Box>
     )
-}
+})
 
 export default ChartCard
 

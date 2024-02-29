@@ -1,14 +1,13 @@
-import { GeographyEnum, GraphTypeEnum } from "./enum";
+import { GeographyEnum } from "./enum";
 import { Category, Geography, GraphResource } from "./types";
 import { mockCounties } from "./mockData";
-import { API_BASE_URL } from '../config/appConfig';
 import axios from 'axios';
 import { nameSort, toCamelCase } from "./utils";
 import { filterOptionsMenu } from "./constants";
 
 export const fetchIndicatorCategories = async() : Promise<Category[]> => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/dashboard-service/categories`);
+        const response = await axios.get(`/dashboard-service/categories`);
         const formattedData = response.data.sort(nameSort);
         return formattedData;
     } catch (error) {
@@ -20,7 +19,7 @@ export const fetchIndicatorCategories = async() : Promise<Category[]> => {
 export const fetchCategoriesByState  = async(state : Geography) : Promise<Category[]> => {
     
     try {
-        const response = await axios.get(`${API_BASE_URL}/dashboard-service/categories?stateIds=${deconstructStateId(state.id)}`);
+        const response = await axios.get(`/dashboard-service/categories?stateIds=${deconstructStateId(state.id)}`);
         const formattedData = response.data.sort(nameSort);
         return formattedData;
     } catch (error) {
@@ -37,7 +36,7 @@ const deconstructStateId = (id : string) : string => {
 
 export const fetchStatesByCategory = async(categoryId: string) : Promise<Geography[]> => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/dashboard-service/geography?categoryId=${categoryId}`);
+        const response = await axios.get(`/dashboard-service/geography?categoryId=${categoryId}`);
         const formattedData = response.data.sort(nameSort);
         return formattedData;
     } catch (error) {
@@ -48,7 +47,7 @@ export const fetchStatesByCategory = async(categoryId: string) : Promise<Geograp
 
 export const fetchAllStates = async() : Promise<Geography[]> => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/dashboard-service/geography/states`);
+        const response = await axios.get(`/dashboard-service/geography/states`);
         const formattedData = response.data.sort(nameSort);
 
         const geographies = formattedData.map((state : Geography) => {
@@ -68,7 +67,7 @@ export const fetchSubGeographies = async(categoryId: string | null, parentId: st
         if(!categoryId){
             throw new Error();
         }
-        const response = await axios.get(`${API_BASE_URL}/dashboard-service/geography?categoryId=${categoryId}&geographyId=${parentId}&geographyType=${toCamelCase(childType)}`);
+        const response = await axios.get(`/dashboard-service/geography?categoryId=${categoryId}&geographyId=${parentId}&geographyType=${toCamelCase(childType)}`);
         const formattedData = response.data.sort(nameSort);
 
         const geographies = formattedData.map((geography : Geography) => {
@@ -113,7 +112,7 @@ export const fetchGraphDashboardUrl = async(categoryId: string | undefined, type
         if(!categoryId){
             throw new Error();
         }
-        const response = await axios.get(`${API_BASE_URL}/dashboard-service/graph?categoryId=${categoryId}${type ? `&geographyType=${toCamelCase(type)}` : "" }`);
+        const response = await axios.get(`/dashboard-service/graph?categoryId=${categoryId}${type ? `&geographyType=${toCamelCase(type)}` : "" }`);
         return response.data;
     } catch (error) {
         console.error(`Error fetching graph dashboard url with categoryId: {${categoryId}}`, error);
@@ -136,23 +135,6 @@ export const fetchGraphUrl = async(dashboardUrl: string, targets: Geography[]) :
         throw error;
     }
 };
-
-// export const fetchGraphUrl = async(dashboardUrl: string, targets: Geography[]) : Promise<string> => {
-//     try {
-//         if(!dashboardUrl || dashboardUrl.length === 0){
-//             throw new Error();
-//         }
-
-//         const targetIdArray : string[] = targets.map((target => target.id));
-//         const targetIdsFormatted = targetIdArray.join("|");
-
-//         const response = await axios.get(`${dashboardUrl}&$VP_All3Levels=${targetIdsFormatted}`);
-//         return response.data;
-//     } catch (error) {
-//         console.error(`Error fetching graph url for iframe with url: {${dashboardUrl}} and targets: ${JSON.stringify(targets)}`, error);
-//         throw error;
-//     }
-// };
 
 export const getListOfCounties : (state : Geography) => Promise<Geography[]> = (state) => {
     return new Promise<Geography[]>((resolve) => {

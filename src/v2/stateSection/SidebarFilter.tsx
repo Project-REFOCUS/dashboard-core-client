@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { AutocompleteChangeReason, Box, Card, CardContent, Stack, Typography } from '@mui/material';
+import { AutocompleteChangeReason, Box, Card, Stack, Typography } from '@mui/material';
 import MultiInput from '../components/MultiInput';
-import { fetchSubGeographies, getListOfCounties } from '../common/services';
+import { fetchSubGeographies } from '../common/services';
 import FilterCard from '../components/FilterCard';
 import { Geography } from '../common/types';
 import { GeographyEnum } from '../common/enum';
@@ -24,7 +24,6 @@ const SidebarFilter = observer(({state, handleGeoOnChange, handleFilterOnChange}
     const [ subFiltersArray, setSubFiltersArray ] = useState<GeographyEnum[][]>([]);
 
     useEffect(() => {
-        // getListOfCounties(state).then(counties => setItemList(counties));
         fetchSubGeographies(
             AppStore.category ? AppStore.category.id : null, 
             state.id, 
