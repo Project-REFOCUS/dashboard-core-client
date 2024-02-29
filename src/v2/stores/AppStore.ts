@@ -34,10 +34,9 @@ class AppStore {
         if(this.category){
             // console.log("SET GLOBAL CATEGORY: " + category?.name);
             this.disposeUrls();
-            this.category = category;
-        }else{
-            this.category = category;
         }
+
+        this.category = category;
     }
 
     @action

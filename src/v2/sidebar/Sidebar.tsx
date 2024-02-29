@@ -52,8 +52,11 @@ const Sidebar : React.FC<Props> = observer(() => {
         // console.log("Change Category reason: "+ reason +" category: " + JSON.stringify(category));
         if(reason == 'selectOption' && category !== null){
             AppStore.setCategory(category);
-            AppStore.getMapStates(category).then(states => setFilteredStateList(states));
-            filterSelectedStates(category.id, AppStore.states);
+            AppStore.getMapStates(category).then(states => {
+                setFilteredStateList(states);
+                filterSelectedStates(category.id, Array.from(AppStore.states));
+            });
+            
         }else if(reason == "removeOption" || reason == "clear"){
             AppStore.setCategory(null);
             setFilteredStateList([]);
@@ -61,12 +64,41 @@ const Sidebar : React.FC<Props> = observer(() => {
     }
 
     // checks to see if any of the selected state tokens should be removed
+    // matches the selected state tokens with the new id's corresponding to the category change
     const filterSelectedStates = (categoryId: string, states : Geography[]) => {
-        const subjectStates = states.filter(state => {
-            const foundArray = AppStore.categoryStateMap.get(categoryId);
-            const foundIndex = foundArray?.findIndex((item)=> item.name === state.name);
-            return foundIndex !== -1;
-        });
+
+        if(states.length === 0){
+            return;
+        }
+
+        const foundIndexes : number[] = [];
+        const foundArray : Geography[] | undefined = AppStore.categoryStateMap.get(categoryId);
+
+        if(!foundArray){
+            console.error("Error finding categoryStatemap for category id: " + categoryId);
+        }
+
+        const subjectStates = states
+            .filter(state => {
+                const foundIndex = foundArray?.findIndex((item)=> item.name === state.name);
+                if(foundIndex && foundIndex !== -1){
+                    foundIndexes.push(foundIndex);
+                }
+                return foundIndex !== -1;
+            }).map((state, index) => {
+
+                if(foundArray){
+                    const foundState : Geography = foundArray[foundIndexes[index]];
+                    const newId = foundState.id;
+                    if(!foundState){
+                        console.error("Error pairing selected states with the new id during category change event");
+                    }else{
+                        return foundState;
+                    }
+                }
+                return state;
+            });
+
         AppStore.setStates([...subjectStates]);
     }
 
