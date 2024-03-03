@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FormControl, Typography, Autocomplete, TextField, AutocompleteChangeReason } from '@mui/material';
+import { FormControl, Typography, Autocomplete, TextField, AutocompleteChangeReason, styled, Chip, ChipProps, Theme } from '@mui/material';
 import '../styles/components/multiInput.scss';
 
 interface Props<T> {
@@ -9,6 +9,10 @@ interface Props<T> {
     labelFunc?: (item: T) => string;
 }
 
+interface CustomChipProps extends ChipProps{
+    label: string;
+}
+
 const textFieldSX = {
     color: 'var(--Gray-140, #2A3039)',
     fontFamily: 'Avenir',
@@ -16,6 +20,22 @@ const textFieldSX = {
     fontStyle: 'normal',
     fontWeight: 350,
     lineHeight: '16px',
+};
+
+const CustomStyledChip = styled(Chip)(({ theme }: { theme: Theme }) => ({
+    // padding: theme.spacing(1),
+    // height: '100%',
+    // display: 'flex',
+    // flexDirection: 'row',
+    '& .MuiChip-label': {
+        overflowWrap: 'break-word',
+        whiteSpace: 'normal',
+        textOverflow: 'clip'
+    }
+}));
+
+const CustomChip: React.FC<CustomChipProps> = ({ label }) => {
+    return <CustomStyledChip label={label} />;
 };
 
 function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) => item.name}: Props<T>) {
@@ -55,6 +75,14 @@ function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) 
                         sx={textFieldSX}
                     />
                 )}
+                // renderTags={(value, getTagProps) =>
+                //     value.map((option, index) => (
+                //         <CustomChip
+                //             label={labelFunc(option)}
+                //             {...getTagProps({ index })}
+                //         />
+                //     )
+                // )}
             />
         </FormControl>
     )

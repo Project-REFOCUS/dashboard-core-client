@@ -7,6 +7,7 @@ import {
 } from '@mui/material';
 
 import '../styles/chart/emptyChartCard.scss';
+import { GeographyEnum } from '../common/enum';
 
 const GraphPlaceholder = require('../../empty_data_img.png');
 
@@ -16,9 +17,11 @@ const textSX = {
     fontSize: '18px',
 };
 
-type Props = {}
+type Props = {
+    geographyType : GeographyEnum
+}
 
-const EmptyChartCard = (props: Props) => {
+const EmptyChartCard = ({geographyType}: Props) => {
     return (
         <Box id="empty-chart-panel" className="flex-right-ratio">
             <Card className="inner-card" elevation={0}>
@@ -32,7 +35,7 @@ const EmptyChartCard = (props: Props) => {
                                 <img src={GraphPlaceholder} alt="Empty Chart Image"/>
                             </Box>
                         </Box>
-                        <Typography sx={textSX}> Select county to see details </Typography>
+                        <Typography sx={textSX}> Select {geographyType.toLowerCase()} to see details </Typography>
                     </Stack>
                 </Box>
             </Card>

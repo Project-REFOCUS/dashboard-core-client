@@ -45,7 +45,7 @@ const StateSection = observer(({state} : Props) => {
         });
     }
 
-    const chartCard = geoArray.length === 0  ? <EmptyChartCard/> :
+    const chartCard = geoArray.length === 0  ? <EmptyChartCard geographyType={GeographyEnum.COUNTY} /> :
         <ChartCard 
             geographies={geoArray}
             targetType={GeographyEnum.COUNTY} 

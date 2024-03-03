@@ -33,6 +33,18 @@ const SidebarFilter = observer(({state, handleGeoOnChange, handleFilterOnChange}
 
     const countyOnChange = (values: Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
         setSelectedItems([...values]);
+
+        if(reason == "removeOption" && removedIndex !== -1){
+            if(subFiltersArray[removedIndex]?.length > 0){
+                setSubFiltersArray((prevFiltersArray) => {
+                    prevFiltersArray[removedIndex].splice(removedIndex, 1);
+                    return [...prevFiltersArray];
+                });
+            }
+        }else if(reason == "clear"){
+            setSubFiltersArray([]);
+        }
+
         handleGeoOnChange(values, removedIndex, reason);
     }
 
@@ -45,7 +57,7 @@ const SidebarFilter = observer(({state, handleGeoOnChange, handleFilterOnChange}
     }
 
     const filterCards = selectedItems.map((county, index) => 
-        <FilterCard geography={county} color="#DA5FB0" key={index} handleOnChange={(values)=> handleSubFilterChange(values, index)} selectedItems={subFiltersArray[index]}/>
+        <FilterCard geography={county} color="#DA5FB0" key={county.id} handleOnChange={(values)=> handleSubFilterChange(values, index)} selectedItems={subFiltersArray[index]}/>
     );
 
     return (

@@ -25,6 +25,7 @@ import { dateRanges } from '../common/constants';
 import '../styles/chart/chartCard.scss';
 import { observer } from 'mobx-react';
 import GraphIframe from './GraphIframe';
+import EmptyChartCard from './EmptyChartCard';
 
 const GraphPlaceholder = require('./Graph.png');
 const GraphXL = require('../../graph_xl.png');
@@ -164,8 +165,8 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                         </Stack>
                         <Box className={isVisible ? "row" : "flex-right-ratio"} id="chart-content-container">
                             {/* Dont forget the screen readers */}
-                            <Stack className={isVisible ? "flex-left-ratio" : "vanish"} id="chart-card-left-container" sx={{ justifyContent: 'space-between' }} spacing={1}>
-                                <Box>
+                            <Stack className={isVisible ? "flex-left-ratio" : "vanish"} id="chart-card-left-container" sx={{ justifyContent: 'space-between'}} spacing={1}>
+                                <Box sx={{maxWidth: 209 }}>
                                     <MultiInput title={filterName} itemList={locationFilterList} handleOnChange={handleLocationFilterChange}/>
                                     <Box className="flex-left-ratio">
                                         {filterCards}
@@ -201,9 +202,9 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                         { !isExpanded ? <ExpandIcon handleOnClick={openPopUp}/> : <CloseIcon handleOnClick={closePopUp}/>}
                                     </Stack>
                                 </Stack>
+                                { selectedLocationFilterList.length > 0 ?
                                 <Box id="chart-iframe" className={ isVisible ? "flex-right-ratio" : "vanish" }>
                                     <Box className="crop-container" sx={{ overflow: 'hidden'}}>
-                                        { selectedLocationFilterList.length > 0 &&
                                         <GraphIframe 
                                             className="crop-image" 
                                             geographies={selectedLocationFilterList} 
@@ -212,9 +213,11 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                             category={AppStore.category} 
                                             handleGraphTypeOptions={handleGraphTypeOptions}
                                         />
-                                        }
                                     </Box>
                                 </Box>
+                                :
+                                <EmptyChartCard geographyType={filterName}/>
+                                }
                             </Stack>
                         </Box>
                     </Stack>
