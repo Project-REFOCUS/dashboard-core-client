@@ -16,11 +16,12 @@ interface Props {
     targetType: GeographyEnum,
     graphType?: GraphTypeEnum,
     category: Category | null,
-    className?: string  //pass through css prop
-    handleGraphTypeOptions: (graphOptions : GraphTypeEnum[]) => void
+    className?: string,  //pass through css prop
+    handleGraphTypeOptions: (graphOptions : GraphTypeEnum[]) => void,
+    fullscreen: boolean,
 }
 
-const GraphIframe = observer(({geographies, targetType, category, className, graphType=GraphTypeEnum.BAR, handleGraphTypeOptions}: Props) => {
+const GraphIframe = observer(({geographies, targetType, category, className, graphType=GraphTypeEnum.BAR, handleGraphTypeOptions, fullscreen}: Props) => {
 
     const [ url, setUrl ] = useState<string>("");
     const [ isLoading, setIsLoading ] = useState<boolean>(true);
@@ -47,22 +48,33 @@ const GraphIframe = observer(({geographies, targetType, category, className, gra
         const iframe = iframeRef.current;
         console.log("Inside handleIframeLoad value of iframe: " + iframe);
         if (iframe) {
-            const { contentDocument, contentWindow } = iframe;
-            if (contentDocument) {
-                const newWidth = iframe.contentWindow?.document.scrollingElement?.clientWidth;
-                const newHeight = `${iframe.contentWindow?.document.scrollingElement?.clientHeight}px`;
-                console.log("Document is: " + JSON.stringify(contentWindow?.document.body.scrollHeight));
-                console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.getElementsByClassName("design-playground-resizable-container")));
-                console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.querySelector(".design-playground-resizable-container")));
-                // console.log("Document found id: " + JSON.stringify(contentWindow?.document.body .getElementById("dashboardSurface")));
-                console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + newWidth);
-                console.log("Iframe Height: "+ contentDocument.documentElement.clientHeight + " or " + newHeight);
-                // iframe.style.width = newWidth;
-                iframe.style.height = `${newWidth ? newWidth * aspectRatio : 338}px`;
-            }
+            resizeIframe(iframe);
         }
         setIsLoading(false);
     }
+
+    const resizeIframe = ( iframe : HTMLIFrameElement) => {
+        const { contentDocument, contentWindow } = iframe;
+        if (contentDocument) {
+            const newWidth = iframe.contentWindow?.document.scrollingElement?.clientWidth;
+            // const newHeight = `${iframe.contentWindow?.document.scrollingElement?.clientHeight}px`;
+            // console.log("Document is: " + JSON.stringify(contentWindow?.document.body.scrollHeight));
+            // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.getElementsByClassName("design-playground-resizable-container")));
+            // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.querySelector(".design-playground-resizable-container")));
+            // // console.log("Document found id: " + JSON.stringify(contentWindow?.document.body .getElementById("dashboardSurface")));
+            // console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + newWidth);
+            // console.log("Iframe Height: "+ contentDocument.documentElement.clientHeight + " or " + newHeight);
+            // // iframe.style.width = newWidth;
+            iframe.style.height = `${newWidth ? newWidth * aspectRatio : 338}px`;
+        }
+    }
+
+    useEffect(() => {
+        const iframe = iframeRef.current;
+        if (iframe) {
+            resizeIframe(iframe);
+        }
+    }, [fullscreen]);
     
     return (
         <iframe

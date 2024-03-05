@@ -132,27 +132,26 @@ const ChartCard = observer(({geographies, targetType, titleBreadcrumbs, secondar
                                 </Stack>
                             </Stack>
                         </Stack>
-                        { isVisible &&
-                            <Stack direction="row">
-                                <Box className="flex-left-ratio">
-                                    {/* Todo: Where do the colors come from? */}
-                                    {listLabelDots}
+                        <Stack direction="row" className={!isVisible ? 'vanish' : ''}>
+                            <Box className="flex-left-ratio">
+                                {/* Todo: Where do the colors come from? */}
+                                {listLabelDots}
+                            </Box>
+                            <Box id="chart-iframe" className="flex-right-ratio" >
+                                {/* <img className={isExpanded ? "img-expand": ""} src={isExpanded ? GraphXL : GraphPlaceholder}/> */}
+                                <Box className="crop-container" sx={{ overflow: 'hidden'}}>
+                                    <GraphIframe 
+                                        className="crop-image" 
+                                        geographies={geographies}
+                                        targetType={targetType}
+                                        graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
+                                        category={AppStore.category} 
+                                        handleGraphTypeOptions={handleGraphTypeOptions}
+                                        fullscreen={isExpanded}
+                                    />
                                 </Box>
-                                <Box id="chart-iframe" className="flex-right-ratio" >
-                                    {/* <img className={isExpanded ? "img-expand": ""} src={isExpanded ? GraphXL : GraphPlaceholder}/> */}
-                                    <Box className="crop-container" sx={{ overflow: 'hidden'}}>
-                                        <GraphIframe 
-                                            className="crop-image" 
-                                            geographies={geographies}
-                                            targetType={targetType}
-                                            graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
-                                            category={AppStore.category} 
-                                            handleGraphTypeOptions={handleGraphTypeOptions}
-                                        />
-                                    </Box>
-                                </Box>
-                            </Stack>
-                        }
+                            </Box>
+                        </Stack>
                     </Stack>
                 </Box>
             </Card>

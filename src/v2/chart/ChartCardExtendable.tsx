@@ -202,8 +202,8 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                         { !isExpanded ? <ExpandIcon handleOnClick={openPopUp}/> : <CloseIcon handleOnClick={closePopUp}/>}
                                     </Stack>
                                 </Stack>
-                                { selectedLocationFilterList.length > 0 ?
                                 <Box id="chart-iframe" className={ isVisible ? "flex-right-ratio" : "vanish" }>
+                                    { selectedLocationFilterList.length > 0 ?
                                     <Box className="crop-container" sx={{ overflow: 'hidden'}}>
                                         <GraphIframe 
                                             className="crop-image" 
@@ -212,12 +212,13 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                             graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
                                             category={AppStore.category} 
                                             handleGraphTypeOptions={handleGraphTypeOptions}
+                                            fullscreen={isExpanded}
                                         />
                                     </Box>
+                                    :
+                                    <EmptyChartCard geographyType={filterName}/>
+                                    }
                                 </Box>
-                                :
-                                <EmptyChartCard geographyType={filterName}/>
-                                }
                             </Stack>
                         </Box>
                     </Stack>
