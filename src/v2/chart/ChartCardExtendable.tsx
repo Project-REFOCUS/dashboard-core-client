@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
     Autocomplete,
     AutocompleteChangeReason,
@@ -14,7 +13,7 @@ import VisibilityIcon from './VisibilityIcon';
 import ExpandIcon from './ExpandIcon';
 import FilterCard from '../components/FilterCard';
 import MultiInput from '../components/MultiInput';
-import { fetchSubGeographies, fetchSubGeographiesLegendMap, getSubGeographiesByGeographyAndType } from '../common/services';
+import { fetchSubGeographies } from '../common/services';
 import { GeographyEnum, GraphTypeEnum } from '../common/enum';
 import { DateDelta, Geography } from '../common/types';
 import TrashIcon from './TrashIcon';
@@ -26,9 +25,6 @@ import '../styles/chart/chartCard.scss';
 import { observer } from 'mobx-react';
 import GraphIframe from './GraphIframe';
 import EmptyChartCard from './EmptyChartCard';
-
-const GraphPlaceholder = require('./Graph.png');
-const GraphXL = require('../../graph_xl.png');
 
 interface Props {
     handleClosePopUpOnClick?: () => void;
@@ -205,8 +201,7 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                 <Box id="chart-iframe" className={ isVisible ? "flex-right-ratio" : "vanish" }>
                                     <Box className="crop-container" sx={{ overflow: 'hidden'}}>
                                         { selectedLocationFilterList.length > 0 ?
-                                        <GraphIframe 
-                                            className="crop-image" 
+                                        <GraphIframe  
                                             geographies={selectedLocationFilterList} 
                                             targetType={geography.type} 
                                             graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 

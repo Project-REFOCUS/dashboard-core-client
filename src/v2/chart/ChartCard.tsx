@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-import { 
+import {
     Autocomplete,
     AutocompleteChangeReason,
     Box,
@@ -94,9 +94,9 @@ const ChartCard = observer(({geographies, targetType, titleBreadcrumbs, secondar
                 <Box id="chart-section-container">
                     <Stack spacing={1}>
                         <Stack direction="row" spacing={1}>
-                            <Stack id="chart-header-container" 
-                                className="flex-left-ratio" 
-                                direction="row" 
+                            <Stack id="chart-header-container"
+                                className="flex-left-ratio"
+                                direction="row"
                                 divider={<Typography id="chart-section-header">|</Typography>}
                                 spacing={0.5}
                             >
@@ -126,7 +126,6 @@ const ChartCard = observer(({geographies, targetType, titleBreadcrumbs, secondar
                                             />
                                         </FormControl>
                                     </Box>
-                                    {/* Todo: there are hover over descriptions for the buttons */}
                                     <VisibilityIcon handleOnClick={handleVisibilityToggle} isVisible={isVisible}/>
                                     { !isExpanded ? <ExpandIcon handleOnClick={openPopUp}/> : <CloseIcon handleOnClick={closePopUp}/>}
                                 </Stack>
@@ -138,14 +137,12 @@ const ChartCard = observer(({geographies, targetType, titleBreadcrumbs, secondar
                                 {listLabelDots}
                             </Box>
                             <Box id="chart-iframe" className="flex-right-ratio" >
-                                {/* <img className={isExpanded ? "img-expand": ""} src={isExpanded ? GraphXL : GraphPlaceholder}/> */}
                                 <Box className="crop-container" sx={{ overflow: 'hidden'}}>
-                                    <GraphIframe 
-                                        className="crop-image" 
+                                    <GraphIframe
                                         geographies={geographies}
                                         targetType={targetType}
-                                        graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
-                                        category={AppStore.category} 
+                                        graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined}
+                                        category={AppStore.category}
                                         handleGraphTypeOptions={handleGraphTypeOptions}
                                         fullscreen={isExpanded}
                                     />

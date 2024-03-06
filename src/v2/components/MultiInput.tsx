@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormControl, Typography, Autocomplete, TextField, AutocompleteChangeReason, styled, Chip, ChipProps, Theme } from '@mui/material';
 import '../styles/components/multiInput.scss';
 
@@ -35,8 +35,15 @@ const CustomChip: React.FC<CustomChipProps> = ({ label }) => {
 };
 
 function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) => item.name}: Props<T>) {
-    const [previousValues, setPreviousValues] = React.useState<T[]>([]);
-    const [isEmpty, setIsEmpty] = useState(true);
+    const [ previousValues, setPreviousValues ] = React.useState<T[]>([]);
+    const [ isEmpty, setIsEmpty ] = useState(true);
+    const [ isLoading, setIsLoading ] = useState<boolean>(true);
+
+    useEffect(()=>{
+        if(itemList && itemList.length > 0) {
+            setIsLoading(false);
+        }
+    },[itemList]);
 
     const handleInputChange = (event: React.SyntheticEvent<Element, Event>, values: T[], reason: AutocompleteChangeReason) => {
         console.log("Change Counties reason: " + reason + " counties: " + JSON.stringify(values));
@@ -54,6 +61,7 @@ function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) 
         <FormControl variant="standard" size="small" fullWidth>
             <Typography className="input-title">{title}</Typography>
             <Autocomplete
+                className={isLoading? "input-loading" : ""}
                 multiple
                 limitTags={2}
                 size="small"
@@ -62,6 +70,7 @@ function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) 
                 filterSelectedOptions
                 disableListWrap
                 onChange={handleInputChange}
+                loading={itemList.length === 0}
                 isOptionEqualToValue={(option, value) => JSON.stringify(option) === JSON.stringify(value)}
                 componentsProps={{
                     popper: {

@@ -35,9 +35,9 @@
     padding-right: 8px;
 }
 
-// #chart-sidebar-panel, #chart-extendable-container {
-//     transition: all 0.3s ease;
-// }
+#chart-sidebar-panel, #chart-extendable-container {
+    transition: transform 0.3s ease;
+}
 
 .expand-popup{
     position: fixed;

@@ -1,0 +1,24 @@
+@keyframes blurAnimation {
+    0% {
+        filter: blur(1px); 
+    }
+    50% {
+        filter: blur(3px);
+    }
+    100% {
+        filter: blur(1px); 
+    }
+}
+
+.input-loading.MuiAutocomplete-root {
+    animation-name: blurAnimation;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+    transition: filter 0.2s ease-in-out;
+    pointer-events: none;
+
+    .MuiBox-root > .MuiButtonBase-root {
+        background: #00aeef5c;
+    }
+}

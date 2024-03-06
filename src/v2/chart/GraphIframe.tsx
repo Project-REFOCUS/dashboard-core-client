@@ -3,11 +3,12 @@ import { GeographyEnum, GraphTypeEnum } from '../common/enum';
 import AppStore from '../stores/AppStore';
 import { Category, Geography } from '../common/types';
 import { observer } from 'mobx-react';
+import LoadingAnimation from '../components/LoadingAnimation';
 
 const iframeStyle = {
     border: 'none',
     width: '100%',
-    // height: '338px'
+    transition: 'all 0.2s ease',
     // overflow: 'hidden'
 }
 
@@ -16,12 +17,11 @@ interface Props {
     targetType: GeographyEnum,
     graphType?: GraphTypeEnum,
     category: Category | null,
-    className?: string,  //pass through css prop
     handleGraphTypeOptions: (graphOptions : GraphTypeEnum[]) => void,
     fullscreen: boolean,
 }
 
-const GraphIframe = observer(({geographies, targetType, category, className, graphType=GraphTypeEnum.BAR, handleGraphTypeOptions, fullscreen}: Props) => {
+const GraphIframe = observer(({geographies, targetType, category, graphType=GraphTypeEnum.BAR, handleGraphTypeOptions, fullscreen}: Props) => {
 
     const [ url, setUrl ] = useState<string>("");
     const [ isLoading, setIsLoading ] = useState<boolean>(true);
@@ -31,7 +31,9 @@ const GraphIframe = observer(({geographies, targetType, category, className, gra
     // the iframe content height is calculated by our input width
     // f(app width) = iframe content height
     // f(575.2) = 338
-    const aspectRatio = 0.5876216968011;     
+    // const aspectRatio = 0.5876216968011;
+    // adjusted to 0.57 to account for fullscreen event
+    const aspectRatio = 0.57;   
 
     // Todo: Check if category needs to be used as a trigger for this effect. Might be abe to remove the prop entirely
     useEffect(() => {
@@ -77,13 +79,17 @@ const GraphIframe = observer(({geographies, targetType, category, className, gra
     }, [fullscreen]);
     
     return (
-        <iframe
-            ref={iframeRef}
-            //className={className} 
-            src={url}
-            style={iframeStyle}
-            onLoad={handleIframeLoad}
-        />
+        <>
+            { isLoading && <LoadingAnimation/> }
+            <iframe
+                className={ isLoading ? "vanish" : ""}
+                ref={iframeRef}
+                src={url}
+                style={iframeStyle}
+                onLoad={handleIframeLoad}
+            ></iframe>
+        </>
+
     )
 })
 

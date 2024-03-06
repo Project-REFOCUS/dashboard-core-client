@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { 
     Autocomplete,
     AutocompleteChangeReason,
@@ -7,6 +7,7 @@ import {
     Popper
 } from '@mui/material'
 import { DownArrow } from './CustomIcons';
+import '../styles/components/multiButton.scss';
 
 interface Props<T> {
     value: T[];
@@ -15,8 +16,18 @@ interface Props<T> {
 }
 
 function MultiButton<T>({itemList, handleOnChange, value} : Props<T>){
+
+    const [ isLoading, setIsLoading ] = useState<boolean>(true);
+
+    useEffect(()=>{
+        if(itemList && itemList.length > 0) {
+            setIsLoading(false);
+        }
+    },[itemList]);
+
     return (
         <Autocomplete
+            className={isLoading? "input-loading" : ""}
             multiple
             options={itemList}
             filterSelectedOptions
@@ -38,7 +49,7 @@ function MultiButton<T>({itemList, handleOnChange, value} : Props<T>){
                     >
                     Add
                     </Button>
-                    {/*Prevent a revealing console log error expecting an input element*/}
+                    {/*Prevents a revealing console log error expecting an input element*/}
                     <input {...params.inputProps} style={{ display: 'none' }} />
                 </Box>
             )}
