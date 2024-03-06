@@ -41,15 +41,21 @@ const Sidebar : React.FC<Props> = observer(() => {
 
     const [fullStateList, setFullStateList] = useState<Geography[]>([]);
     const [filteredStateList, setFilteredStateList] = useState<Geography[]>([]);
-    
+
+    const [ isLoading, setIsLoading ] = useState<boolean>(true);
+
     useEffect(() => {
-        fetchIndicatorCategories().then((categories : Category[]) => setFullCategoryList(categories));
-        fetchAllStates().then((states : Geography[]) => setFullStateList(states));
+        Promise.all([
+            fetchIndicatorCategories(),
+            fetchAllStates()
+        ]).then(([categories, states]) => {
+            setFullCategoryList(categories);
+            setFullStateList(states);
+            setIsLoading(false);
+        });
     }, []);
 
-    //@param reason — One of "createOption", "selectOption", "removeOption", "blur" or "clear".
     const categoryChange = (event: React.SyntheticEvent<Element, Event>, category: Category | null, reason: AutocompleteChangeReason) => {
-        // console.log("Change Category reason: "+ reason +" category: " + JSON.stringify(category));
         if(reason == 'selectOption' && category !== null){
             AppStore.setCategory(category);
             AppStore.getMapStates(category).then(states => {
@@ -119,7 +125,7 @@ const Sidebar : React.FC<Props> = observer(() => {
                                 <FormControl variant="standard" size="small" fullWidth>
                                     <Typography sx={inputLabelSX}>Category</Typography>
                                     <Autocomplete
-                                        // select
+                                        className={isLoading? "input-loading" : ""}
                                         size="small"
                                         id="category-selector"
                                         options={filteredCategoryList.length === 0 ? fullCategoryList : filteredCategoryList}
@@ -127,7 +133,7 @@ const Sidebar : React.FC<Props> = observer(() => {
                                         getOptionLabel={(category) => category.name}
                                         disableListWrap
                                         onChange={categoryChange}
-                                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                                        isOptionEqualToValue={(option, value) => option.name === value.name}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}
@@ -143,6 +149,7 @@ const Sidebar : React.FC<Props> = observer(() => {
                                 <FormControl variant="standard" size="small" fullWidth>
                                     <Typography sx={inputLabelSX}>State</Typography>
                                     <Autocomplete
+                                        className={isLoading? "input-loading" : ""}
                                         multiple
                                         limitTags={2}
                                         size="small"
@@ -153,7 +160,7 @@ const Sidebar : React.FC<Props> = observer(() => {
                                         disableListWrap
                                         value={AppStore.states}
                                         onChange={stateChange}
-                                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                                        isOptionEqualToValue={(option, value) => option.name === value.name}
                                         renderInput={(params) => (
                                             <TextField
                                                 {...params}

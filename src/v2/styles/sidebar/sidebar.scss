@@ -4,3 +4,27 @@
   flex: 1 1 0;
 }
 
+@keyframes blurAnimation {
+    0% {
+        filter: blur(2px); 
+    }
+    50% {
+        filter: blur(6px);
+    }
+    100% {
+        filter: blur(2px); 
+    }
+}
+
+.input-loading.MuiAutocomplete-root {
+    animation-name: blurAnimation;
+    animation-duration: 1.2s;
+    animation-iteration-count: infinite;
+    animation-direction: reverse;
+    transition: filter 0.2s ease-in-out;
+    pointer-events: none;
+
+    .MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root'] {
+        background-color: transparent;
+    }
+}
