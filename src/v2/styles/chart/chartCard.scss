@@ -26,10 +26,6 @@
     }
 }
 
-// #chart-iframe{
-//     height: 100%
-// }
-
 #chart-header-container{
     flex-wrap: wrap;
 }
@@ -38,6 +34,10 @@
     // gap: 16px;
     padding-right: 8px;
 }
+
+// #chart-sidebar-panel, #chart-extendable-container {
+//     transition: all 0.3s ease;
+// }
 
 .expand-popup{
     position: fixed;

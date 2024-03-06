@@ -81,8 +81,8 @@ div.fill-container{
     padding: 8px;
 }
 
-.disabled-cursor{
-    cursor: not-allowed !important;
+.disabled-cursor:hover {
+    pointer-events: none;
 }
 
 .MuiAutocomplete-inputRoot{
@@ -118,4 +118,8 @@ span.MuiChip-label {
     color: #000;
     font-family: "Open Sans" !important;
     font-size: 11px;
+}
+
+.Mui-disabled {
+    cursor: not-allowed !important;
 }

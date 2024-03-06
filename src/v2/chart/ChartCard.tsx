@@ -160,9 +160,3 @@ const ChartCard = observer(({geographies, targetType, titleBreadcrumbs, secondar
 })
 
 export default ChartCard
-
-{/* <Box id="chart-iframe" className="flex-right-ratio">
-                                    <Box className="crop-container" sx={{ overflow: 'hidden'}}>
-                                        <img className="crop-image" src={isExpanded ? GraphXL : GraphPlaceholder}/>
-                                    </Box>
-                                </Box> */}

@@ -203,8 +203,8 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                     </Stack>
                                 </Stack>
                                 <Box id="chart-iframe" className={ isVisible ? "flex-right-ratio" : "vanish" }>
-                                    { selectedLocationFilterList.length > 0 ?
                                     <Box className="crop-container" sx={{ overflow: 'hidden'}}>
+                                        { selectedLocationFilterList.length > 0 ?
                                         <GraphIframe 
                                             className="crop-image" 
                                             geographies={selectedLocationFilterList} 
@@ -214,10 +214,10 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                             handleGraphTypeOptions={handleGraphTypeOptions}
                                             fullscreen={isExpanded}
                                         />
+                                        :
+                                        <EmptyChartCard geographyType={filterName}/>
+                                        }
                                     </Box>
-                                    :
-                                    <EmptyChartCard geographyType={filterName}/>
-                                    }
                                 </Box>
                             </Stack>
                         </Box>

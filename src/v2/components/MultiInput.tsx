@@ -23,10 +23,6 @@ const textFieldSX = {
 };
 
 const CustomStyledChip = styled(Chip)(({ theme }: { theme: Theme }) => ({
-    // padding: theme.spacing(1),
-    // height: '100%',
-    // display: 'flex',
-    // flexDirection: 'row',
     '& .MuiChip-label': {
         overflowWrap: 'break-word',
         whiteSpace: 'normal',
@@ -67,6 +63,20 @@ function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) 
                 disableListWrap
                 onChange={handleInputChange}
                 isOptionEqualToValue={(option, value) => JSON.stringify(option) === JSON.stringify(value)}
+                componentsProps={{
+                    popper: {
+                        modifiers: [
+                            {
+                                name: 'flip',
+                                enabled: false
+                            },
+                            {
+                                name: 'preventOverflow',
+                                enabled: false
+                            }
+                        ]
+                    }
+                }}
                 renderInput={(params) => (
                     <TextField
                         {...params}
@@ -75,14 +85,6 @@ function MultiInput<T>({title, itemList, handleOnChange, labelFunc=(item : any) 
                         sx={textFieldSX}
                     />
                 )}
-                // renderTags={(value, getTagProps) =>
-                //     value.map((option, index) => (
-                //         <CustomChip
-                //             label={labelFunc(option)}
-                //             {...getTagProps({ index })}
-                //         />
-                //     )
-                // )}
             />
         </FormControl>
     )
