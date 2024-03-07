@@ -5,6 +5,14 @@ import { Category, Geography } from '../common/types';
 import { observer } from 'mobx-react';
 import LoadingAnimation from '../components/LoadingAnimation';
 
+// 338 (height) / 575.2 (width) = 0.5876216968011
+// the iframe content height is calculated by our input width
+// f(app width) = iframe content height
+// f(575.2) = 338
+// const aspectRatio = 0.5876216968011;
+// adjusted to 0.57 to account for fullscreen event
+const aspectRatio = 0.5717;
+
 const iframeStyle = {
     border: 'none',
     width: '100%',
@@ -25,15 +33,7 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
 
     const [ url, setUrl ] = useState<string>("");
     const [ isLoading, setIsLoading ] = useState<boolean>(true);
-    const iframeRef = useRef<HTMLIFrameElement>(null);
-
-    // 338 (height) / 575.2 (width) = 0.5876216968011
-    // the iframe content height is calculated by our input width
-    // f(app width) = iframe content height
-    // f(575.2) = 338
-    // const aspectRatio = 0.5876216968011;
-    // adjusted to 0.57 to account for fullscreen event
-    const aspectRatio = 0.57;   
+    const iframeRef = useRef<HTMLIFrameElement>(null);   
 
     // Todo: Check if category needs to be used as a trigger for this effect. Might be abe to remove the prop entirely
     useEffect(() => {
@@ -46,28 +46,22 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
     }, [geographies, graphType, category]);
 
     const handleIframeLoad = () => {
-        // finished loading
-        const iframe = iframeRef.current;
-        console.log("Inside handleIframeLoad value of iframe: " + iframe);
-        if (iframe) {
-            resizeIframe(iframe);
-        }
         setIsLoading(false);
     }
 
     const resizeIframe = ( iframe : HTMLIFrameElement) => {
         const { contentDocument, contentWindow } = iframe;
         if (contentDocument) {
-            const newWidth = iframe.contentWindow?.document.scrollingElement?.clientWidth;
+            const clientWidth = iframe.contentWindow?.document.scrollingElement?.clientWidth;
             // const newHeight = `${iframe.contentWindow?.document.scrollingElement?.clientHeight}px`;
             // console.log("Document is: " + JSON.stringify(contentWindow?.document.body.scrollHeight));
             // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.getElementsByClassName("design-playground-resizable-container")));
             // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.querySelector(".design-playground-resizable-container")));
             // // console.log("Document found id: " + JSON.stringify(contentWindow?.document.body .getElementById("dashboardSurface")));
-            // console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + newWidth);
+            console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + clientWidth);
             // console.log("Iframe Height: "+ contentDocument.documentElement.clientHeight + " or " + newHeight);
-            // // iframe.style.width = newWidth;
-            iframe.style.height = `${newWidth ? newWidth * aspectRatio : 338}px`;
+            // // iframe.style.width = clientWidth;
+            iframe.style.height = `${clientWidth ? clientWidth * aspectRatio : 338}px`;
         }
     }
 
@@ -76,7 +70,7 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
         if (iframe) {
             resizeIframe(iframe);
         }
-    }, [fullscreen]);
+    }, [fullscreen, isLoading]);
     
     return (
         <>

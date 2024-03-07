@@ -15,7 +15,7 @@ const HoverGraphic = ({ visible, anchorRef, children, handleClose } : Props) => 
             sx={{
                 pointerEvents: 'none',
                 zIndex: 999,
-                opacity: 0.8,
+                opacity: 0.9,
                 // '&::before': {
                 //     content: '""',
                 //     // position: 'relative',
