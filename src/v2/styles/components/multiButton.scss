@@ -1,18 +1,12 @@
-.main-sidebar-panel {
-  width: 250px;
-//   padding: 8px;
-  flex: 1 1 0;
-}
-
 @keyframes blurAnimation {
     0% {
-        filter: blur(2px); 
+        filter: blur(1px); 
     }
     50% {
-        filter: blur(6px);
+        filter: blur(3px);
     }
     100% {
-        filter: blur(2px); 
+        filter: blur(1px); 
     }
 }
 
@@ -24,7 +18,7 @@
     transition: filter 0.2s ease-in-out;
     pointer-events: none;
 
-    .MuiAutocomplete-inputRoot[class*='MuiOutlinedInput-root'] {
-        background-color: transparent;
+    .MuiBox-root > .MuiButtonBase-root {
+        background: #00aeef5c;
     }
 }

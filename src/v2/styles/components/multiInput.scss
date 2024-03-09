@@ -1,7 +1,18 @@
-.main-sidebar-panel {
-  width: 250px;
-//   padding: 8px;
-  flex: 1 1 0;
+.MuiTypography-root.MuiTypography-body1.input-title {
+    padding-bottom: 4px;
+    color: var(--black, #2D3436);
+    font-family: "Open Sans", "sans-serif";
+    font-size: 14px;
+}
+
+.MuiChip-label {
+    overflow-wrap: 'break-word';
+    white-space: 'normal';
+    text-overflow: 'clip';
+}
+
+.MuiButtonBase-root.MuiChip-root.MuiChip-filled.MuiChip-sizeSmall.MuiChip-colorDefault.MuiChip-deletable.MuiChip-deletableColorDefault.MuiChip-filledDefault.MuiAutocomplete-tag.MuiAutocomplete-tagSizeSmall{
+    max-width: 70%;
 }
 
 @keyframes blurAnimation {
@@ -15,7 +26,7 @@
         filter: blur(2px); 
     }
 }
-
+  
 .input-loading.MuiAutocomplete-root {
     animation-name: blurAnimation;
     animation-duration: 1.2s;

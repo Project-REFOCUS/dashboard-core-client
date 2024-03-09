@@ -2,6 +2,124 @@
   margin: 0;
 }
 
+#default-dropdown-text{
+    color: var(--Gray-140, #2A3039);
+
+    font-family: Avenir;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 350;
+    line-height: 16px;
+}
+
 div.main-component {
   margin: 0 50px 0 50px;
+}
+
+div.fill-container{
+    width: 100%;
+}
+
+.MuiCard-root.inner-card{
+    background-color: rgba(223, 230, 233, 0.20);
+    border-radius: 4px;
+}
+
+.svg-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .svg-clickable {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .svg-clickable:hover {
+        filter: invert(36%) sepia(55%) saturate(5537%) hue-rotate(211deg) brightness(98%) contrast(87%);
+    }
+}
+
+.crop-container{
+    overflow: hidden;
+
+    .crop-image{
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+}
+
+.flex-center{
+    justify-content: center;
+    align-items: center;
+}
+
+.wrap {
+    flex-wrap: wrap;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+}
+
+.vanish {
+    display: none !important;
+}
+
+.flex-left-ratio {
+    flex: 1 1 0;
+}
+
+.flex-right-ratio {
+    flex: 2.8 2.8 0;
+}
+
+.sidebar-spacer {
+    width: 250px;
+    padding: 8px;
+}
+
+.disabled-cursor:hover {
+    pointer-events: none;
+}
+
+.MuiAutocomplete-inputRoot{
+    padding-left: 4px !important;
+    padding-bottom: 4px !important;
+    padding-top: 4px !important;
+}
+
+.MuiAutocomplete-input {
+    padding-left: 4px !important;
+    // padding-bottom: 4px !important;
+    // padding-top: 4px !important;
+}
+
+.MuiCardContent-root {
+    padding: 8px !important;
+}
+
+.MuiContainer-root {
+    margin-bottom: 5vh;
+}
+
+.MuiTypography-root.MuiTypography-body1{
+    color: var(--black, #2D3436);
+    font-family: "Open Sans, sans-serif";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+span.MuiChip-label {
+    color: #000;
+    font-family: "Open Sans" !important;
+    font-size: 11px;
+}
+
+.Mui-disabled {
+    cursor: not-allowed !important;
 }
