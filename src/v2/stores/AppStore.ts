@@ -130,6 +130,8 @@ class AppStore {
         let dashboardUrlResources : GraphResource[] | undefined;
         let mapKey = targetType ? targetType : "Dashboard";
 
+        console.log("Get graph in AppStore target type: " + targetType + " vs mapKey: " + mapKey);
+
         const firstIndex = 0;
 
         if(this.graphDashboardMap.has(mapKey)){
@@ -141,7 +143,7 @@ class AppStore {
 
         }else{
             dashboardUrlResources = await fetchGraphDashboardUrl(this.category?.id, targetType);
-            // console.log("Value of the graph response retrieved is: "+ JSON.stringify(dashboardUrlResources));
+            console.log("Value of the graph response retrieved is: "+ JSON.stringify(dashboardUrlResources) + "for mapKey=" + mapKey);
             this.graphDashboardMap.set(mapKey, dashboardUrlResources);
         }
 

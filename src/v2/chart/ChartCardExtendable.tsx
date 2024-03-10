@@ -126,15 +126,15 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
         });
     }
 
-    const titleElements = ancestry.map((geography, index) => <Typography id="chart-section-header" key={index}>{geography.name}</Typography>);
+    const titleElements = ancestry.map((geographyItem, index) => <Typography id="chart-section-header" key={index}>{geographyItem.name}</Typography>);
 
     const filterCards = selectedLocationFilterList.map((locationFilter, index) => <FilterCard geography={locationFilter} color="#DA5FB0" key={index} handleOnChange={(values)=> handleSubFilterChange(values, index)} selectedItems={childFiltersArray[index]}/>);
 
     const extensionCards = selectedLocationFilterList.length === 0 ? null : 
-        selectedLocationFilterList.map((geography, geoIndex) => childFiltersArray[geoIndex] === undefined ? null :
+        selectedLocationFilterList.map((geographyExtention, geoIndex) => childFiltersArray[geoIndex] === undefined ? null :
         childFiltersArray[geoIndex].map((filter, filterIndex) =>
             <ChartCardExtendable 
-                geography={geography}
+                geography={geographyExtention}
                 state={state} ancestry={[...ancestry, geography]}
                 filterName={filter} 
                 handleDelete={()=>removeChildFilter(geoIndex, filterIndex)}
@@ -203,7 +203,7 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                         { selectedLocationFilterList.length > 0 ?
                                         <GraphIframe  
                                             geographies={selectedLocationFilterList} 
-                                            targetType={geography.type} 
+                                            targetType={filterName} 
                                             graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
                                             category={AppStore.category} 
                                             handleGraphTypeOptions={handleGraphTypeOptions}

@@ -38,6 +38,7 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
     // Todo: Check if category needs to be used as a trigger for this effect. Might be abe to remove the prop entirely
     useEffect(() => {
         setIsLoading(true);
+        console.log("Geography.type for iFrame is: " + targetType);
         AppStore.getGraph(geographies, targetType, graphType).then(response => {
             console.log("Value of the graph url for category{"+ category?.name +"} is: "+ JSON.stringify(response));
             setUrl(response.url);
