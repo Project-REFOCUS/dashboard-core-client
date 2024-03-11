@@ -20,7 +20,7 @@ const StateSection = observer(({state} : Props) => {
     // i.e. geoArray[1] has multiple filters in filtersArray[1]. One to Many relationship
     const [ filtersArray, setFiltersArray ] = useState<GeographyEnum[][]>([]);
 
-    // Adding or Removing the county cards that popuate under the input
+    // Adding or Removing the county cards that populate under the input
     const handleGeoArrayChange = (geographies: Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
         if(reason == "removeOption" && removedIndex !== -1){
             setFiltersArray((prevFilterArray) => {

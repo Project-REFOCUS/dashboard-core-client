@@ -1,6 +1,5 @@
 import { GeographyEnum } from "./enum";
 import { Category, Geography, GraphResource } from "./types";
-import { mockCounties } from "./mockData";
 import axios from 'axios';
 import { nameSort, toCamelCase } from "./utils";
 import { filterOptionsMenu } from "./constants";
@@ -98,7 +97,7 @@ export const fetchSubGeographiesLegendMap = async(categoryId: string | null, par
             }
         }
 
-        console.log("Legend map contains: " + JSON.stringify(legendMap));
+        // console.log("Legend map contains: " + JSON.stringify(legendMap));
         return legendMap;
 
     } catch (error) {
@@ -107,56 +106,25 @@ export const fetchSubGeographiesLegendMap = async(categoryId: string | null, par
     }
 };
 
-export const fetchGraphDashboardUrl = async(categoryId: string | undefined, type?: GeographyEnum) : Promise<GraphResource[]> => {
+export const fetchGraphUrl = async(categoryId: string | undefined, type: GeographyEnum | undefined, targets: Geography[]) : Promise<GraphResource[]> => {
     try {
-        if(!categoryId){
-            throw new Error();
-        }
-        const response = await axios.get(`/dashboard-service/graph?categoryId=${categoryId}${type ? `&geographyType=${toCamelCase(type)}` : "" }`);
-        return response.data;
-    } catch (error) {
-        console.error(`Error fetching graph dashboard url with categoryId: {${categoryId}}`, error);
-        throw error;
-    }
-};
-
-export const fetchGraphUrl = async(dashboardUrl: string, targets: Geography[]) : Promise<string> => {
-    try {
-        if(!dashboardUrl || dashboardUrl.length === 0){
+        if(!categoryId || !type){
             throw new Error();
         }
         const targetIdArray : string[] = targets.map((target => target.id));
         const targetIdsFormatted = targetIdArray.join("|");
 
-        return `${dashboardUrl}&$VP_All3Levels=${targetIdsFormatted}`;
-
+        const response = await axios.get(`/dashboard-service/graph?categoryId=${categoryId}&geographyType=${toCamelCase(type)}&geographyIds=${targetIdsFormatted}`);
+        // console.log("Graph response looks like"+JSON.stringify(response));
+        return response.data;
+        
     } catch (error) {
-        console.error(`Error fetching graph url for iframe with url: {${dashboardUrl}} and targets: ${JSON.stringify(targets)}`, error);
+        console.error(`Error fetching graph dashboard url with categoryId: {${categoryId}} type: ${type} and targets: ${JSON.stringify(targets)}`, error);
         throw error;
     }
 };
 
-export const getListOfCounties : (state : Geography) => Promise<Geography[]> = (state) => {
-    return new Promise<Geography[]>((resolve) => {
-        const counties : Geography[] = [
-            { id: "2", name: "Westchester", type: GeographyEnum.COUNTY},
-            { id: "4", name: "Brooklyn", type: GeographyEnum.COUNTY},
-            { id: "6", name: "Manhattan", type: GeographyEnum.COUNTY},
-            { id: "8", name: "Albany", type: GeographyEnum.COUNTY}
-        ];
-        resolve(counties);
-    });
-};
-
-export const getSubGeographiesByGeographyAndType : (state: Geography, geography : Geography, type : GeographyEnum) => Promise<Geography[]> = 
-    (state, geography, type) => {
-    return new Promise((resolve) => {
-        resolve(mockCounties);
-    });
-};
-
 export const getGeographyDropdownOptions = (geoType : GeographyEnum) => {
-    // find by id
     const foundItem = filterOptionsMenu.find(item => item.type === geoType);
     return foundItem ? foundItem.subTypes : [];
 }

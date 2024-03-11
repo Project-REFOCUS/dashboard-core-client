@@ -45,12 +45,22 @@ const Sidebar : React.FC<Props> = observer(() => {
     const [ isLoading, setIsLoading ] = useState<boolean>(true);
 
     useEffect(() => {
+        const queryParameters = new URLSearchParams(window.location.search);
+        const siteParameter = queryParameters.get('site');
+
         Promise.all([
             fetchIndicatorCategories(),
             fetchAllStates()
         ]).then(([categories, states]) => {
             setFullCategoryList(categories);
             setFullStateList(states);
+    
+            if(siteParameter){
+                const preSelectedState = states.find(state => state.name === siteParameter);
+                if(preSelectedState){
+                    stateChange([preSelectedState]);
+                }
+            }
             setIsLoading(false);
         });
     }, []);
@@ -108,9 +118,8 @@ const Sidebar : React.FC<Props> = observer(() => {
         AppStore.setStates([...subjectStates]);
     }
 
-    const stateChange = (event: React.SyntheticEvent<Element, Event>, states: Geography[], reason: AutocompleteChangeReason) => {
-        console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
-        
+    const stateChange = (states: Geography[]) => {
+        // console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         AppStore.setStates(states);
         AppStore.getMapCategories(states).then(categories => setFilteredCategoryList(categories));
     }
@@ -159,7 +168,7 @@ const Sidebar : React.FC<Props> = observer(() => {
                                         filterSelectedOptions
                                         disableListWrap
                                         value={AppStore.states}
-                                        onChange={stateChange}
+                                        onChange={(e,value,r) => stateChange(value)}
                                         isOptionEqualToValue={(option, value) => option.name === value.name}
                                         renderInput={(params) => (
                                             <TextField

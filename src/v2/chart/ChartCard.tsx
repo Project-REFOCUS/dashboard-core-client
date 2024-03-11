@@ -44,19 +44,19 @@ const ChartCard = observer(({geographies, targetType, titleBreadcrumbs, secondar
     const [ isExpanded, setIsExpanded ] = useState<boolean>(false);
 
     const handleGraphTypeOptions = (graphOptions : GraphTypeEnum[]) => {
-        console.log("Chart Toggle options values: " + JSON.stringify(graphOptions));
+        // console.log("Chart Toggle options values: " + JSON.stringify(graphOptions));
         const option = graphOptions.length < 2 ? graphOptions[0] : graphOptions.find(graphOption => graphOption == chartOption)
         setChartOptionsList(graphOptions);
         setChartOption(option ? option : graphOptions[0]);
     }
 
     const handleChartToggle = (value : GraphTypeEnum) => {
-        console.log("Chart Toggle value: " + value);
+        // console.log("Chart Toggle value: " + value);
         setChartOption(value);
     }
 
     const handleVisibilityToggle = () => {
-        console.log("OnClick value: "+ !isVisible);
+        // console.log("OnClick value: "+ !isVisible);
         if(isExpanded && isVisible){
             closePopUp();
         }
@@ -64,7 +64,7 @@ const ChartCard = observer(({geographies, targetType, titleBreadcrumbs, secondar
     }
 
     const handleDateChange = (event : React.SyntheticEvent<Element, Event>, dateRange : DateDelta | null, reason : AutocompleteChangeReason) => {
-        console.log("Change Date reason: "+ reason +" states: " + JSON.stringify(dateRange));
+        // console.log("Change Date reason: "+ reason +" states: " + JSON.stringify(dateRange));
         setSelectedDateRange(dateRange);
     }
 

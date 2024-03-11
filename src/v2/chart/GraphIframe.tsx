@@ -58,7 +58,7 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
             // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.getElementsByClassName("design-playground-resizable-container")));
             // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.querySelector(".design-playground-resizable-container")));
             // // console.log("Document found id: " + JSON.stringify(contentWindow?.document.body .getElementById("dashboardSurface")));
-            console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + clientWidth);
+            // console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + clientWidth);
             // console.log("Iframe Height: "+ contentDocument.documentElement.clientHeight + " or " + newHeight);
             // // iframe.style.width = clientWidth;
             iframe.style.height = `${clientWidth ? clientWidth * aspectRatio : 338}px`;

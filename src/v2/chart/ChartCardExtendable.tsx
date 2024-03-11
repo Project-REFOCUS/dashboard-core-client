@@ -57,19 +57,19 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
     }, []);
 
     const handleGraphTypeOptions = (graphOptions : GraphTypeEnum[]) => {
-        console.log("Chart Toggle options values: " + JSON.stringify(graphOptions));
+        // console.log("Chart Toggle options values: " + JSON.stringify(graphOptions));
         const option = graphOptions.length < 2 ? graphOptions[0] : graphOptions.find(graphOption => graphOption == GraphTypeEnum.BAR)
         setChartOption(option ? option : graphOptions[0]);
         setChartOptionsList(graphOptions);
     }
 
     const handleChartToggle = (value : GraphTypeEnum) => {
-        console.log("Chart Toggle value: " + value);
+        // console.log("Chart Toggle value: " + value);
         setChartOption(value);
     }
 
     const handleVisibilityToggle = () => {
-        console.log("OnClick value: "+ !isVisible);
+        // console.log("OnClick value: "+ !isVisible);
         if(isExpanded && isVisible){
             closePopUp();
         }
@@ -77,7 +77,7 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
     }
 
     const handleDateChange = (event : React.SyntheticEvent<Element, Event>, dateRange : DateDelta | null, reason : AutocompleteChangeReason) => {
-        console.log("Change Date reason: "+ reason +" states: " + JSON.stringify(dateRange));
+        // console.log("Change Date reason: "+ reason +" states: " + JSON.stringify(dateRange));
         setSelectedDateRange(dateRange);
     }
 
@@ -96,7 +96,7 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
 
     // Adding/Removing a new Geography Card
     const handleLocationFilterChange = (values : Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
-        console.log("Change filter: " + JSON.stringify(values));
+        // console.log("Change filter: " + JSON.stringify(values));
         if(reason == "removeOption" && removedIndex !== -1){
             setChildFiltersArray((prevFiltersArray) => {
                 if(prevFiltersArray[removedIndex]?.length > 0){
@@ -121,20 +121,20 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
         
         setChildFiltersArray((prevFiltersArray) => {
             prevFiltersArray[geoIndex] = prevFiltersArray[geoIndex].filter((child, index) => index !== removeIndex);
-            console.log("After remove: "+ JSON.stringify(prevFiltersArray[geoIndex]));
+            // console.log("After remove: "+ JSON.stringify(prevFiltersArray[geoIndex]));
             return [...prevFiltersArray];
         });
     }
 
-    const titleElements = ancestry.map((geography, index) => <Typography id="chart-section-header" key={index}>{geography.name}</Typography>);
+    const titleElements = ancestry.map((geographyItem, index) => <Typography id="chart-section-header" key={index}>{geographyItem.name}</Typography>);
 
     const filterCards = selectedLocationFilterList.map((locationFilter, index) => <FilterCard geography={locationFilter} color="#DA5FB0" key={index} handleOnChange={(values)=> handleSubFilterChange(values, index)} selectedItems={childFiltersArray[index]}/>);
 
     const extensionCards = selectedLocationFilterList.length === 0 ? null : 
-        selectedLocationFilterList.map((geography, geoIndex) => childFiltersArray[geoIndex] === undefined ? null :
+        selectedLocationFilterList.map((geographyExtention, geoIndex) => childFiltersArray[geoIndex] === undefined ? null :
         childFiltersArray[geoIndex].map((filter, filterIndex) =>
             <ChartCardExtendable 
-                geography={geography}
+                geography={geographyExtention}
                 state={state} ancestry={[...ancestry, geography]}
                 filterName={filter} 
                 handleDelete={()=>removeChildFilter(geoIndex, filterIndex)}
@@ -203,7 +203,7 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
                                         { selectedLocationFilterList.length > 0 ?
                                         <GraphIframe  
                                             geographies={selectedLocationFilterList} 
-                                            targetType={geography.type} 
+                                            targetType={filterName} 
                                             graphType={chartOption && chartOptionsList.length > 0 ? chartOption : undefined} 
                                             category={AppStore.category} 
                                             handleGraphTypeOptions={handleGraphTypeOptions}
