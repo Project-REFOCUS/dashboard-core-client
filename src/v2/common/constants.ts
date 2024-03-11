@@ -1,11 +1,13 @@
 import { GeographyEnum } from './enum';
 import { DateDelta, GeoFilterType } from './types';
 
+const currentDate = new Date();
+
 export const dateRanges : DateDelta[] = [
-    { x: {month: 'January', year: '2023'}, y: {month: 'December', year: '2023'}},
-    { x: {month: 'January', year: '2022'}, y: {month: 'December', year: '2022'}},
-    { x: {month: 'January', year: '2021'}, y: {month: 'December', year: '2021'}},
-    { x: {month: 'January', year: '2020'}, y: {month: 'December', year: '2020'}},
+    { x: {month: 'January', year: '2020'}, y: {month: currentDate.toLocaleString('default', { month: 'long' }) , year: `${currentDate.getFullYear()}`}}
+    // { x: {month: 'January', year: '2023'}, y: {month: 'December', year: '2023'}},
+    // { x: {month: 'January', year: '2022'}, y: {month: 'December', year: '2022'}},
+    // { x: {month: 'January', year: '2021'}, y: {month: 'December', year: '2021'}},
 ]
 
 export const filterOptionsMenu: GeoFilterType[] = [

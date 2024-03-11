@@ -1,7 +1,7 @@
 import { GraphTypeEnum } from './../common/enum';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { Category, Geography, GraphResource } from '../common/types';
-import { fetchCategoriesByState, fetchGraphDashboardUrl, fetchGraphUrl, fetchStatesByCategory } from '../common/services';
+import { fetchCategoriesByState, fetchGraphUrl, fetchStatesByCategory } from '../common/services';
 import { GeographyEnum } from '../common/enum';
 
 class AppStore {
@@ -126,37 +126,18 @@ class AppStore {
     }
 
     async getGraph(targets: Geography[], targetType?: GeographyEnum, graphType?: GraphTypeEnum) : Promise<{url : string, graphOptions : GraphTypeEnum[]}>{
-
-        let dashboardUrlResources : GraphResource[] | undefined;
-        let mapKey = targetType ? targetType : "Dashboard";
-
-        console.log("Get graph in AppStore target type: " + targetType + " vs mapKey: " + mapKey);
-
         const firstIndex = 0;
 
-        if(this.graphDashboardMap.has(mapKey)){
-            dashboardUrlResources = this.graphDashboardMap.get(mapKey);
-            
-            if(!dashboardUrlResources || !dashboardUrlResources[firstIndex]){
-                throw new Error("Value of key {Dashboard} returned improper value: " + dashboardUrlResources);
-            }
+        const graphTargetResources: GraphResource[] = await fetchGraphUrl(this.category?.id, targetType, targets);
 
-        }else{
-            dashboardUrlResources = await fetchGraphDashboardUrl(this.category?.id, targetType);
-            console.log("Value of the graph response retrieved is: "+ JSON.stringify(dashboardUrlResources) + "for mapKey=" + mapKey);
-            this.graphDashboardMap.set(mapKey, dashboardUrlResources);
-        }
-
-        // console.log("Retrieved graph url root value for key{"+ mapKey +"} is" + JSON.stringify(dashboardUrlResources));
-
-        const graphResourceItem = graphType ? dashboardUrlResources.find((graphResource) => graphResource.type === graphType) : dashboardUrlResources[firstIndex];
+        const graphResourceItem = graphType ? graphTargetResources.find((graphResource) => graphResource.type === graphType) : graphTargetResources[firstIndex];
 
         if(!graphResourceItem){
-            throw new Error("Graph Resource Item returned improper resource: " + graphResourceItem);
+            throw new Error("Graph Resource Item returned improper resource: " + JSON.stringify(graphResourceItem));
         }
 
-        const graphTargetResource: string = await fetchGraphUrl(graphResourceItem.url, targets);
-        return { url : graphTargetResource, graphOptions: dashboardUrlResources.map((graphResource)=> graphResource.type)};
+        const graphTargetUrl : string = graphResourceItem.url;
+        return { url : graphTargetUrl, graphOptions: graphTargetResources.map((graphResource)=> graphResource.type)};
     }
 }
 
