@@ -38,7 +38,6 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
     // Todo: Check if category needs to be used as a trigger for this effect. Might be abe to remove the prop entirely
     useEffect(() => {
         setIsLoading(true);
-        console.log("Geography.type for iFrame is: " + targetType);
         AppStore.getGraph(geographies, targetType, graphType).then(response => {
             console.log("Value of the graph url for category{"+ category?.name +"} is: "+ JSON.stringify(response));
             setUrl(response.url);
@@ -59,7 +58,7 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
             // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.getElementsByClassName("design-playground-resizable-container")));
             // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.querySelector(".design-playground-resizable-container")));
             // // console.log("Document found id: " + JSON.stringify(contentWindow?.document.body .getElementById("dashboardSurface")));
-            console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + clientWidth);
+            // console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + clientWidth);
             // console.log("Iframe Height: "+ contentDocument.documentElement.clientHeight + " or " + newHeight);
             // // iframe.style.width = clientWidth;
             iframe.style.height = `${clientWidth ? clientWidth * aspectRatio : 338}px`;

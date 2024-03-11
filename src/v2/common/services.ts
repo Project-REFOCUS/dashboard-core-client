@@ -97,7 +97,7 @@ export const fetchSubGeographiesLegendMap = async(categoryId: string | null, par
             }
         }
 
-        console.log("Legend map contains: " + JSON.stringify(legendMap));
+        // console.log("Legend map contains: " + JSON.stringify(legendMap));
         return legendMap;
 
     } catch (error) {
@@ -115,7 +115,7 @@ export const fetchGraphUrl = async(categoryId: string | undefined, type: Geograp
         const targetIdsFormatted = targetIdArray.join("|");
 
         const response = await axios.get(`/dashboard-service/graph?categoryId=${categoryId}&geographyType=${toCamelCase(type)}&geographyIds=${targetIdsFormatted}`);
-        console.log("Graph response looks like"+JSON.stringify(response));
+        // console.log("Graph response looks like"+JSON.stringify(response));
         return response.data;
         
     } catch (error) {

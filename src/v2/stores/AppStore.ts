@@ -51,7 +51,7 @@ class AppStore {
         });
 
         if(subjectStates.length === 0){
-            console.log(`Categories are already mapped for states: ${JSON.stringify(states)}`);
+            // console.log(`Categories are already mapped for states: ${JSON.stringify(states)}`);
             return;
         }
         
@@ -59,7 +59,7 @@ class AppStore {
             const categories = await fetchCategoriesByState(state);
             runInAction(() => {
                 this.stateCategoryMap.set(state.name, categories);
-                console.log("Added to state category map: key{" + state.name + "} " + JSON.stringify(this.stateCategoryMap.get(state.name)));
+                // console.log("Added to state category map: key{" + state.name + "} " + JSON.stringify(this.stateCategoryMap.get(state.name)));
             });
         }));
     }
@@ -67,7 +67,7 @@ class AppStore {
     @action 
     async updateStatesByCategory(category : Category) : Promise<void> {
         if(this.categoryStateMap.has(category.id)){
-            console.log(`States are already mapped for category: ${category.name}`);
+            // console.log(`States are already mapped for category: ${category.name}`);
             return;
         }
 
@@ -87,10 +87,10 @@ class AppStore {
             
         // @ts-ignore
         const categoriesForEachState : Category[][] = states.map((state) => {
-            console.log("Get operation in state category map returned: for key{"+ state.name + "} "+ JSON.stringify(this.stateCategoryMap.get(state.name)));
+            // console.log("Get operation in state category map returned: for key{"+ state.name + "} "+ JSON.stringify(this.stateCategoryMap.get(state.name)));
             
             if(!this.stateCategoryMap.has(state.name)){
-                console.error("Error state-category map doesnt have a key associated with state: "+ state.name);
+                // console.error("Error state-category map doesnt have a key associated with state: "+ state.name);
                 return [];
             }else{
                 return this.stateCategoryMap.get(state.name);
@@ -117,7 +117,7 @@ class AppStore {
         
         // console.log("Get operation in category state map returned: for key{"+ category.id + "} "+JSON.stringify(this.categoryStateMap.get(category.id)));
         if(!this.categoryStateMap.has(category.id)){
-            console.error("Error category-state map doesnt have a key associated with category: "+ category.id + " " + category.name);
+            // console.error("Error category-state map doesnt have a key associated with category: "+ category.id + " " + category.name);
             return [];
         }else{
             // @ts-ignore
