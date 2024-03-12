@@ -37,10 +37,10 @@ interface Props {}
 
 const Sidebar : React.FC<Props> = observer(() => {
     const [fullCategoryList, setFullCategoryList] = useState<Category[]>([]);
-    const [filteredCategoryList, setFilteredCategoryList] = useState<Category[]>([]);
+    const [filteredCategoryList, setFilteredCategoryList] = useState<Category[] | null>(null);
 
     const [fullStateList, setFullStateList] = useState<Geography[]>([]);
-    const [filteredStateList, setFilteredStateList] = useState<Geography[]>([]);
+    const [filteredStateList, setFilteredStateList] = useState<Geography[] | null>(null);
 
     const [ isLoading, setIsLoading ] = useState<boolean>(true);
 
@@ -58,7 +58,7 @@ const Sidebar : React.FC<Props> = observer(() => {
             if(siteParameter){
                 const preSelectedState = states.find(state => state.name === siteParameter);
                 if(preSelectedState){
-                    stateChange([preSelectedState]);
+                    stateChange([preSelectedState],'selectOption');
                 }
             }
             setIsLoading(false);
@@ -75,7 +75,7 @@ const Sidebar : React.FC<Props> = observer(() => {
             
         }else if(reason == "removeOption" || reason == "clear"){
             AppStore.setCategory(null);
-            setFilteredStateList([]);
+            setFilteredStateList(null);
         }
     }
 
@@ -118,10 +118,15 @@ const Sidebar : React.FC<Props> = observer(() => {
         AppStore.setStates([...subjectStates]);
     }
 
-    const stateChange = (states: Geography[]) => {
+    const stateChange = (states: Geography[], reason: AutocompleteChangeReason) => {
         // console.log("Change State reason: "+ reason +" states: " + JSON.stringify(states));
         AppStore.setStates(states);
-        AppStore.getMapCategories(states).then(categories => setFilteredCategoryList(categories));
+
+        if((reason === "removeOption" || reason === "clear") && states.length === 0){
+            setFilteredCategoryList(null);
+        }else{
+            AppStore.getMapCategories(states).then(categories => setFilteredCategoryList(categories));
+        }
     }
 
     return (
@@ -137,7 +142,7 @@ const Sidebar : React.FC<Props> = observer(() => {
                                         className={isLoading? "input-loading" : ""}
                                         size="small"
                                         id="category-selector"
-                                        options={filteredCategoryList.length === 0 ? fullCategoryList : filteredCategoryList}
+                                        options={filteredCategoryList || fullCategoryList}
                                         value={AppStore.category ? AppStore.category : null}
                                         getOptionLabel={(category) => category.name}
                                         disableListWrap
@@ -163,12 +168,12 @@ const Sidebar : React.FC<Props> = observer(() => {
                                         limitTags={2}
                                         size="small"
                                         id="state-selector"
-                                        options={filteredStateList.length === 0 ? fullStateList : filteredStateList}
+                                        options={filteredStateList || fullStateList}
                                         getOptionLabel={(state) => state.name}
                                         filterSelectedOptions
                                         disableListWrap
                                         value={AppStore.states}
-                                        onChange={(e,value,r) => stateChange(value)}
+                                        onChange={(e,value,reason) => stateChange(value, reason)}
                                         isOptionEqualToValue={(option, value) => option.name === value.name}
                                         renderInput={(params) => (
                                             <TextField

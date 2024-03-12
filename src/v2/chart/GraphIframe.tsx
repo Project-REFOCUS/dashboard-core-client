@@ -4,6 +4,7 @@ import AppStore from '../stores/AppStore';
 import { Category, Geography } from '../common/types';
 import { observer } from 'mobx-react';
 import LoadingAnimation from '../components/LoadingAnimation';
+import { Alert } from '@mui/material';
 
 // 338 (height) / 575.2 (width) = 0.5876216968011
 // the iframe content height is calculated by our input width
@@ -31,17 +32,26 @@ interface Props {
 
 const GraphIframe = observer(({geographies, targetType, category, graphType=GraphTypeEnum.BAR, handleGraphTypeOptions, fullscreen}: Props) => {
 
-    const [ url, setUrl ] = useState<string>("");
     const [ isLoading, setIsLoading ] = useState<boolean>(true);
+    const [ errorState, setErrorState ] = useState<boolean>(false);
     const iframeRef = useRef<HTMLIFrameElement>(null);   
 
-    // Todo: Check if category needs to be used as a trigger for this effect. Might be abe to remove the prop entirely
     useEffect(() => {
         setIsLoading(true);
+        setErrorState(false);
         AppStore.getGraph(geographies, targetType, graphType).then(response => {
             console.log("Value of the graph url for category{"+ category?.name +"} is: "+ JSON.stringify(response));
-            setUrl(response.url);
+            
+            // Iframe has a race condition, the load handler needs to be attached before the src.
+            // The symptom revealing this issue is the iframe will only trigger onload when mounted.
+            // If the src changes the iframe will not trigger the load handler. This fixes that.
+            const iframe = iframeRef.current;
+            iframe?.setAttribute("src", response.url);
+            
             handleGraphTypeOptions(response.graphOptions);
+        }).catch(() => {
+            setIsLoading(false);
+            setErrorState(true);
         });
     }, [geographies, graphType, category]);
 
@@ -53,14 +63,6 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
         const { contentDocument, contentWindow } = iframe;
         if (contentDocument) {
             const clientWidth = iframe.contentWindow?.document.scrollingElement?.clientWidth;
-            // const newHeight = `${iframe.contentWindow?.document.scrollingElement?.clientHeight}px`;
-            // console.log("Document is: " + JSON.stringify(contentWindow?.document.body.scrollHeight));
-            // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.getElementsByClassName("design-playground-resizable-container")));
-            // console.log("Document found className: " + JSON.stringify(contentWindow?.document.body.querySelector(".design-playground-resizable-container")));
-            // // console.log("Document found id: " + JSON.stringify(contentWindow?.document.body .getElementById("dashboardSurface")));
-            // console.log("Iframe Width: "+ contentDocument.documentElement.clientWidth + " or " + clientWidth);
-            // console.log("Iframe Height: "+ contentDocument.documentElement.clientHeight + " or " + newHeight);
-            // // iframe.style.width = clientWidth;
             iframe.style.height = `${clientWidth ? clientWidth * aspectRatio : 338}px`;
         }
     }
@@ -75,12 +77,12 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
     return (
         <>
             { isLoading && <LoadingAnimation/> }
+            { errorState && <Alert severity="warning">Something went wrong. Please try again.</Alert> }
             <iframe
                 className={ isLoading ? "vanish" : ""}
                 ref={iframeRef}
-                src={url}
-                style={iframeStyle}
                 onLoad={handleIframeLoad}
+                style={iframeStyle}
             ></iframe>
         </>
 
