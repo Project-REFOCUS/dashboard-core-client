@@ -112,7 +112,7 @@ export const fetchGraphUrl = async(categoryId: string | undefined, type: Geograp
             throw new Error();
         }
         const targetIdArray : string[] = targets.map((target => target.id));
-        const targetIdsFormatted = targetIdArray.join("|");
+        const targetIdsFormatted = targetIdArray.join(",");
 
         const response = await axios.get(`/dashboard-service/graph?categoryId=${categoryId}&geographyType=${toCamelCase(type)}&geographyIds=${targetIdsFormatted}`);
         // console.log("Graph response looks like"+JSON.stringify(response));
