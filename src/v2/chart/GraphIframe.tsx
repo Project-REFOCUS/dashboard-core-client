@@ -4,7 +4,6 @@ import AppStore from '../stores/AppStore';
 import { Category, Geography } from '../common/types';
 import { observer } from 'mobx-react';
 import LoadingAnimation from '../components/LoadingAnimation';
-import { Alert } from '@mui/material';
 
 // 338 (height) / 575.2 (width) = 0.5876216968011
 // the iframe content height is calculated by our input width
@@ -47,7 +46,7 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
             // If the src changes the iframe will not trigger the load handler. This fixes that.
             const iframe = iframeRef.current;
             iframe?.setAttribute("src", response.url);
-            
+
             handleGraphTypeOptions(response.graphOptions);
         }).catch(() => {
             setIsLoading(false);
@@ -76,10 +75,9 @@ const GraphIframe = observer(({geographies, targetType, category, graphType=Grap
     
     return (
         <>
-            { isLoading && <LoadingAnimation/> }
-            { errorState && <Alert severity="warning">Something went wrong. Please try again.</Alert> }
+            {(isLoading || errorState) && <LoadingAnimation loading={isLoading} error={errorState}/>}
             <iframe
-                className={ isLoading ? "vanish" : ""}
+                className={ isLoading || errorState ? "vanish" : ""}
                 ref={iframeRef}
                 onLoad={handleIframeLoad}
                 style={iframeStyle}

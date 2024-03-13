@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {  Box, CircularProgress } from '@mui/material';
+import {  Alert, Box, CircularProgress } from '@mui/material';
 
 const aspectRatio = 0.57;
 
@@ -12,7 +12,12 @@ const boxSx = {
     zIndex: 49,
 }
 
-const LoadingAnimation = () => {
+interface Props {
+    loading: boolean
+    error: boolean
+}
+
+const LoadingAnimation = ({loading, error}: Props) => {
 
     const boxRef = useRef<HTMLDivElement>(null);
 
@@ -24,7 +29,8 @@ const LoadingAnimation = () => {
 
     return (
         <Box ref={boxRef} sx={boxSx}>
-            <CircularProgress sx={{zIndex:99}}/>
+            { loading && <CircularProgress sx={{zIndex:99}}/> }
+            { error && <Alert sx={{margin: "auto"}} severity="warning">Something went wrong. Please try again.</Alert> }
         </Box>
     );
 };
