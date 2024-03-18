@@ -58,9 +58,9 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
 
     const handleGraphTypeOptions = (graphOptions : GraphTypeEnum[]) => {
         // console.log("Chart Toggle options values: " + JSON.stringify(graphOptions));
-        const option = graphOptions.length < 2 ? graphOptions[0] : graphOptions.find(graphOption => graphOption == GraphTypeEnum.BAR)
-        setChartOption(option ? option : graphOptions[0]);
+        const option = graphOptions.length < 2 ? graphOptions[0] : graphOptions.find(graphOption => graphOption == chartOption)
         setChartOptionsList(graphOptions);
+        setChartOption(option ? option : graphOptions[0]);
     }
 
     const handleChartToggle = (value : GraphTypeEnum) => {
