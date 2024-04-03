@@ -53,6 +53,7 @@ const Sidebar : React.FC<Props> = observer(() => {
             fetchAllStates()
         ]).then(([categories, states]) => {
             setFullCategoryList(categories);
+            console.log("FULL STATE LIST: " + JSON.stringify(states));
             setFullStateList(states);
     
             if(siteParameter){
@@ -69,6 +70,7 @@ const Sidebar : React.FC<Props> = observer(() => {
         if(reason == 'selectOption' && category !== null){
             AppStore.setCategory(category);
             AppStore.getMapStates(category).then(states => {
+                console.log("THESE ARE the FILTERED States: " + JSON.stringify(states));
                 setFilteredStateList(states);
                 filterSelectedStates(category.id, Array.from(AppStore.states));
             });
