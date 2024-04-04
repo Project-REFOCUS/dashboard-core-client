@@ -56,7 +56,7 @@ const esbuildPluginProxyConfiguration = {
             port: 9000
         },
         projectRefocusRemote: {
-            host: 'projectrefocus.gscbinc.com',
+            host: 'developer.dashboard.projectrefocus.com',
             port: 80
         }
     }
