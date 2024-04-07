@@ -19,23 +19,25 @@ class AppStore {
         makeObservable(this);
     }
 
+    @action 
+    setIsExpanded(isExpanded : boolean) {
+        this.isExpanded = isExpanded;
+    }
+
     @action
     setStates(states : Geography[]) : void {
         this.states = states;
     }
 
     @action 
-    setIsExpanded(isExpanded : boolean) {
-        this.isExpanded = isExpanded;
-    }
-
-    @action 
-    setCategory(category : Category | null) : void {
+    setCategory(category : Category | null, states? : Geography[]) : void {
         if(this.category){
-            // console.log("SET GLOBAL CATEGORY: " + category?.name);
             this.disposeUrls();
         }
 
+        if(states){
+            this.states = states;
+        }
         this.category = category;
     }
 

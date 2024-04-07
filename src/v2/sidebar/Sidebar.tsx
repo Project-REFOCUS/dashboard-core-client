@@ -18,6 +18,7 @@ import { observer } from 'mobx-react';
 import AppStore from '../stores/AppStore';
 
 import '../styles/sidebar/sidebar.scss';
+import { trimLowerCase } from '../common/utils';
 
 
 const inputLabelSX = {
@@ -53,7 +54,7 @@ const Sidebar : React.FC<Props> = observer(() => {
             fetchAllStates()
         ]).then(([categories, states]) => {
             setFullCategoryList(categories);
-            console.log("FULL STATE LIST: " + JSON.stringify(states));
+            // console.log("FULL STATE LIST: " + JSON.stringify(states));
             setFullStateList(states);
     
             if(siteParameter){
@@ -68,16 +69,17 @@ const Sidebar : React.FC<Props> = observer(() => {
 
     const categoryChange = (event: React.SyntheticEvent<Element, Event>, category: Category | null, reason: AutocompleteChangeReason) => {
         if(reason == 'selectOption' && category !== null){
-            AppStore.setCategory(category);
+            console.log("Category is now: ", JSON.stringify(category));
             AppStore.getMapStates(category).then(states => {
-                console.log("THESE ARE the FILTERED States: " + JSON.stringify(states));
+                // console.log("THESE ARE the FILTERED States: " + JSON.stringify(states));
                 setFilteredStateList(states);
-                filterSelectedStates(category.id, Array.from(AppStore.states));
+                const statesWithNewIds = filterSelectedStates(category.id, Array.from(AppStore.states));
+                AppStore.setCategory(category, statesWithNewIds);
             });
             
         }else if(reason == "removeOption" || reason == "clear"){
-            AppStore.setCategory(null);
             setFilteredStateList(null);
+            AppStore.setCategory(null);
         }
     }
 
@@ -96,20 +98,29 @@ const Sidebar : React.FC<Props> = observer(() => {
             console.error("Error finding categoryStatemap for category id: " + categoryId);
         }
 
-        const subjectStates = states
-            .filter(state => {
-                const foundIndex = foundArray?.findIndex((item)=> item.name === state.name);
-                if(foundIndex && foundIndex !== -1){
-                    foundIndexes.push(foundIndex);
-                }
-                return foundIndex !== -1;
-            }).map((state, index) => {
+        // console.log("Searching for states: " + JSON.stringify(states));
+        const subjectStates : Geography[] = states
+            .filter( state => {
+                const foundIndex = foundArray?.findIndex((item, index) => {
+                    if(trimLowerCase(item.name) === trimLowerCase(state.name)){
+                        // console.log(`Compare at index{${index}} {${state.name}}: item.name = {${item.name}}, boolean result: ${trimLowerCase(item.name) === trimLowerCase(state.name)}`);
+                    }
+                    return trimLowerCase(item.name) === trimLowerCase(state.name);
+                });
 
+                if(foundIndex === undefined || foundIndex === -1){
+                    console.error("Error pairing selected state " + JSON.stringify(state) + " during category change event");
+                    return false;
+                }else{
+                    // console.log("Found state: " + state.name + " in filterList[index" + foundIndex + "]");
+                    foundIndexes.push(foundIndex);
+                    return true;
+                }
+            }).map((state, index) => {
                 if(foundArray){
                     const foundState : Geography = foundArray[foundIndexes[index]];
-                    const newId = foundState.id;
-                    if(!foundState){
-                        console.error("Error pairing selected states with the new id during category change event");
+                    if(!foundState || trimLowerCase(foundState.name) !== trimLowerCase(state.name)){
+                        console.error("Error pairing selected state " + JSON.stringify(state) + " with the new id during category change event");
                     }else{
                         return foundState;
                     }
@@ -117,7 +128,8 @@ const Sidebar : React.FC<Props> = observer(() => {
                 return state;
             });
 
-        AppStore.setStates([...subjectStates]);
+        // console.log("Here are the transformed states: ", JSON.stringify(subjectStates));
+        return subjectStates ? subjectStates : [];
     }
 
     const stateChange = (states: Geography[], reason: AutocompleteChangeReason) => {
