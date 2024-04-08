@@ -15,14 +15,16 @@ export const fetchIndicatorCategories = async() : Promise<Category[]> => {
     }
 };
 
-export const fetchCategoriesByState  = async(state : Geography) : Promise<Category[]> => {
-    
+export const fetchCategoriesByStates  = async(states : Geography[]) : Promise<Category[]> => {
+    const targetIdsFormatted = formatGeographyIdsForUrl(states, true);
+
     try {
-        const response = await axios.get(`/dashboard-service/categories?stateIds=${deconstructStateId(state.id)}`);
+        const response = await axios.get(`/dashboard-service/categories?stateIds=${targetIdsFormatted}`);
+        console.debug(`DEbugging response: ${JSON.stringify(response)}`);
         const formattedData = response.data.sort(nameSort);
         return formattedData;
     } catch (error) {
-        console.error('Error fetching categories with given state id: ' + state.id, error);
+        console.error('Error fetching categories with given states: ' + JSON.stringify(states), error);
         throw error;
     }
 };
@@ -31,6 +33,16 @@ const deconstructStateId = (id : string) : string => {
     const stateIdIndex = 0;
     const subStrings = id.split('.');
     return subStrings[stateIdIndex];
+}
+
+export const formatGeographyIdsForUrl = (geographies : Geography[], deconstruct : Boolean = false) => {
+    const targetIdArray : string[] = geographies.map((geography => {
+        if(deconstruct) {
+            return deconstructStateId(geography.id);
+        }
+        return geography.id;
+    }));
+    return targetIdArray.join(",");
 }
 
 export const fetchStatesByCategory = async(categoryId: string) : Promise<Geography[]> => {
@@ -111,8 +123,9 @@ export const fetchGraphUrl = async(categoryId: string | undefined, type: Geograp
         if(!categoryId || !type){
             throw new Error();
         }
-        const targetIdArray : string[] = targets.map((target => target.id));
-        const targetIdsFormatted = targetIdArray.join(",");
+        // const targetIdArray : string[] = targets.map((target => target.id));
+        // const targetIdsFormatted = targetIdArray.join(",");
+        const targetIdsFormatted = formatGeographyIdsForUrl(targets);
 
         const response = await axios.get(`/dashboard-service/graph?categoryId=${categoryId}&geographyType=${toCamelCase(type)}&geographyIds=${targetIdsFormatted}`);
         // console.log("Graph response looks like"+JSON.stringify(response));

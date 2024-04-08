@@ -123,3 +123,9 @@ span.MuiChip-label {
 .Mui-disabled {
     cursor: not-allowed !important;
 }
+
+@media (min-width: 1200px) {
+    .MuiContainer-root.MuiContainer-maxWidthLg.css-1oqqzyl-MuiContainer-root {
+        max-width: 83.33333%;
+    }
+}

@@ -7,6 +7,8 @@ import { Geography } from '../common/types';
 import EmptyChartCard from '../chart/EmptyChartCard';
 import { GeographyEnum } from '../common/enum';
 import { observer } from 'mobx-react';
+import { fetchSubGeographies } from '../common/services';
+import AppStore from '../stores/AppStore';
 
 interface Props {
     state: Geography,
@@ -15,10 +17,19 @@ interface Props {
 const StateSection = observer(({state} : Props) => {
 
     const [ geoArray, setGeoArray ] = useState<Geography[]>([]);
+    const [ countyList, setCountyList ] = useState<Geography[]>([]);
 
     //filters corresponding to the index of the locations in the geoArray
     // i.e. geoArray[1] has multiple filters in filtersArray[1]. One to Many relationship
     const [ filtersArray, setFiltersArray ] = useState<GeographyEnum[][]>([]);
+
+    useEffect(() => {
+        fetchSubGeographies(
+            AppStore.category ? AppStore.category.id : null, 
+            state.id, 
+            GeographyEnum.COUNTY
+        ).then(counties => setCountyList(counties));
+    }, []);
 
     // Adding or Removing the county cards that populate under the input
     const handleGeoArrayChange = (geographies: Geography[], removedIndex: number, reason: AutocompleteChangeReason) => {
@@ -64,9 +75,9 @@ const StateSection = observer(({state} : Props) => {
     );
 
     return (
-        <Card elevation={0}>
+        <Card className={countyList.length === 0 ? "vanish" : ""} elevation={0}>
             <Stack direction="row">
-                <SidebarFilter state={state} handleGeoOnChange={handleGeoArrayChange} handleFilterOnChange={handleFilterChange}/>
+                <SidebarFilter state={state} counties={countyList} handleGeoOnChange={handleGeoArrayChange} handleFilterOnChange={handleFilterChange}/>
                 <Stack className="flex-right-ratio" sx={{ paddingRight: '8px'}} spacing={1}>
                     <Card elevation={0}>
                         {chartCard}

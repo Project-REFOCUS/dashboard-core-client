@@ -135,7 +135,7 @@ const ChartCardExtendable = observer(({geography, filterName, ancestry, state, h
         childFiltersArray[geoIndex].map((filter, filterIndex) =>
             <ChartCardExtendable 
                 geography={geographyExtention}
-                state={state} ancestry={[...ancestry, geography]}
+                state={state} ancestry={[...ancestry, geographyExtention]}
                 filterName={filter} 
                 handleDelete={()=>removeChildFilter(geoIndex, filterIndex)}
                 extension

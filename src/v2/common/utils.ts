@@ -1,4 +1,3 @@
-
 export const isArrayEmpty = (array : any[]) => {
     return array.length === 0
 }
@@ -20,10 +19,10 @@ export const nameSort = (a: {name: string}, b: {name: string}) : number => {
 export const toCamelCase = (subject : string) => {
     let array = subject.split(" ");
 
-    // if(array.length <= 1){
-    //     return subject
-    // }
-
     return array.reduce((prev, curr) => 
         prev + (curr.charAt(0).toUpperCase() + curr.slice(1).toLowerCase()));
+}
+
+export const trimLowerCase = (subject : string) => {
+    return subject.trim().toLowerCase();
 }

@@ -23,7 +23,7 @@ const CardSX = {
 const App: React.FC = observer(() => {
 
     const stateSections = (AppStore.states.length > 0) && AppStore.category !== null ? 
-        AppStore.states.map((state: Geography, index: number) => {
+        AppStore.states.map((state: Geography) => {
             return <StateSection state={state} key={state?.id}/>;
         }) : null;
         
