@@ -1,7 +1,7 @@
 import { GraphTypeEnum } from './../common/enum';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { Category, Geography, GraphResource } from '../common/types';
-import { fetchCategoriesByState, fetchGraphUrl, fetchStatesByCategory } from '../common/services';
+import { fetchCategoriesByStates, fetchGraphUrl, fetchStatesByCategory } from '../common/services';
 import { GeographyEnum } from '../common/enum';
 
 class AppStore {
@@ -47,23 +47,14 @@ class AppStore {
     }
 
     @action
-    async updateCategoriesByStates(states : Geography[]) : Promise<void> {
-        const subjectStates : Geography[] = states.filter((state) => {
-            return !this.stateCategoryMap.has(state.name);
-        });
-        
-        if(subjectStates.length === 0){
-            // console.log(`Categories are already mapped for states: ${JSON.stringify(states)}`);
-            return;
+    async findCategoriesByStates(states : Geography[]) : Promise<Category[]> {
+        const categories = await fetchCategoriesByStates(states);
+
+        if(categories.length === 0){
+            console.error("Categories not found for states: "+ JSON.stringify(states));
         }
-        
-        await Promise.all(subjectStates.map( async(state) => {
-            const categories = await fetchCategoriesByState(state);
-            runInAction(() => {
-                this.stateCategoryMap.set(state.name, categories);
-                console.log("Added to state category map: key{" + state.name + "} " + JSON.stringify(this.stateCategoryMap.get(state.name)));
-            });
-        }));
+
+        return categories;
     }
 
     @action 
@@ -83,59 +74,7 @@ class AppStore {
         })
     }
 
-    async getMapCategories(states: Geography[]) : Promise<Category[]> {
-
-        await this.updateCategoriesByStates(states);
-            
-        // @ts-ignore
-        const categoriesForEachState : Category[][] = states.map((state) => {
-            // console.log("Get operation in state category map returned: for key{"+ state.name + "} "+ JSON.stringify(this.stateCategoryMap.get(state.name)));
-            if(!this.stateCategoryMap.has(state.name)){
-                console.error("Error state-category map doesnt have a key associated with state: "+ state.name);
-                return [];
-            }else {
-                console.log("State-category value: ", this.stateCategoryMap.get(state.name));
-                return this.stateCategoryMap.get(state.name);
-            }
-        });
-
-        console.log("Value of sorted flat: " + JSON.stringify(categoriesForEachState));
-
-        const subjectCategories = categoriesForEachState.flat();
-        const quantityMap = new Map<string, number>();
-        const goalQuantity = states.length;
-
-        // subjectCategories.forEach(category => {
-        //     const subject = JSON.stringify(category);
-        //     const quantity = quantityMap.get(subject) || 0;
-        //     quantityMap.set(subject, quantity + 1);
-        //     return category;
-        // });
-
-        console.log("Value of sorted flat: " + JSON.stringify(subjectCategories) + "and the quantityMap: "+ JSON.stringify(quantityMap));
-
-        const uniqueCategoryArray = subjectCategories.filter((category) => {
-            const subject = JSON.stringify(category);
-            const quantity = (quantityMap.get(subject) || 0) + 1;
-            quantityMap.set(subject, quantity);
-
-            if(quantity === goalQuantity){
-                return true;
-            }else if(quantity > goalQuantity){  //not likely
-                console.error("Error finding the similar categories. More categories than expected");
-            }
-
-            return false;
-        });
-
-        if(uniqueCategoryArray.length === 0){
-            console.error("Error finding the similar categories. Something went wrong");
-        }
-
-        return uniqueCategoryArray;
-    }
-
-    async getMapStates(category: Category) : Promise<Geography[]> {
+    async findStates(category: Category) : Promise<Geography[]> {
         
         await this.updateStatesByCategory(category);
         

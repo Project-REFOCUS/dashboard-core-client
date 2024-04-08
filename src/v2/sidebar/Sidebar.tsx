@@ -70,7 +70,7 @@ const Sidebar : React.FC<Props> = observer(() => {
     const categoryChange = (event: React.SyntheticEvent<Element, Event>, category: Category | null, reason: AutocompleteChangeReason) => {
         if(reason == 'selectOption' && category !== null){
             console.log("Category is now: ", JSON.stringify(category));
-            AppStore.getMapStates(category).then(states => {
+            AppStore.findStates(category).then(states => {
                 // console.log("THESE ARE the FILTERED States: " + JSON.stringify(states));
                 setFilteredStateList(states);
                 const statesWithNewIds = filterSelectedStates(category.id, Array.from(AppStore.states));
@@ -101,7 +101,7 @@ const Sidebar : React.FC<Props> = observer(() => {
         // console.log("Searching for states: " + JSON.stringify(states));
         const subjectStates : Geography[] = states
             .filter( state => {
-                const foundIndex = foundArray?.findIndex((item, index) => {
+                const foundIndex = foundArray?.findIndex((item) => {
                     if(trimLowerCase(item.name) === trimLowerCase(state.name)){
                         // console.log(`Compare at index{${index}} {${state.name}}: item.name = {${item.name}}, boolean result: ${trimLowerCase(item.name) === trimLowerCase(state.name)}`);
                     }
@@ -139,7 +139,7 @@ const Sidebar : React.FC<Props> = observer(() => {
         if((reason === "removeOption" || reason === "clear") && states.length === 0){
             setFilteredCategoryList(null);
         }else{
-            AppStore.getMapCategories(states).then(categories => setFilteredCategoryList(categories));
+            AppStore.findCategoriesByStates(states).then(categories => setFilteredCategoryList(categories));
         }
     }
 
