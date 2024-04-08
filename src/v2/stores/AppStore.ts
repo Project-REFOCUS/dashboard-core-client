@@ -51,7 +51,7 @@ class AppStore {
         const subjectStates : Geography[] = states.filter((state) => {
             return !this.stateCategoryMap.has(state.name);
         });
-
+        
         if(subjectStates.length === 0){
             // console.log(`Categories are already mapped for states: ${JSON.stringify(states)}`);
             return;
@@ -90,7 +90,6 @@ class AppStore {
         // @ts-ignore
         const categoriesForEachState : Category[][] = states.map((state) => {
             // console.log("Get operation in state category map returned: for key{"+ state.name + "} "+ JSON.stringify(this.stateCategoryMap.get(state.name)));
-            
             if(!this.stateCategoryMap.has(state.name)){
                 console.error("Error state-category map doesnt have a key associated with state: "+ state.name);
                 return [];
@@ -100,18 +99,40 @@ class AppStore {
             }
         });
 
+        console.log("Value of sorted flat: " + JSON.stringify(categoriesForEachState));
+
         const subjectCategories = categoriesForEachState.flat();
-        const idSet = new Set<string>();
-        const uniqueCategorySet = subjectCategories.filter((category) => {
-            if(idSet.has(category.id)){
-                return false;
-            }else{
-                idSet.add(category.id);
-                return true
+        const quantityMap = new Map<string, number>();
+        const goalQuantity = states.length;
+
+        // subjectCategories.forEach(category => {
+        //     const subject = JSON.stringify(category);
+        //     const quantity = quantityMap.get(subject) || 0;
+        //     quantityMap.set(subject, quantity + 1);
+        //     return category;
+        // });
+
+        console.log("Value of sorted flat: " + JSON.stringify(subjectCategories) + "and the quantityMap: "+ JSON.stringify(quantityMap));
+
+        const uniqueCategoryArray = subjectCategories.filter((category) => {
+            const subject = JSON.stringify(category);
+            const quantity = (quantityMap.get(subject) || 0) + 1;
+            quantityMap.set(subject, quantity);
+
+            if(quantity === goalQuantity){
+                return true;
+            }else if(quantity > goalQuantity){  //not likely
+                console.error("Error finding the similar categories. More categories than expected");
             }
+
+            return false;
         });
 
-        return Array.from(uniqueCategorySet);
+        if(uniqueCategoryArray.length === 0){
+            console.error("Error finding the similar categories. Something went wrong");
+        }
+
+        return uniqueCategoryArray;
     }
 
     async getMapStates(category: Category) : Promise<Geography[]> {

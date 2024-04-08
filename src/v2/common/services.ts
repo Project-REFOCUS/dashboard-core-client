@@ -19,6 +19,7 @@ export const fetchCategoriesByState  = async(state : Geography) : Promise<Catego
     
     try {
         const response = await axios.get(`/dashboard-service/categories?stateIds=${deconstructStateId(state.id)}`);
+        console.debug(`DEbugging response: ${JSON.stringify(response)}`);
         const formattedData = response.data.sort(nameSort);
         return formattedData;
     } catch (error) {
